@@ -1,0 +1,17 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
+USE Illuminate\View\p
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', function () {
+    return view('portofolio');
+});
+
+Route::get('/project', function () {
+    return view('project');
+});
