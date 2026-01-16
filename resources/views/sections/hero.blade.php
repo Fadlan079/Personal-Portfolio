@@ -1,17 +1,17 @@
 <div class="absolute inset-0 -z-10 overflow-hidden">
 <div
     class="absolute -top-32 -left-32
-        w-[420px] h-[420px]
-        bg-primary/25
-        blur-[140px]
+        w-96 h-96
+        bg-primary opacity-10
+        blur-md
         rounded-full">
 </div>
 
 <div
     class="absolute -bottom-32 -right-32
-        w-[500px] h-[500px]
-        bg-primary/20
-        blur-[160px]
+        w-100 h-100
+        bg-primary opacity-10
+        blur-md
         rounded-full">
 </div>
 </div>
@@ -30,7 +30,7 @@
     <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
     Hi, Saya
     <span
-        class="bg-gradient-to-r from-primary to-red-400
+        class="bg-linear-to-r from-primary to-red-400
                 bg-clip-text text-transparent"
     >
         Fadlan
@@ -123,11 +123,6 @@
 </div>
 
 <div class="relative flex justify-center">
-    <div
-    class="absolute -inset-4 rounded-full
-            bg-primary/30 blur-3xl"
-    ></div>
-
     <div
     class="relative w-72 h-72 md:w-80 md:h-80
             rounded-3xl overflow-hidden
