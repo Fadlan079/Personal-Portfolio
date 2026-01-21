@@ -20,13 +20,21 @@ function updateIcon(theme) {
     const icon = document.getElementById('themeIcon');
     if (!icon) return;
 
+    icon.classList.remove(
+        'fa-moon',
+        'fa-sun',
+        'fa-desktop'
+    );
+
     if (!localStorage.getItem(THEME_KEY)) {
-        icon.className = 'fa-solid fa-moon text-text';
+        icon.classList.add('fa-desktop');
     } else if (theme === 'dark') {
-        icon.className = 'fa-solid fa-sun text-text';
+        icon.classList.add('fa-moon');
     } else {
-        icon.className = 'fa-solid fa-desktop text-text';
+        icon.classList.add('fa-sun');
     }
+
+    icon.classList.add('fa-solid', 'text-text');
 }
 
 function initTheme() {
@@ -101,10 +109,13 @@ function updateLangIcon(currentLocale) {
     const flag = document.getElementById('langFlag');
     if (!flag) return;
 
-    const nextLocale = currentLocale === 'id' ? 'en' : 'id';
-
     flag.classList.remove('fi-id', 'fi-us');
-    flag.classList.add(nextLocale === 'id' ? 'fi-id' : 'fi-us');
+
+    if (currentLocale === 'id') {
+        flag.classList.add('fi-id');
+    } else {
+        flag.classList.add('fi-us');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

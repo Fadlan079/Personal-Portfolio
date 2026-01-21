@@ -1,5 +1,15 @@
 <div class="max-w-6xl mx-auto px-6">
   <h3 data-i18n="skills" class="text-3xl font-bold mb-12 text-primary text-center"></h3>
+  
+    <div class="hidden">
+        <span class="text-yellow-400 bg-yellow-400/10"></span>
+        <span class="text-blue-500 bg-blue-500/10"></span>
+        <span class="text-indigo-500 bg-indigo-500/10"></span>
+        <span class="text-amber-500 bg-amber-500/10"></span>
+        <span class="text-sky-500 bg-sky-500/10"></span>
+        <span class="text-orange-500 bg-orange-500/10"></span>
+        <span class="text-red-500 bg-red-500/10"></span>
+    </div>
 
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
     <x-skill-card
