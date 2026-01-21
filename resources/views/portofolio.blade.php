@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="{{app()->getLocale()}}">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio | Fadlan</title>
-  @vite(['resources/css/app.css'])
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.1/css/flag-icons.min.css"/>
-</head>
-
-<body class="bg-bg text-text overflow-x-hidden">
+@extends('layouts.main')
+@section('title', 'Portofolio | Fadlan')
+@section('content')
     <x-navbar
     brand="Fadlan"
     :menus="[
@@ -58,6 +49,4 @@
         ['icon' => 'fa-brands fa-whatsapp', 'href' => 'https://wa.me/6282210732928'],
     ]"
   />
-  @vite(['resources/js/app.js'])
-</body>
-</html>
+@endsection

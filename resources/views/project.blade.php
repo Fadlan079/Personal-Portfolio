@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="{{app()->getLocale()}}">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Projects | Fadlan</title>
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.1/css/flag-icons.min.css"/>
-</head>
-<body class="bg-bg text-text">
+@extends('layouts.main')
+@section('title', 'Project | Fadlan')
+@section('content')
     <x-navbar
     brand="Fadlan"
     :menus="[
@@ -157,8 +149,7 @@
 
   </div>
 </section>
-
-  <x-footer
+    <x-footer
     brand="Fadlan"
     description="Full Stack Developer yang membangun aplikasi web modern dengan antarmuka responsif, backend yang terstruktur, dan pengelolaan data yang rapi."
     :links="[
@@ -172,5 +163,4 @@
         ['icon' => 'fa-brands fa-whatsapp', 'href' => 'https://wa.me/6282210732928'],
     ]"
   />
-</body>
-</html>
+@endsection
