@@ -1,0 +1,12 @@
+@extends('layouts.main')
+@section('title','Dashboard')
+<x-sidebar
+brand="Fadlan"
+:menus="[
+    ['label'=>'Overview','href'=>'/dashboard','icon'=>'fa-house'],
+    ['label'=>'Users','href'=>'/dashboard/users','icon'=>'fa-users'],
+    ['label'=>'Settings','href'=>'/dashboard/settings','icon'=>'fa-gear'],
+]"
+/>
+@section('content')
+@endsection

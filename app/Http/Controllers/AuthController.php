@@ -20,13 +20,13 @@ class AuthController extends Controller
         ]);
 
         if (
-            $data['email'] === 'admin@example.com' &&   
+            $data['email'] === 'admin@example.com' &&
             $data['password'] === '1234567'
         ) {
         $request->session()->put('is_login', true);
         $request->session()->put('user_email', $data['email']);
 
-            return redirect('/')
+            return redirect()->route('dashboard')
                 ->with('success', 'Login berhasil');
         }
 

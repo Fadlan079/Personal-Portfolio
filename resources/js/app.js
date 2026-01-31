@@ -1,12 +1,12 @@
 import './bootstrap';
+import htmx from 'htmx.org';
+window.htmx = htmx;
 import { heroAnimation } from './animations/hero';
-import { educationScrollAnimation } from './animations/education';
 import { heroRibbonAnimation } from './animations/hero';
 import { heroFloatingCards } from './animations/hero';
 import { heroIconParallax } from './animations/hero';
 import { navbarFloatAnimation } from "./animations/navbar";
 import { navbarScrollEffect } from "./animations/navbar";
-import { projectScrollAnimation } from "./animations/projects";
 
 const THEME_KEY = 'theme';
 const html = document.documentElement;
@@ -156,11 +156,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadLanguage(saved);
     updateLangIcon(saved);
     heroAnimation();
-    educationScrollAnimation();
     heroRibbonAnimation();
     heroFloatingCards();
     heroIconParallax();
     navbarFloatAnimation();
     navbarScrollEffect();
-    projectScrollAnimation();
 });

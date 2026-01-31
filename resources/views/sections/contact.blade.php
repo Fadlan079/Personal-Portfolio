@@ -6,11 +6,10 @@
 
   <div class="grid lg:grid-cols-2 lg:grid-rows-2 gap-8">
 
-    <div class="lg:row-span-2 bg-surface border border-border rounded-2xl p-5">
+    <div class="lg:row-span-2 bg-bg border border-border rounded-2xl p-5">
       <h4 class="text-lg font-semibold mb-6" data-i18n="send.message"></h4>
 
       <form
-        action="{{ route('contact.send') }}"
         method="POST"
         class="space-y-4">
         @csrf
@@ -46,13 +45,7 @@
       </form>
     </div>
 
-    @if (session('success'))
-    <div class="text-green-500 text-sm">
-        {{ session('success') }}
-    </div>
-    @endif
-
-    <div class="bg-surface border border-border rounded-2xl p-6">
+    <div class="bg-bg border border-border rounded-2xl p-6">
         <h4 class="text-lg font-semibold mb-5" data-i18n="social.media">
         </h4>
 

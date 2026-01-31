@@ -4,30 +4,27 @@
 <x-navbar
 brand="Fadlan"
 :menus="[
-    ['key' => 'nav.home', 'href' => '#home'],
+    ['key' => 'nav.home', 'href' => '/'],
     ['key' => 'nav.about', 'href' => '#about'],
-    ['key' => 'nav.skills', 'href' => '#skills'],
-    ['key' => 'nav.experience', 'href' => '#experience'],
     ['key' => 'nav.projects', 'href' => '#projects'],
-    ['key' => 'nav.education', 'href' => '#education'],
     ['key' => 'nav.contact', 'href' => '#contact'],
 ]"
 />
 
 <main>
-<section id="home" class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden z-10">@include('sections.hero')</section>
+@include('sections.hero')
 
-<section id="about" class="py-20 bg-surface ">@include('sections.about')</section>
+{{-- <section id="about" class="py-20 bg-surface ">@include('sections.about')</section> --}}
 
-<section id="skills" class="py-20 bg-bg">@include('sections.skills')</section>
+{{-- <section id="skills" class="py-20 bg-bg">@include('sections.skills')</section>
 
-<section id="experience" class="py-20 bg-bg">@include('sections.experience')</section>
+<section id="experience" class="py-20 bg-bg">@include('sections.experience')</section> --}}
 
-<section id="projects" class="py-20 bg-surface">@include('sections.project')</section>
+{{-- <section id="projects" class="py-20 bg-bg">@include('sections.project')</section> --}}
 
-<section id="education" class="py-24 bg-bg">@include('sections.education')</section>
+{{-- <section id="education" class="py-24 bg-bg">@include('sections.education')</section> --}}
 
-<section id="contact" class="py-24 bg-bg">@include('sections.contact')</section>
+{{-- <section id="contact" class="py-24 bg-surface">@include('sections.contact')</section> --}}
 </main>
 
 <x-footer
@@ -35,10 +32,7 @@ brand="Fadlan"
 :links="[
     ['key' => 'nav.home', 'href' => '#home'],
     ['key' => 'nav.about', 'href' => '#about'],
-    ['key' => 'nav.skills', 'href' => '#skills'],
-    ['key' => 'nav.experience', 'href' => '#experience'],
     ['key' => 'nav.projects', 'href' => '#projects'],
-    ['key' => 'nav.education', 'href' => '#education'],
     ['key' => 'nav.contact', 'href' => '#contact'],
 ]"
 :socials="[

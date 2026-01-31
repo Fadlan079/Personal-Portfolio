@@ -102,6 +102,18 @@ public function index()
                 ],
             ];
         $featuredProjects = array_slice($list, 0, 3);
-        return view('portofolio', compact('featuredProjects'));
+        return view('pages.home', compact('featuredProjects'));
+    }
+
+    public function Showabout(){
+        return view('pages.about');
+    }
+
+    public function Showproject(){
+        return view('pages.project');
+    }
+
+    public function Showcontact(){
+        return view('pages.contact');
     }
 }

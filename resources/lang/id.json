@@ -1,5 +1,9 @@
 {
     "title.portfolio": "Portofolio",
+    "title.about": "Tentang",
+    "title.contact": "kontak",
+    "title.project": "Proyek",
+
     "nav.home": "Beranda",
     "nav.about": "Tentang",
     "nav.skills": "Keahlian",

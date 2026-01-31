@@ -10,56 +10,6 @@
         <form action="/login" method="post" class="space-y-4">
             @csrf
 
-                @if (session('error'))
-    <div
-        id="success-alert"
-        class="fixed top-6 right-6 z-50
-            flex items-center gap-3
-            px-4 py-3
-            max-w-sm
-            bg-primary text-text
-            shadow-lg backdrop-blur
-            text-sm
-            animate-slide-in">
-        <span class="font-medium">
-            {{ session('error') }}
-        </span>
-
-        <button
-            onclick="closeAlert()"
-            class="ml-auto text-white/80 hover:text-white">
-            ✕
-        </button>
-    </div>
-
-    <script>
-        const alertEl = document.getElementById('success-alert');
-
-        function closeAlert() {
-            alertEl.classList.add('opacity-0', 'translate-x-4');
-            setTimeout(() => alertEl.remove(), 300);
-        }
-
-        setTimeout(closeAlert, 3000);
-    </script>
-
-    <style>
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(16px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    .animate-slide-in {
-        animation: slideIn 0.4s ease-out;
-    }
-    </style>
-    @endif
             <div>
                 <label class="block text-sm mb-1 text-muted">Email</label>
 
@@ -100,11 +50,11 @@
                     required
                 >
             </div>
-<p class="text-xs text-muted mb-6">
-    Akun demo:
-    <span class="font-medium text-text">admin@example.com</span> /
-    <span class="font-medium text-text">1234567</span>
-</p>
+            <p class="text-xs text-muted mb-6">
+                Akun demo:
+                <span class="font-medium text-text">admin@example.com</span> /
+                <span class="font-medium text-text">1234567</span>
+            </p>
 
             <div class="flex flex-col gap-4 flex-wrap text-center justify-center text-md">
                 <div class="flex justify-center">

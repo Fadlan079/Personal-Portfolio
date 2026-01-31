@@ -2,14 +2,14 @@
   <div class="max-w-6xl mx-auto px-6">
 
     <!-- HEADER -->
-    <div class="education-header mb-16 text-center">
+    <div class="mb-16 text-center">
       <h3
-        class="education-title text-4xl font-extrabold text-primary"
+        class="text-4xl font-extrabold text-primary"
         data-i18n="education">
       </h3>
 
       <p
-        class="education-subtitle text-muted mt-3 max-w-2xl mx-auto"
+        class="text-muted mt-3 max-w-2xl mx-auto"
         data-i18n="subtitle.education">
       </p>
     </div>
@@ -19,18 +19,18 @@
 
       <!-- LINE -->
       <div
-        class="education-line absolute z-0 left-4 md:left-1/2 top-0 h-full w-0.5
+        class="absolute z-0 left-4 md:left-1/2 top-0 h-full w-0.5
                bg-border md:-translate-x-1/2">
       </div>
 
       <!-- ITEMS -->
-      <div class="education-list space-y-14">
+      <div class="space-y-14">
 
         <!-- ITEM 1 -->
-        <div class="education-item grid md:grid-cols-2 gap-8 items-start">
+        <div class="grid md:grid-cols-2 gap-8 items-start">
           <div class="md:text-right">
             <div
-              class="education-card bg-bg border border-border rounded-2xl p-6
+              class="bg-bg border border-border rounded-2xl p-6
                      hover:-translate-y-1 transition inline-block">
 
               <div class="flex md:justify-end flex-wrap items-center gap-3 mb-2">
@@ -58,12 +58,12 @@
         </div>
 
         <!-- ITEM 2 -->
-        <div class="education-item grid md:grid-cols-2 gap-8 items-start">
+        <div class=" grid md:grid-cols-2 gap-8 items-start">
           <div class="relative hidden md:block"></div>
 
           <div>
             <div
-              class="education-card bg-bg border border-border rounded-2xl p-6
+              class="bg-bg border border-border rounded-2xl p-6
                      hover:-translate-y-1 transition">
 
               <h4
@@ -84,10 +84,10 @@
         </div>
 
         <!-- ITEM 3 -->
-        <div class="education-item grid md:grid-cols-2 gap-8 items-start">
+        <div class="grid md:grid-cols-2 gap-8 items-start">
           <div class="md:text-right">
             <div
-              class="education-card bg-bg border border-border rounded-2xl p-6
+              class=" bg-bg border border-border rounded-2xl p-6
                      hover:-translate-y-1 transition inline-block">
 
               <h4

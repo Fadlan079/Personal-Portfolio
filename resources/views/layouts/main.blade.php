@@ -48,6 +48,11 @@
         );
         }
 
+        ::selection {
+            background: var(--color-primary);
+            color: var(--color-text);
+        }
+
         .cta-bubble {
             position: absolute;
             top: 60%;
@@ -65,62 +70,11 @@
     </style>
 </head>
 <body class="bg-bg text-text overflow-x-hidden">
-
-    @if (session('success'))
-    <div
-        id="success-alert"
-        class="fixed top-6 right-6 z-50
-            flex items-center gap-3
-            px-4 py-3
-            max-w-sm
-            bg-success text-text
-            shadow-lg backdrop-blur
-            text-sm
-            animate-slide-in">
-        <span class="font-medium">
-            {{ session('success') }}
-        </span>
-
-        <button
-            onclick="closeAlert()"
-            class="ml-auto text-white/80 hover:text-white">
-            ✕
-        </button>
-    </div>
-
-    <script>
-        const alertEl = document.getElementById('success-alert');
-
-        function closeAlert() {
-            alertEl.classList.add('opacity-0', 'translate-x-4');
-            setTimeout(() => alertEl.remove(), 300);
-        }
-
-        setTimeout(closeAlert, 3000);
-    </script>
-
-    <style>
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateX(16px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    .animate-slide-in {
-        animation: slideIn 0.4s ease-out;
-    }
-    </style>
-    @endif
+    <x-global-modal />
 
     <main>
         @yield('content')
     </main>
-
 
     @yield('script')
     @vite(['resources/js/app.js'])

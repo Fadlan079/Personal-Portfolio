@@ -4,8 +4,10 @@
   will-change: transform;
 }
 </style>
+
 <nav class="nav-float fixed top-6 left-1/2 -translate-x-1/2
     w-[calc(100%-2rem)] max-w-5xl
+    md:w-[90%] md:max-w-3xl
 
 bg-white/70 dark:bg-black/40
 backdrop-blur-xl
@@ -125,6 +127,32 @@ class="w-9 h-9 rounded-full
 </a>
 
     @endforeach
+        <div class="flex justify-center">
+            @if (!session('is_login'))
+                <a
+                    href="/login"
+                    class="w-full cta-btn relative overflow-hidden px-4 py-2
+                        border-2 border-border text-text font-semibold"
+                    style="--cta-bubble-color: var(--color-primary);">
+
+                    <span class="cta-bubble"></span>
+                    <span class="cta-text relative z-10">Login</span>
+                </a>
+            @else
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button
+                        type="submit"
+                        class="w-full cta-btn relative overflow-hidden px-8 py-3
+                            border-2 border-border text-text font-semibold"
+                        style="--cta-bubble-color: #ef4444;">
+
+                        <span class="cta-bubble"></span>
+                        <span class="cta-text relative z-10">Logout</span>
+                    </button>
+                </form>
+            @endif
+        </div>
   </nav>
 </aside>
 

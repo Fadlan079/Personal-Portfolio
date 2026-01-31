@@ -104,5 +104,56 @@ export function heroIconParallax() {
         });
 
     });
+
+    const highlight = document.getElementById('btn-highlight');
+const buttons = document.querySelectorAll('.device-btn');
+
+// Set default ke tombol pertama
+let activeBtn = buttons[0];
+moveHighlight(activeBtn);
+
+// Event klik
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeBtn = btn;
+    moveHighlight(btn);
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Fungsi animasi highlight smooth
+function moveHighlight(btn) {
+  const parentRect = btn.parentElement.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+
+  const left = btnRect.left - parentRect.left;
+  const width = btnRect.width;
+
+  // GSAP smooth dengan duration lebih tinggi + ease
+  gsap.to(highlight, {
+    x: left,
+    width: width,
+    duration: 0.6,           // lebih lama = lebih smooth
+    ease: "power3.out"
+  });
 }
 
+}
+
+document.querySelectorAll(".cta-btn").forEach(btn => {
+    const bubble = btn.querySelector(".cta-bubble");
+    const text = btn.querySelector(".cta-text");
+
+    const tl = gsap.timeline({ paused: true });
+
+    tl.to(bubble, {
+        scale: 1,
+        y: "-35%",
+        duration: 0.55,
+        ease: "power4.out"
+    });
+
+    btn.addEventListener("mouseenter", () => tl.play());
+    btn.addEventListener("mouseleave", () => tl.reverse());
+});

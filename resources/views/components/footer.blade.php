@@ -19,7 +19,7 @@
 
         <div>
             <h4 class="font-semibold mb-4 text-text" data-i18n="quick.links"></h4>
-            <ul class="space-y-2 text-muted text-sm grid grid-cols-2">
+            <ul class="space-y-2 text-muted text-sm grid grid-cols-1">
                 @foreach ($links as $link)
                     <li>
                         <a href="{{ $link['href'] }}"
