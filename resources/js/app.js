@@ -1,9 +1,9 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
-Alpine.start();
 import htmx from 'htmx.org';
 window.htmx = htmx;
+
 import { heroAnimation } from './animations/hero';
 import { heroRibbonAnimation } from './animations/hero';
 import { heroFloatingCards } from './animations/hero';
@@ -12,6 +12,7 @@ import { navbarFloatAnimation } from "./animations/navbar";
 import { navbarScrollEffect } from "./animations/navbar";
 import { aboutAnimation } from "./animations/about";
 import { projectAnimation } from "./animations/project";
+import { projectModalAnimation } from "./animations/project-modal";
 
 const THEME_KEY = 'theme';
 const html = document.documentElement;
@@ -51,7 +52,7 @@ function updateIcon(theme) {
 }
 
 function initTheme() {
-    const savedTheme = localStorage.getItem(THEME_KEY);
+    const savedTheme = localStorage .getItem(THEME_KEY);
 
     if (savedTheme === 'light' || savedTheme === 'dark') {
         applyTheme(savedTheme);
@@ -140,6 +141,65 @@ function updateLangIcon(currentLocale) {
     }
 }
 
+window.tagInput = function (suggestions) {
+    return {
+        input: '',
+        tags: [],
+        filtered: [],
+
+        search() {
+            const query = this.input.replace('#','').toLowerCase()
+
+            this.filtered = suggestions.filter(item =>
+                item.toLowerCase().includes(query)
+            ).slice(0,5)
+        },
+
+        addTag(tag) {
+            tag = tag.replace('#','').toLowerCase()
+
+            if (!this.tags.includes(tag) && tag.trim() !== '') {
+                this.tags.push(tag)
+            }
+
+            this.input = ''
+            this.filtered = []
+        },
+
+        removeTag(index) {
+            this.tags.splice(index,1)
+        }
+    }
+}
+
+window.imageUpload = function () {
+    return {
+        images: [],
+
+        handleFiles(event) {
+            const files = Array.from(event.target.files);
+
+            for (let file of files) {
+                if (this.images.length >= 8) break;
+
+                this.images.push({
+                    file: file,
+                    url: URL.createObjectURL(file)
+                });
+            }
+
+        },
+
+        removeImage(index) {
+            this.images.splice(index, 1);
+        }
+    }
+}
+
+Alpine.start()
+
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('nav a[href^="#"]');
@@ -177,4 +237,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     try { navbarScrollEffect(); } catch(e){ console.warn(e) }
     try { aboutAnimation(); } catch(e){ console.warn(e) }
     try { projectAnimation(); } catch(e){ console.warn(e) }
+    try { projectModalAnimation(); } catch(e){ console.warn(e) }
 });

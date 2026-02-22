@@ -175,18 +175,6 @@
             @endforelse
         </div>
     </section>
-
-    {{-- ACTIVITY --}}
-    <section class="py-24 max-w-6xl mx-auto px-8 space-y-6">
-        <p class="text-xs uppercase tracking-widest text-muted">
-            index / activity
-        </p>
-
-        <p class="text-sm text-muted">
-            Last update · 2 days ago
-        </p>
-    </section>
-
 </div>
 
 @endsection

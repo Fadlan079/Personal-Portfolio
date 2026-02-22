@@ -7,7 +7,7 @@
          shadow-[20px_0_40px_rgba(0,0,0,0.12)]
          transition-transform duration-300
          -translate-x-full md:translate-x-0
-         z-999 rounded-r-2xl
+         z-50 rounded-r-2xl
          flex flex-col">
 
   <!-- Header -->
@@ -40,7 +40,6 @@
         class="w-full px-4 py-2 rounded-xl
                text-red-500 hover:bg-red-500/10
                transition flex items-center gap-2">
-        <i class="fa-solid fa-right-from-bracket"></i>
         Logout
       </button>
     </form>

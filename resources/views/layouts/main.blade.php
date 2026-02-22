@@ -108,10 +108,10 @@
     <x-navbar
     brand="Fadlan"
     :menus="[
-        ['key' => 'nav.home', 'href' => route('Home')],
-        ['key' => 'nav.about', 'href' => route('About')],
-        ['key' => 'nav.projects', 'href' => route('Project')],
-        ['key' => 'nav.contact', 'href' => route('Contact')],
+        ['key' => 'nav.home', 'href' => route('portofolio.home')],
+        ['key' => 'nav.about', 'href' => route('portofolio.about')],
+        ['key' => 'nav.projects', 'href' => route('portofolio.project')],
+        ['key' => 'nav.contact', 'href' => route('portofolio.contact')],
     ]"
     />
 
@@ -123,10 +123,10 @@
     <x-footer
     brand="Fadlan"
     :links="[
-        ['key' => 'nav.home', 'href' => route('Home')],
-        ['key' => 'nav.about', 'href' => route('About')],
-        ['key' => 'nav.projects', 'href' => route('Project')],
-        ['key' => 'nav.contact', 'href' => route('Contact')],
+        ['key' => 'nav.home', 'href' => route('portofolio.home')],
+        ['key' => 'nav.about', 'href' => route('portofolio.about')],
+        ['key' => 'nav.projects', 'href' => route('portofolio.project')],
+        ['key' => 'nav.contact', 'href' => route('portofolio.contact')],
     ]"
     :socials="[
         ['icon' => 'fa-brands fa-github', 'href' => 'https://github.com/Fadlan079'],

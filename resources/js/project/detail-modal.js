@@ -1,11 +1,21 @@
+/* =========================
+   ELEMENT SELECTOR
+========================= */
+
 const detailModal = document.getElementById('projectDetailModal');
-const detailClose = document.getElementById('detailModalClose');
+const screenshotContainer = document.getElementById('detailScreenshots');
+const lightboxClose = document.getElementById('lightboxClose');
+
+
+/* =========================
+   OPEN DETAIL MODAL
+========================= */
 
 document.querySelectorAll('.project-open').forEach(card => {
 
     card.addEventListener('click', () => {
-
-        // Basic
+        detailModal.dataset.id = card.dataset.id;
+        // ===== Basic Info =====
         document.getElementById('detailType').textContent = card.dataset.type;
         document.getElementById('detailStatus').textContent = card.dataset.status;
         document.getElementById('detailTitle').textContent = card.dataset.title;
@@ -17,14 +27,13 @@ document.querySelectorAll('.project-open').forEach(card => {
         document.getElementById('detailCreated').textContent = card.dataset.created;
         document.getElementById('detailUpdated').textContent = card.dataset.updated;
 
-        // Tech stack
+        // ===== Tech Stack =====
         const techContainer = document.getElementById('detailTech');
         techContainer.innerHTML = '';
 
         if (card.dataset.tech) {
             try {
                 const techs = JSON.parse(card.dataset.tech);
-
                 techs.forEach(t => {
                     techContainer.innerHTML += `
                         <span class="px-2 py-1 text-xs border border-border">
@@ -32,128 +41,91 @@ document.querySelectorAll('.project-open').forEach(card => {
                         </span>
                     `;
                 });
-            } catch (e) {
+            } catch {
                 techContainer.innerHTML = '-';
             }
         }
 
-        // Screenshots
+        // ===== Screenshots =====
         const wrapper = document.getElementById('detailScreenshotsWrapper');
-        const container = document.getElementById('detailScreenshots');
-        container.innerHTML = '';
+        screenshotContainer.innerHTML = '';
 
         if (card.dataset.screenshot) {
-try {
-    const images = JSON.parse(card.dataset.screenshot || "[]");
+            try {
+                const images = JSON.parse(card.dataset.screenshot);
 
-    if (images.length > 0) {
-        images.forEach(img => {
-            container.innerHTML += `
-            <div class="aspect-video overflow-hidden border border-border/50 bg-surface/40 group">
-                <img src="${img}"
-                    class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
-            </div>
-            `;
-        });
+                if (images.length > 0) {
 
-        wrapper.classList.remove('hidden');
-    } else {
-        wrapper.classList.add('hidden');
-    }
+                    images.forEach(img => {
+                        screenshotContainer.innerHTML += `
+                        <div class="aspect-video overflow-hidden border border-border/50 bg-surface/40 group">
+                            <img src="${img}"
+                                class="w-full h-full object-cover transition duration-500 group-hover:scale-105 cursor-pointer">
+                        </div>
+                        `;
+                    });
 
-} catch (e) {
-    wrapper.classList.add('hidden');
-}
+                    wrapper.classList.remove('hidden');
+
+                } else {
+                    wrapper.classList.add('hidden');
+                }
+
+            } catch {
+                wrapper.classList.add('hidden');
+            }
         } else {
             wrapper.classList.add('hidden');
         }
 
-        // Live & Repo
+        // ===== Links =====
         const live = document.getElementById('detailLive');
         const repo = document.getElementById('detailRepo');
 
-        if (card.dataset.live) {
-            live.href = card.dataset.live;
-            live.classList.remove('hidden');
-        } else {
-            live.classList.add('hidden');
-        }
+        card.dataset.live
+            ? (live.href = card.dataset.live, live.classList.remove('hidden'))
+            : live.classList.add('hidden');
 
-        if (card.dataset.repo) {
-            repo.href = card.dataset.repo;
-            repo.classList.remove('hidden');
-        } else {
-            repo.classList.add('hidden');
-        }
+        card.dataset.repo
+            ? (repo.href = card.dataset.repo, repo.classList.remove('hidden'))
+            : repo.classList.add('hidden');
 
-        detailModal.classList.remove('hidden');
-        detailModal.classList.add('flex');
+        // ===== OPEN MODAL =====
+        window.openProjectModal();
         document.body.classList.add('overflow-hidden');
     });
 
 });
 
-// EDIT BUTTON HANDLER
-const editBtn = document.getElementById('detailEditBtn');
 
-if (editBtn) {
+/* =========================
+   LIGHTBOX TRIGGER
+========================= */
 
-    editBtn.onclick = () => {
-
-        const project = JSON.parse(detailModal.dataset.project);
-
-        closeDetailModal();
-
-        openEditModal({
-            id: project.id,
-            title: project.title,
-            desc: project.desc,
-            repo: project.repo,
-            live: project.live
-        });
-
-    };
-
-}
-
-
-function closeDetailModal() {
-    detailModal.classList.add('hidden');
-    detailModal.classList.remove('flex');
-    document.body.classList.remove('overflow-hidden');
-}
-
-detailClose.addEventListener('click', closeDetailModal);
-
-detailModal.addEventListener('click', (e) => {
-    if (e.target === detailModal) closeDetailModal();
-});
-
-// LIGHTBOX
-const lightbox = document.getElementById('imageLightbox');
-const lightboxImg = document.getElementById('lightboxImage');
-const lightboxClose = document.getElementById('lightboxClose');
-
-// pakai event delegation karena gambar dibuat dynamic
-document.addEventListener('click', function (e) {
-
-    if (e.target.matches('#detailScreenshots img')) {
-        lightboxImg.src = e.target.src;
-        lightbox.classList.remove('hidden');
-        lightbox.classList.add('flex');
-        document.body.classList.add('overflow-hidden');
+screenshotContainer?.addEventListener('click', (e) => {
+    if (e.target.tagName === "IMG") {
+        window.openLightbox(e.target.src);
     }
-
 });
 
-function closeLightbox() {
-    lightbox.classList.add('hidden');
-    lightbox.classList.remove('flex');
-    document.body.classList.remove('overflow-hidden');
+lightboxClose?.addEventListener('click', () => {
+    window.closeLightbox();
+});
+
+const deleteBtn = document.getElementById('detailDeleteBtn');
+const deleteForm = document.getElementById('deleteProjectForm');
+
+if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+
+        const projectId = detailModal.dataset.id;
+
+        if (!projectId) return;
+
+        if (confirm('Yakin mau hapus project ini?')) {
+
+            deleteForm.action = `/dashboard/projects/${projectId}`;
+            deleteForm.submit();
+        }
+    });
 }
-
-lightboxClose.addEventListener('click', closeLightbox);
-
-lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
-});

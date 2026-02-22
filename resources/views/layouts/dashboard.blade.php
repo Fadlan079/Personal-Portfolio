@@ -86,10 +86,11 @@
     <x-sidebar
         brand="Fadlan"
         :menus="[
-        ['label' => 'Dashboard', 'href' => route('dashboard')],
-        ['label' => 'Project', 'href' => route('projects.index')],
-        ['label' => 'Setting', 'href' => route('dashboard')],
-        ['label' => 'Account', 'href' => route('dashboard')],
+        ['label' => 'Dashboard', 'href' => route('dashboard.home')],
+        ['label' => 'Project', 'href' => route('dashboard.projects.index')],
+        ['label' => 'Trash', 'href' => route('dashboard.trash')],
+        ['label' => 'Setting', 'href' => route('dashboard.home')],
+        ['label' => 'Account', 'href' => route('dashboard.home')],
         ]"
     />
 
@@ -99,6 +100,6 @@
         @yield('content')
     </main>
 
-    @yield('script')
+    @stack('scripts')
 </body>
 </html>

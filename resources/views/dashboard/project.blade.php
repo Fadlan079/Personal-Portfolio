@@ -208,22 +208,28 @@
                     <span class="file"></span>
                     <span class="file"></span>
 
-                    <a href="javascript:void(0)"
-                    class="file file-front pointer-events-auto p-5 flex flex-col gap-3 project-open"
-                        data-id="{{ $project->id }}"
-                        data-title="{{ $project->title }}"
-                        data-desc="{{ $project->desc }}"
-                        data-type="{{ $project->type }}"
-                        data-status="{{ $project->status }}"
-                        data-created="{{ $project->created_at->format('d M Y') }}"
-                        data-updated="{{ $project->updated_at->format('d M Y') }}"
-                        data-repo="{{ $project->repo }}"
-                        data-role="{{ $project->role }}"
-                        data-team="{{ $project->team_size }}"
-                        data-responsibilities="{{ $project->responsibilities }}"
-                        data-live="{{ $project->live_url }}"
-                        data-screenshot='@json($project->screenshot)'
-                        data-tech='@json($project->tech)'>
+                       <a href="javascript:void(0)"
+                        class="file file-front pointer-events-auto p-5 flex flex-col gap-3 project-open"
+                            data-id="{{ $project->id }}"
+                            data-title="{{ $project->title }}"
+                            data-desc="{{ $project->desc }}"
+                            data-type="{{ $project->type }}"
+                            data-status="{{ $project->status }}"
+                            data-created="{{ $project->created_at->format('d M Y') }}"
+                            data-updated="{{ $project->updated_at->format('d M Y') }}"
+                            data-repo="{{ $project->repo }}"
+                            data-role="{{ $project->role }}"
+                            data-team="{{ $project->team_size }}"
+                            data-responsibilities="{{ $project->responsibilities }}"
+                            data-live="{{ $project->live_url }}"
+                            data-screenshot='@json(
+                                $project->screenshot
+                                    ? collect($project->screenshot)
+                                        ->map(fn($img) => asset("storage/".$img))
+                                        ->values()
+                                    : []
+                            )'
+                            data-tech='@json($project->tech)'>
 
                         <div>
                             <h3 class="text-xl font-semibold leading-tight">
@@ -298,27 +304,13 @@
     </div>
     @endif
 </section>
-
-<section
-  class="py-28 max-w-7xl mx-auto px-6 space-y-6">
-
-  <p class="text-xs uppercase tracking-widest text-muted">
-    index / activity
-  </p>
-
-  <p class="text-sm text-muted">
-    Last update · 2 days ago
-  </p>
-</section>
-
+@endsection
 
 <x-project.detail-modal />
 
 <x-project.edit-modal />
 
-<x-project.create-modal />
-@endsection
-
+<x-project.create-modal :technologies="$technologies" />
 @section('script')
 @vite([
 'resources/js/project/detail-modal.js',

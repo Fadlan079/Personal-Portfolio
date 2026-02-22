@@ -1,5 +1,4 @@
 <style>
-    /* Hide Scrollbar Elegant */
 .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -11,9 +10,8 @@
 
 </style>
 
-<!-- PROJECT DETAIL MODAL -->
 <div id="projectDetailModal"
-     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+     class="fixed inset-0 z-70 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
 
     <div class="relative bg-surface border border-border
                 w-full max-w-3xl
@@ -22,13 +20,11 @@
                 p-6
                 space-y-6">
 
-        <!-- Close Button -->
         <button id="detailModalClose"
                 class="absolute top-4 right-4 text-muted hover:text-text transition">
             ✕
         </button>
 
-        <!-- HEADER -->
         <div class="space-y-4">
 
             <div class="flex items-center gap-3">
@@ -52,7 +48,6 @@
 
         </div>
 
-        <!-- ROLE & TEAM -->
         <div class="grid grid-cols-2 gap-6 text-sm">
             <div>
                 <p class="text-muted uppercase tracking-wide text-xs">Role</p>
@@ -65,7 +60,6 @@
             </div>
         </div>
 
-        <!-- RESPONSIBILITIES -->
         <div>
             <p class="text-muted uppercase tracking-wide text-xs">Responsibilities</p>
             <p id="detailResponsibilities"
@@ -74,7 +68,6 @@
 
         <div class="h-px bg-border w-full opacity-40"></div>
 
-        <!-- META -->
         <div class="grid grid-cols-2 gap-6 text-sm">
             <div>
                 <p class="text-muted uppercase tracking-wide text-xs">Created</p>
@@ -87,25 +80,14 @@
             </div>
         </div>
 
-        <!-- PROJECT FILES -->
         <div id="detailScreenshotsWrapper" class="hidden space-y-3">
             <p class="text-muted uppercase tracking-wide text-xs">Project Files</p>
 
             <div id="detailScreenshots"
                  class="grid grid-cols-2 md:grid-cols-4 gap-3">
-
-                <!-- Example Item (JS will generate this dynamically) -->
-                <!--
-                <div class="aspect-square overflow-hidden border border-border/50 bg-surface/40 group">
-                    <img src="..."
-                         class="w-full h-full object-cover transition duration-500 group-hover:scale-105">
-                </div>
-                -->
-
             </div>
         </div>
 
-        <!-- ACTIONS -->
         <div class="flex flex-wrap gap-3 pt-4">
 
             <a id="detailLive"
@@ -119,27 +101,36 @@
                class="px-4 py-2 border border-border text-sm hover:border-primary transition">
                 View Repository
             </a>
+            @if(request()->routeIs('dashboard.*'))
+                @auth
+                    <button id="detailEditBtn"
+                            class="px-4 py-2 border border-border text-sm hover:border-primary transition">
+                        Edit Project
+                    </button>
 
-            @auth
-                <button id="detailEditBtn"
-                        class="px-4 py-2 border border-border text-sm hover:border-primary transition">
-                    Edit Project
-                </button>
-            @endauth
-
+                    <button id="detailDeleteBtn" 
+                            class="px-4 py-2 border border-danger text-danger text-sm hover:bg-danger/50 hover:text-text transition">
+                        Delete Project
+                    </button>
+                @endauth
+            @endif
         </div>
-
     </div>
 </div>
 
 <div id="imageLightbox"
-     class="fixed inset-0 z-60 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-6">
+     class="fixed inset-0 z-90 hidden items-center justify-center bg-bg/80 backdrop-blur-sm p-6">
 
     <button id="lightboxClose"
-            class="absolute top-6 right-6 text-white text-2xl">
+            class="absolute top-6 right-6 text-text text-2xl">
         ✕
     </button>
 
     <img id="lightboxImage"
          class="max-h-[90vh] max-w-[90vw] object-contain shadow-2xl">
 </div>
+
+<form id="deleteProjectForm" method="POST" style="display:none;">
+    @csrf
+    @method('DELETE')
+</form>

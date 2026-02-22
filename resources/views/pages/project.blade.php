@@ -215,9 +215,9 @@
   </div>
 </section>
 
-<x-project.detail-modal />
-
 @endsection
+
+<x-project.detail-modal />
 
 @section('script')
 @vite(['resources/js/project/filters.js','resources/js/project/detail-modal.js',])
