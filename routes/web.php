@@ -31,14 +31,17 @@ Route::middleware(['auth', 'verified'])
             [ProjectController::class, 'bulkForceDelete'])
             ->name('bulkForceDelete');
 
+        Route::get('account', [ProfileController::class, 'edit'])
+        ->name('account.edit');
+
+        Route::patch('account', [ProfileController::class, 'update'])
+            ->name('account.update');
+
+        Route::delete('account', [ProfileController::class, 'destroy'])
+            ->name('account.destroy');
+
         Route::resource('projects', ProjectController::class)->except(['show']);
     });
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
 require __DIR__.'/auth.php';
 

@@ -145,7 +145,6 @@ class ProjectController extends Controller
                 $query->where('title', 'like', "%{$search}%");
             }
 
-            // Gunakan multipleSelect untuk ambil semua data tanpa pagination
             if ($multipleSelect) {
                 $projects = $query->get();
             } else {

@@ -12,7 +12,7 @@
         class="py-32 max-w-6xl mx-auto px-8 space-y-10 overflow-hidden">
 
         <p class="text-xs uppercase tracking-widest text-muted">
-            Index / dashboard
+            dashboard / overview
         </p>
 
         <h1 class="text-[clamp(3rem,7vw,6rem)] font-semibold leading-[1.1]">

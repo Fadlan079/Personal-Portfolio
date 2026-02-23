@@ -83,16 +83,41 @@
 </head>
 
 <body id="mainBody"  class="bg-bg text-text overflow-x-hidden">
-    <x-sidebar
-        brand="Fadlan"
-        :menus="[
-        ['label' => 'Dashboard', 'href' => route('dashboard.home')],
-        ['label' => 'Project', 'href' => route('dashboard.projects.index')],
-        ['label' => 'Trash', 'href' => route('dashboard.trash')],
-        ['label' => 'Setting', 'href' => route('dashboard.home')],
-        ['label' => 'Account', 'href' => route('dashboard.home')],
-        ]"
-    />
+<x-sidebar
+    brand="Fadlan"
+    :menus="[
+        [
+            'label' => 'Overview',
+            'href'  => route('dashboard.home'),
+            'route' => 'dashboard.home',
+            'icon'  => 'fa-solid fa-house'
+        ],
+        [
+            'label' => 'Project',
+            'href'  => route('dashboard.projects.index'),
+            'route' => 'dashboard.projects.*',
+            'icon'  => 'fa-solid fa-folder'
+        ],
+        [
+            'label' => 'Trash',
+            'href'  => route('dashboard.trash'),
+            'route' => 'dashboard.trash',
+            'icon'  => 'fa-solid fa-trash'
+        ],
+        // [
+        //     'label' => 'Setting',
+        //     'href'  => route('dashboard.settings'),
+        //     'route' => 'dashboard.settings*',
+        //     'icon'  => 'fa-solid fa-gear'
+        // ],
+        [
+            'label' => 'Account',
+            'href'  => route('dashboard.account.edit'),
+            'route' => 'dashboard.account*',
+            'icon'  => 'fa-solid fa-user'
+        ],
+    ]"
+/>
 
     <x-global-modal />
 

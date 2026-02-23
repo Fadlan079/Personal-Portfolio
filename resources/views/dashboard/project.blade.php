@@ -12,7 +12,7 @@
         <div class="space-y-6 max-w-2xl">
 
             <p class="text-xs uppercase tracking-widest text-muted">
-                Index / Projects
+                dashboard / Projects
             </p>
 
             <h1 class="text-[clamp(3rem,7vw,5.5rem)] font-semibold leading-[1.05]">

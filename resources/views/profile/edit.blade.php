@@ -1,29 +1,45 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.dashboard')
+@section('title', 'Account Settings')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('content')
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+<section class="py-20 max-w-4xl mx-auto px-6 space-y-16">
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
+    <!-- Header -->
+    <header class="space-y-6 max-w-4xl">
+        <p class="text-xs uppercase tracking-widest text-muted">
+            dashboard / account
+        </p>
+
+        <h1 class="text-[clamp(2.5rem,6vw,3.5rem)] font-semibold leading-tight">
+            Account Settings
+            <span class="block text-muted font-normal text-lg mt-2">
+                Manage your profile information and security
+            </span>
+        </h1>
+    </header>
+
+    <!-- Profile Information -->
+    <div class="border border-border bg-surface p-8 space-y-6">
+        <div class="max-w-xl">
+            @include('profile.partials.update-profile-information-form')
         </div>
     </div>
-</x-app-layout>
+
+    <!-- Update Password -->
+    <div class="border border-border bg-surface p-8 space-y-6">
+        <div class="max-w-xl">
+            @include('profile.partials.update-password-form')
+        </div>
+    </div>
+
+    <!-- Delete Account -->
+    <div class="border border-red-500/40 bg-surface p-8 space-y-6">
+        <div class="max-w-xl">
+            @include('profile.partials.delete-user-form')
+        </div>
+    </div>
+
+</section>
+
+@endsection

@@ -7,7 +7,7 @@
 
     <header class="space-y-6 max-w-6xl">
         <p class="text-xs uppercase tracking-widest text-muted">
-            dashboard / projects / trash
+            dashboard / trash
         </p>
 
         <h1 class="text-[clamp(2.5rem,6vw,4rem)] font-semibold leading-tight">
@@ -179,29 +179,29 @@
                         </div>
                     @endforeach
 
-@if(!$multipleSelect && $projects instanceof \Illuminate\Pagination\LengthAwarePaginator)
-    <div class="pt-6">
-        <div class="flex justify-center">
-            <nav class="flex items-center gap-2 text-sm">
-                @if ($projects->onFirstPage())
-                    <span class="px-3 py-2 text-muted border border-border">Prev</span>
-                @else
-                    <a href="{{ $projects->previousPageUrl() }}" class="px-3 py-2 border border-border hover:border-primary">Prev</a>
-                @endif
+                    @if(!$multipleSelect && $projects instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                        <div class="pt-6">
+                            <div class="flex justify-center">
+                                <nav class="flex items-center gap-2 text-sm">
+                                    @if ($projects->onFirstPage())
+                                        <span class="px-3 py-2 text-muted border border-border">Prev</span>
+                                    @else
+                                        <a href="{{ $projects->previousPageUrl() }}" class="px-3 py-2 border border-border hover:border-primary">Prev</a>
+                                    @endif
 
-                <span class="px-4 py-2 border border-border">
-                    {{ $projects->currentPage() }} / {{ $projects->lastPage() }}
-                </span>
+                                    <span class="px-4 py-2 border border-border">
+                                        {{ $projects->currentPage() }} / {{ $projects->lastPage() }}
+                                    </span>
 
-                @if ($projects->hasMorePages())
-                    <a href="{{ $projects->nextPageUrl() }}" class="px-3 py-2 border border-border hover:border-primary">Next</a>
-                @else
-                    <span class="px-3 py-2 text-muted border border-border">Next</span>
-                @endif
-            </nav>
-        </div>
-    </div>
-@endif
+                                    @if ($projects->hasMorePages())
+                                        <a href="{{ $projects->nextPageUrl() }}" class="px-3 py-2 border border-border hover:border-primary">Next</a>
+                                    @else
+                                        <span class="px-3 py-2 text-muted border border-border">Next</span>
+                                    @endif
+                                </nav>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         @empty
