@@ -196,6 +196,12 @@
             'route' => 'dashboard.trash',
             'icon'  => 'fa-solid fa-trash'
         ],
+        [
+            'label' => 'Skills',
+            'href'  => route('dashboard.skills.index'),
+            'route' => 'dashboard.skills.*',
+            'icon'  => 'fa-solid fa-code-branch'
+        ],
         // [
         //     'label' => 'Setting',
         //     'href'  => route('dashboard.settings'),

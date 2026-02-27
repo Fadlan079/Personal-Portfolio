@@ -205,7 +205,7 @@
     :menus="[
         ['key' => 'nav.home', 'href' => route('portofolio.home')],
         ['key' => 'nav.about', 'href' => route('portofolio.about')],
-        ['key' => 'nav.projects', 'href' => route('portofolio.project')],
+        ['key' => 'nav.projects', 'href' => route('portofolio.projects')],
         ['key' => 'nav.contact', 'href' => route('portofolio.contact')],
     ]"
     />
@@ -220,7 +220,7 @@
     :links="[
         ['key' => 'nav.home', 'href' => route('portofolio.home')],
         ['key' => 'nav.about', 'href' => route('portofolio.about')],
-        ['key' => 'nav.projects', 'href' => route('portofolio.project')],
+        ['key' => 'nav.projects', 'href' => route('portofolio.projects')],
         ['key' => 'nav.contact', 'href' => route('portofolio.contact')],
     ]"
     :socials="[

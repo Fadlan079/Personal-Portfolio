@@ -33,7 +33,7 @@ class ProjectController extends Controller
         }
 
         $summary = Project::summary();
-        $technologies = Technology::pluck('name');
+        $technologies = \App\Models\Skill::pluck('name');
 
         return view('dashboard.project', compact(
             'projects',
@@ -45,7 +45,7 @@ class ProjectController extends Controller
 
     public function create()
     {
-        $technologies = Technology::pluck('name');
+        $technologies = \App\Models\Skill::pluck('name');
         return view('project.create', compact('technologies'));
     }
 
@@ -92,17 +92,18 @@ class ProjectController extends Controller
         }
 
         $techs = $validated['tech'] ?? [];
-
-        foreach ($techs as $tech) {
-            Technology::firstOrCreate([
-                'name' => strtolower($tech)
-            ]);
-        }
+        
+        $validSkills = \App\Models\Skill::whereIn('name', $techs)->get();
+        
+        // Update the tech JSON column to only include valid skills
+        $validated['tech'] = $validSkills->pluck('name')->toArray();
 
         $validated['screenshot'] = $screenshotPaths;
 
-
-        Project::create($validated);
+        $project = Project::create($validated);
+        
+        // Sync relations
+        $project->skills()->sync($validSkills->pluck('id'));
 
         return back()->with('success', 'Project created successfully.');
     }
@@ -147,13 +148,15 @@ class ProjectController extends Controller
 
         $techs = $validated['tech'] ?? [];
 
-        foreach ($techs as $tech) {
-            Technology::firstOrCreate([
-                'name' => strtolower($tech)
-            ]);
-        }
+        $validSkills = \App\Models\Skill::whereIn('name', $techs)->get();
+        
+        // Update the tech JSON column to only include valid skills (matching DB names)
+        $validated['tech'] = $validSkills->pluck('name')->toArray();
 
         $project->update($validated);
+        
+        // Sync relations for Many-to-Many
+        $project->skills()->sync($validSkills->pluck('id'));
 
         /*
         |--------------------------------------------------------------------------

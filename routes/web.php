@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified'])
         Route::get('/', [DashboardController::class, 'index'])
             ->name('home');
 
-        Route::get('projects/trash', [ProjectController::class, 'trash'])
+        Route::get('/trash', [\App\Http\Controllers\Dashboard\TrashController::class, 'index'])
             ->name('trash');
 
         Route::post('projects/restore/{id}', [ProjectController::class, 'restore'])
@@ -38,6 +38,19 @@ Route::middleware(['auth', 'verified'])
             [ProjectController::class, 'bulkForceDelete'])
             ->name('bulkForceDelete');
 
+        // Skills Trash
+        Route::post('skills/restore/{id}', [\App\Http\Controllers\Dashboard\TrashController::class, 'restoreSkill'])
+            ->name('skills.restore');
+
+        Route::delete('skills/force-delete/{id}', [\App\Http\Controllers\Dashboard\TrashController::class, 'forceDeleteSkill'])
+            ->name('skills.forceDelete');
+
+        Route::post('skills/bulk-restore', [\App\Http\Controllers\Dashboard\TrashController::class, 'bulkRestoreSkills'])
+            ->name('skills.bulkRestore');
+
+        Route::post('skills/bulk-force-delete', [\App\Http\Controllers\Dashboard\TrashController::class, 'bulkForceDeleteSkills'])
+            ->name('skills.bulkForceDelete');
+
         Route::get('account', [ProfileController::class, 'edit'])
             ->name('account.edit');
 
@@ -48,6 +61,7 @@ Route::middleware(['auth', 'verified'])
             ->name('account.destroy');
 
         Route::resource('projects', ProjectController::class)->except(['show']);
+        Route::resource('skills', \App\Http\Controllers\Dashboard\SkillController::class)->except(['show']);
     });
 
 require __DIR__.'/auth.php';
@@ -55,7 +69,7 @@ require __DIR__.'/auth.php';
 Route::name('portofolio.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/about', [HomeController::class, 'Showabout'])->name('about');
-    Route::get('/project', [HomeController::class, 'Showproject'])->name('project');
+    Route::get('/projects', [HomeController::class, 'Showproject'])->name('projects');
     Route::get('/contact', [HomeController::class, 'Showcontact'])->name('contact');
     Route::view('/test', 'pages.tes')->name('test');
 });

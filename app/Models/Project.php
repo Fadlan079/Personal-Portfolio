@@ -24,8 +24,14 @@ class Project extends Model
         'tech',
         'repo',
         'live_url',
+        'live_url',
         'screenshot',
     ];
+
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class);
+    }
 
     protected $casts = [
         'tech' => 'array',

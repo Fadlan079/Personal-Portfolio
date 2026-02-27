@@ -219,7 +219,7 @@
                 <div class="flex gap-4 flex-wrap justify-center text-md">
                     <div class="flex justify-center">
                         <a
-                            href="{{route('portofolio.project')}}"
+                            href="{{route('portofolio.projects')}}"
                             class="cta-btn relative overflow-hidden px-8 py-3
                                 bg-primary text-text font-semibold border-2 border-border"
                                 style="--cta-bubble-color: var(--color-bg);">
@@ -326,7 +326,7 @@
                                 <span class="file border-border bg-bg"></span>
                                 <span class="file border-border bg-bg"></span>
 
-                               <a href="{{ route('portofolio.project', ['search' => $project->title]) }}"
+                               <a href="{{ route('portofolio.projects', ['search' => $project->title]) }}"
                                     class="file file-front pointer-events-auto p-5 flex flex-col gap-3 justify-between bg-surface border-border">
                                     <div>
                                         <h3 class="text-2xl font-semibold leading-tight group-hover:text-primary transition-colors">
@@ -374,121 +374,34 @@
         <p>Check out my latest projects!</p>
         </div>
     </section>
-<section id="skills" class="py-24 border-t border-border bg-bg">
-    <div class="max-w-7xl mx-auto px-6">
+
+<section id="skills" class="py-24 border-t border-border bg-bg relative overflow-hidden">
+    <!-- Subtle background elements -->
+    <div class="absolute inset-0 pointer-events-none z-0">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px]"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10 block w-full">
 
         <!-- Section Header -->
-        <div class="text-center mb-16">
+        <div class="text-center mb-16 relative z-20">
             <p class="text-sm uppercase tracking-widest text-muted mb-4">
                 Technical Skills
             </p>
 
             <h3 class="text-3xl md:text-4xl font-semibold leading-tight mb-6">
-                Technologies I Work With
+                Interactive Skill Tree
             </h3>
 
             <p class="text-muted max-w-2xl mx-auto leading-loose">
-                I build structured, scalable web applications with clean backend
-                architecture and interactive frontend experiences.
+                I build structured, scalable web applications. Explore my core specialization domains and the stack I utilize. Hover and click around!
             </p>
         </div>
 
-        <!-- Skills Grid -->
-        <div class="grid md:grid-cols-3 gap-8">
-
-            <!-- Backend -->
-            <div class="skill-card group p-8 rounded-2xl border border-border bg-surface hover:-translate-y-2 transition duration-500">
-                <h4 class="text-lg font-semibold mb-6 text-primary">
-                    Backend
-                </h4>
-
-                <div class="space-y-4 text-sm">
-
-                    <div class="flex justify-between">
-                        <span>Laravel</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>PHP</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>MySQL</span>
-                        <span class="text-muted">Intermediate</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>REST API</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Frontend -->
-            <div class="skill-card group p-8 rounded-2xl border border-border bg-surface hover:-translate-y-2 transition duration-500">
-                <h4 class="text-lg font-semibold mb-6 text-primary">
-                    Frontend
-                </h4>
-
-                <div class="space-y-4 text-sm">
-
-                    <div class="flex justify-between">
-                        <span>JavaScript</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Tailwind CSS</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>HTMX</span>
-                        <span class="text-muted">Intermediate</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>GSAP</span>
-                        <span class="text-muted">Intermediate</span>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Tools -->
-            <div class="skill-card group p-8 rounded-2xl border border-border bg-surface hover:-translate-y-2 transition duration-500">
-                <h4 class="text-lg font-semibold mb-6 text-primary">
-                    Tools & Workflow
-                </h4>
-
-                <div class="space-y-4 text-sm">
-
-                    <div class="flex justify-between">
-                        <span>Git & GitHub</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Figma</span>
-                        <span class="text-muted">Intermediate</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Vite</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                    <div class="flex justify-between">
-                        <span>Responsive Design</span>
-                        <span class="text-muted">Advanced</span>
-                    </div>
-
-                </div>
-            </div>
-
+        <!-- Skills Tree Interactive Container -->
+        <div class="relative w-full h-[600px] md:h-[700px] mx-auto flex items-center justify-center overflow-visible" id="skill-tree-container" data-skills="{{ $skills->toJson() }}">
+            <svg id="skill-tree-lines" class="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"></svg>
+            <!-- Nodes will be injected dynamically via JS -->
         </div>
 
     </div>
@@ -547,7 +460,7 @@
 
 
 @endsection
-@vite(['resources/js/three-viewer.js'])
+@vite(['resources/js/three-viewer.js', 'resources/js/skill-tree.js'])
 <script>
 const buttons = document.querySelectorAll('.device-btn');
 const views = document.querySelectorAll('.device-view');

@@ -10,7 +10,9 @@ class HomeController extends Controller
     public function index()
     {
         $recentProjects = Project::recent(5)->get();
-        return view('pages.home',compact('recentProjects'));
+        // Only fetch skills that have at least 1 associated project (unlocked)
+        $skills = \App\Models\Skill::has('projects')->withCount('projects')->get();
+        return view('pages.home', compact('recentProjects', 'skills'));
     }
 
     public function Showabout(){

@@ -11,7 +11,9 @@ export default defineConfig({
         'resources/css/dashboard_project.css',
         'resources/js/app.js',
         'resources/js/project/detail-modal.js',
-        'resources/js/project/filters.js'
+        'resources/js/project/filters.js',
+        'resources/js/three-viewer.js',
+        'resources/js/skill-tree.js'
       ],
       refresh: true,
     }),
