@@ -6,51 +6,119 @@
         <div class="hero-ribbons pointer-events-none absolute inset-0 overflow-hidden z-0 font-bold">
             <div class="ribbon ribbon-blue">
                 <div class="ribbon-track">
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
+                    <div class="ribbon-track-content">
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                    </div>
+                    <div class="ribbon-track-content" aria-hidden="true">
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                    </div>
                 </div>
             </div>
 
             <div class="ribbon ribbon-white">
                 <div class="ribbon-track">
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
-                    <span>
-                    FULL STACK DEVELOPER
-                    <em>◆</em>
-                    WEB APPLICATION
-                    </span>
+                    <div class="ribbon-track-content">
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                    </div>
+                    <div class="ribbon-track-content" aria-hidden="true">
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                        <span>
+                        FULL STACK DEVELOPER
+                        <em>◆</em>
+                        WEB APPLICATION
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
