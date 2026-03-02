@@ -17,8 +17,15 @@
     // ── State ──────────────────────────────────────────────────
     let currentSearch = new URLSearchParams(window.location.search).get('search') ?? '';
     let currentType = new URLSearchParams(window.location.search).get('type') ?? 'all';
+    let currentSort = new URLSearchParams(window.location.search).get('sort') ?? 'latest';
     let currentPage = 1;
     let debounceTimer = null;
+
+    // ── Sort dropdown elements
+    const sortToggle = document.getElementById('sort-toggle');
+    const sortMenu = document.getElementById('sort-menu');
+    const sortLabel = document.getElementById('sort-label');
+    const sortChevron = document.getElementById('sort-chevron');
 
     // ── Set initial UI state ───────────────────────────────────
     if (searchInput) searchInput.value = currentSearch;
@@ -34,6 +41,7 @@
         const params = new URLSearchParams();
         if (currentSearch) params.set('search', currentSearch);
         if (currentType && currentType !== 'all') params.set('type', currentType);
+        if (currentSort !== 'latest') params.set('sort', currentSort);
         if (currentPage > 1) params.set('page', currentPage);
 
         // Loading state
@@ -68,6 +76,8 @@
                 : url.searchParams.delete('search');
             currentType !== 'all' ? url.searchParams.set('type', currentType)
                 : url.searchParams.delete('type');
+            currentSort !== 'latest' ? url.searchParams.set('sort', currentSort)
+                : url.searchParams.delete('sort');
             currentPage > 1 ? url.searchParams.set('page', currentPage)
                 : url.searchParams.delete('page');
             window.history.replaceState({}, '', url);
@@ -89,6 +99,49 @@
                 currentPage = 1;
                 fetchProjects();
             }, 400);
+        });
+    }
+
+    // ── Sort dropdown ──────────────────────────────────────────
+    if (sortToggle && sortMenu) {
+        // Set initial label
+        if (currentSort === 'oldest') {
+            sortLabel.textContent = 'Oldest';
+            sortToggle.classList.add('border-primary', 'text-primary');
+        }
+
+        // Toggle open/close
+        sortToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = !sortMenu.classList.contains('hidden');
+            sortMenu.classList.toggle('hidden', isOpen);
+            sortChevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', () => {
+            sortMenu.classList.add('hidden');
+            sortChevron.style.transform = '';
+        });
+
+        // Option click
+        document.querySelectorAll('.sort-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                currentSort = opt.dataset.sort;
+                sortLabel.textContent = opt.textContent.trim();
+                sortMenu.classList.add('hidden');
+                sortChevron.style.transform = '';
+
+                // Active style on toggle button
+                if (currentSort === 'oldest') {
+                    sortToggle.classList.add('border-primary', 'text-primary');
+                } else {
+                    sortToggle.classList.remove('border-primary', 'text-primary');
+                }
+
+                currentPage = 1;
+                fetchProjects();
+            });
         });
     }
 

@@ -31,7 +31,9 @@ class HomeController extends Controller
             $query->filterType($request->type);
         }
 
-        $projects = $query->latest()->paginate(6)->withQueryString();
+        $sort = $request->input('sort', 'latest');
+        $projects = $query->when($sort === 'oldest', fn($q) => $q->oldest(), fn($q) => $q->latest())
+                          ->paginate(6)->withQueryString();
         $summary  = Project::summary();
 
         // AJAX: return JSON with rendered HTML partials

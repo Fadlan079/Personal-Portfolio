@@ -78,11 +78,28 @@
             </span>
         </div>
 
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2 items-center">
             <button class="filter-btn px-4 py-2 border border-border text-sm" data-filter="all">All</button>
             <button class="filter-btn px-4 py-2 border border-border text-sm" data-filter="Website">Website</button>
             <button class="filter-btn px-4 py-2 border border-border text-sm" data-filter="Application">Application</button>
             <button class="filter-btn px-4 py-2 border border-border text-sm" data-filter="Design">Design</button>
+
+            {{-- Sort dropdown --}}
+            <div class="relative" id="sort-dropdown-wrapper">
+                <button id="sort-toggle"
+                    class="flex items-center gap-2 px-4 py-2 border border-border text-sm hover:border-primary transition-colors">
+                    <i class="fas fa-sort-amount-down text-xs text-muted"></i>
+                    <span id="sort-label">Newest</span>
+                    <i class="fas fa-chevron-down text-[10px] text-muted" id="sort-chevron"></i>
+                </button>
+                <div id="sort-menu"
+                    class="hidden absolute right-0 top-full mt-1 z-50 min-w-[9rem] border border-border bg-bg shadow-lg">
+                    <button class="sort-option w-full text-left px-4 py-2.5 text-sm hover:bg-surface transition-colors"
+                        data-sort="latest">Newest</button>
+                    <button class="sort-option w-full text-left px-4 py-2.5 text-sm hover:bg-surface transition-colors"
+                        data-sort="oldest">Oldest</button>
+                </div>
+            </div>
         </div>
     </div>
 
