@@ -375,37 +375,557 @@
         </div>
     </section>
 
+<style>
+/* ================================================================
+   SKILL TREE — AC Origins / Grid Style
+   Orthogonal connector lines, grid-dot BG, golden highlights
+   ================================================================ */
+
+#skills {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Grid-dot overlay */
+#skills::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── SVG canvas for the tree ── */
+#skt-svg {
+    width: 100%;
+    max-width: 1000px;
+    display: block;
+    overflow: visible;
+    margin: 0 auto;
+}
+
+/* ── Connector lines ── */
+.skt-edge {
+    fill: none;
+    stroke: rgba(200,185,155,0.18);
+    stroke-width: 1.5;
+    stroke-linecap: square;
+    transition: stroke 0.28s, stroke-width 0.28s, filter 0.28s;
+}
+
+/* ── SVG node labels ── */
+.skt-lbl {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    fill: rgba(200,185,155,0.55);
+    text-anchor: middle;
+    dominant-baseline: hanging;
+    pointer-events: none;
+    transition: fill 0.25s;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Category side labels ── */
+.skt-cat { pointer-events: none; }
+.skt-cat-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-family: 'Space Grotesk', sans-serif;
+}
+.skt-cat-sub {
+    font-size: 6.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    opacity: 0.4;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Bottom gem bar ── */
+.skt-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+.skt-bar-line {
+    width: 100px;
+    height: 1px;
+    background: rgba(200,185,155,0.14);
+    position: relative;
+}
+.skt-bar-gem {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 7px; height: 7px;
+    border: 1.5px solid rgba(251,191,36,0.55);
+    background: rgba(251,191,36,0.12);
+    box-shadow: 0 0 6px rgba(251,191,36,0.3);
+}
+.skt-bar-txt {
+    font-size: 0.5rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(200,185,155,0.38);
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Tooltip ── */
+.skt-tip {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    width: 210px;
+    transition: opacity 0.18s ease;
+}
+.skt-tip.show { opacity: 1; }
+.skt-tip-inner {
+    background: rgba(14,12,18,0.97);
+    border: 1px solid rgba(200,185,155,0.17);
+    box-shadow: 0 0 28px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,0,0,0.5);
+    padding: 11px 14px;
+    backdrop-filter: blur(18px);
+}
+.skt-tip-cat {
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    border-bottom: 1px solid rgba(200,185,155,0.09);
+    padding-bottom: 4px;
+}
+.skt-tip-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    margin: 4px 0 2px;
+}
+.skt-tip-sub {
+    font-size: 0.58rem;
+    font-style: italic;
+    margin-bottom: 8px;
+    color: rgba(200,185,155,0.5);
+}
+.skt-tip-proj {
+    font-size: 0.58rem;
+    color: rgba(200,185,155,0.65);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.skt-tip-proj::before {
+    content: '▸';
+    opacity: 0.6;
+}
+</style>
+
 <section id="skills" class="py-24 border-t border-border bg-bg relative overflow-hidden">
-    <!-- Subtle background elements -->
+
+    {{-- Radial glow --}}
     <div class="absolute inset-0 pointer-events-none z-0">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[100px]"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px]"
+             style="background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(251,191,36,0.04) 0%, transparent 65%); pointer-events:none;"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 relative z-10 block w-full">
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
 
-        <!-- Section Header -->
-        <div class="text-center mb-16 relative z-20">
-            <p class="text-sm uppercase tracking-widest text-muted mb-4">
-                Technical Skills
-            </p>
-
-            <h3 class="text-3xl md:text-4xl font-semibold leading-tight mb-6">
-                Interactive Skill Tree
-            </h3>
-
+        {{-- Header --}}
+        <div class="text-center mb-12 relative z-20">
+            <p class="text-sm uppercase tracking-widest text-muted mb-4">Technical Skills</p>
+            <h3 class="text-3xl md:text-4xl font-semibold leading-tight mb-6">Interactive Skill Tree</h3>
             <p class="text-muted max-w-2xl mx-auto leading-loose">
                 I build structured, scalable web applications. Explore my core specialization domains and the stack I utilize. Hover and click around!
             </p>
         </div>
 
-        <!-- Skills Tree Interactive Container -->
-        <div class="relative w-full h-[600px] md:h-[700px] mx-auto flex items-center justify-center overflow-visible" id="skill-tree-container" data-skills="{{ $skills->toJson() }}">
-            <svg id="skill-tree-lines" class="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"></svg>
-            <!-- Nodes will be injected dynamically via JS -->
+        {{-- SVG Tree (all rendered by JS) --}}
+        <svg id="skt-svg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
+            <defs>
+                <filter id="skt-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="b"/>
+                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <g id="skt-edges"></g>
+            <g id="skt-nodes"></g>
+            <g id="skt-labels"></g>
+            <g id="skt-cats"></g>
+        </svg>
+
+        {{-- Bottom bar --}}
+        <div class="skt-bar">
+            <div class="skt-bar-line"><div class="skt-bar-gem"></div></div>
+            <span class="skt-bar-txt">Skill Points</span>
+            <div class="skt-bar-line"><div class="skt-bar-gem"></div></div>
         </div>
 
     </div>
 </section>
+
+{{-- Tooltip (fixed, outside section) --}}
+<div class="skt-tip" id="sktTip2">
+    <div class="skt-tip-inner">
+        <p class="skt-tip-cat" id="sT2Cat"></p>
+        <p class="skt-tip-name" id="sT2Name"></p>
+        <p class="skt-tip-sub"  id="sT2Sub"></p>
+        <p class="skt-tip-proj" id="sT2Proj"></p>
+    </div>
+</div>
+
+<script>
+(function () {
+/* ================================================================
+   AC Origins Skill Tree — DB-driven
+   Data source: #skt-svg[data-skills] (or fallback to inline JSON)
+   ================================================================ */
+
+/* ── DB Skills (injected by Blade) ── */
+const DB_SKILLS = @json($skills);
+
+/* ── Category config ── */
+const CAT = {
+    backend:  { label: 'BACKEND',  sub: 'Server · Database · API', color: '#f87171' },
+    frontend: { label: 'FRONTEND', sub: 'UI · Markup · Styling',   color: '#38bdf8' },
+    tools:    { label: 'TOOLS',    sub: 'Scripting · DevOps',      color: '#a3e635' },
+    core:     { label: '',         sub: '',                        color: '#fbbf24' },
+};
+
+/* ── Color per category ── */
+function catColor(cat) {
+    return (CAT[cat] || CAT.tools).color;
+}
+
+/* ── ViewBox: 1000 × 520, center = (500, 260) ── */
+const CX = 500, CY = 80;   /* root node */
+
+/* ----------------------------------------------------------
+   LAYOUT BUILDER
+   Reads DB_SKILLS, groups by category, places them on a grid.
+
+   Grid column X values:  [160, 310, 500, 690, 840]
+   Grid row    Y values:  [80,  180, 290, 400]
+
+   Core:    (500, 80)   — top center
+   Backend  branch:  left side
+   Frontend branch:  right side
+   Tools    branch:  outer left/right
+
+   This creates the clean diamond / circuit-board look.
+   ---------------------------------------------------------- */
+function buildLayout() {
+    /* Separate by category */
+    const bycat = { backend: [], frontend: [], tools: [] };
+    DB_SKILLS.forEach(s => {
+        const c = bycat[s.category] || bycat.tools;
+        c.push(s);
+    });
+
+    /* Static skill node positions.
+       We place up to the actual number in each category.
+       If a category has more skills than slots, they stack. */
+
+    /* Fixed "hub" nodes for categories */
+    const nodes = [
+        { id: 'root', label: 'Skills', icon: 'fa-solid fa-code', category: 'core',
+          color: '#fbbf24', x: 500, y: 80, r: 36, dbSkill: null },
+    ];
+
+    const edges = [];
+
+    /* ── Category hub positions ── */
+    const hubs = {
+        backend:  { id: 'hub-backend',  x: 310, y: 210, r: 28 },
+        frontend: { id: 'hub-frontend', x: 690, y: 210, r: 28 },
+        tools:    { id: 'hub-tools',    x: 500, y: 310, r: 28 },
+    };
+
+    Object.entries(hubs).forEach(([cat, hub]) => {
+        if (!bycat[cat].length) return;
+        nodes.push({
+            id: hub.id, label: CAT[cat].label, icon: catIconFor(cat),
+            category: cat, color: catColor(cat),
+            x: hub.x, y: hub.y, r: hub.r, dbSkill: null, isHub: true,
+        });
+        edges.push(['root', hub.id]);
+    });
+
+    /* ── Skill node positions per category ── */
+    const skillSlots = {
+        backend: [
+            { x: 160, y: 320 }, { x: 310, y: 360 }, { x: 160, y: 430 },
+            { x: 310, y: 460 }, { x: 80,  y: 430 },
+        ],
+        frontend: [
+            { x: 840, y: 320 }, { x: 690, y: 360 }, { x: 840, y: 430 },
+            { x: 690, y: 460 }, { x: 920, y: 430 },
+        ],
+        tools: [
+            { x: 370, y: 420 }, { x: 630, y: 420 }, { x: 500, y: 470 },
+            { x: 250, y: 470 }, { x: 750, y: 470 },
+        ],
+    };
+
+    Object.entries(bycat).forEach(([cat, skills]) => {
+        const hub = hubs[cat];
+        if (!hub || !skills.length) return;
+        const slots = skillSlots[cat] || [];
+        skills.forEach((s, i) => {
+            const slot = slots[i] || { x: hub.x + (i - 2) * 80, y: hub.y + 120 };
+            const nid = 'skill-' + s.id;
+            nodes.push({
+                id: nid, label: s.name, icon: s.icon,
+                category: cat, color: catColor(cat),
+                x: slot.x, y: slot.y, r: 24,
+                dbSkill: s,
+            });
+            edges.push([hub.id, nid]);
+        });
+    });
+
+    return { nodes, edges };
+}
+
+/* Category hub icons */
+function catIconFor(cat) {
+    return { backend:'fa-solid fa-server', frontend:'fa-regular fa-window-maximize', tools:'fa-solid fa-toolbox' }[cat] || 'fa-solid fa-circle';
+}
+
+/* ----------------------------------------------------------
+   SVG helpers
+   ---------------------------------------------------------- */
+const NS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    Object.entries(attrs || {}).forEach(([k,v]) => e.setAttribute(k, v));
+    return e;
+}
+
+/* Orthogonal L-shaped path */
+function orthoPath(x1, y1, x2, y2) {
+    if (Math.abs(x1 - x2) < 2) return `M${x1} ${y1}L${x2} ${y2}`;
+    if (Math.abs(y1 - y2) < 2) return `M${x1} ${y1}L${x2} ${y2}`;
+    const my = y1 + (y2 - y1) * 0.5;
+    return `M${x1} ${y1}L${x1} ${my}L${x2} ${my}L${x2} ${y2}`;
+}
+
+/* ----------------------------------------------------------
+   RENDER
+   ---------------------------------------------------------- */
+const svg       = document.getElementById('skt-svg');
+const edgeLayer = document.getElementById('skt-edges');
+const nodeLayer = document.getElementById('skt-nodes');
+const lblLayer  = document.getElementById('skt-labels');
+const catLayer  = document.getElementById('skt-cats');
+const tip       = document.getElementById('sktTip2');
+
+const { nodes, edges } = buildLayout();
+
+/* Lookup */
+const byId = {};
+nodes.forEach(n => byId[n.id] = n);
+
+let activeId = null;
+
+/* ── Draw edges ── */
+edges.forEach(([fid, tid]) => {
+    const f = byId[fid], t = byId[tid];
+    if (!f || !t) return;
+    const d = orthoPath(f.x, f.y, t.x, t.y);
+    const len = Math.abs(t.x-f.x) + Math.abs(t.y-f.y) + 10;
+    const path = svgEl('path', {
+        d, class: 'skt-edge',
+        'stroke-dasharray': len,
+        'stroke-dashoffset': len,
+        'data-from': fid, 'data-to': tid,
+    });
+    edgeLayer.appendChild(path);
+    requestAnimationFrame(() => {
+        path.style.transition = `stroke-dashoffset ${0.5 + len/900}s ease`;
+        path.style.strokeDashoffset = '0';
+    });
+});
+
+/* ── Draw nodes ── */
+nodes.forEach(n => {
+    /* Circle */
+    const c = svgEl('circle', {
+        cx: n.x, cy: n.y, r: n.r,
+        fill: 'rgba(22,20,26,0.93)',
+        stroke: 'rgba(200,185,155,0.3)',
+        'stroke-width': '1.5',
+        'data-nid': n.id,
+        style: 'cursor:pointer;transition:stroke 0.25s,filter 0.25s;',
+    });
+    nodeLayer.appendChild(c);
+
+    /* Icon via foreignObject */
+    const fs = n.r * 1.1;
+    const fo = svgEl('foreignObject', {
+        x: n.x - fs/2, y: n.y - fs/2,
+        width: fs, height: fs,
+        style: 'pointer-events:none;overflow:visible;',
+    });
+    const div = document.createElement('div');
+    div.style.cssText = `width:${fs}px;height:${fs}px;display:flex;align-items:center;justify-content:center;font-size:${fs*0.52}px;color:rgba(210,200,185,0.55);transition:color 0.25s;`;
+    div.dataset.nid = n.id;
+    /* icon: DB skills store raw HTML, hub nodes store plain class string — handle both */
+    const ic = (n.icon || '').trim();
+    div.innerHTML = ic.startsWith('<') ? ic : `<i class="${ic}" aria-hidden="true"></i>`;
+    fo.appendChild(div);
+    nodeLayer.appendChild(fo);
+
+    /* Label */
+    const lbl = svgEl('text', {
+        x: n.x, y: n.y + n.r + 11,
+        class: 'skt-lbl', 'data-nlbl': n.id,
+    });
+    lbl.textContent = n.label;
+    lblLayer.appendChild(lbl);
+
+    /* Events */
+    c.addEventListener('mouseenter', (e) => onEnter(n, e));
+    c.addEventListener('mousemove',  (e) => moveTip(e));
+    c.addEventListener('mouseleave', onLeave);
+    c.addEventListener('click',      () => toggleActive(n.id));
+});
+
+/* ── Category side labels ── */
+const catPlacements = [
+    { cat:'backend',  x: 52,  y: 320, angle: -90 },
+    { cat:'frontend', x: 948, y: 320, angle:  90 },
+    { cat:'tools',    x: 500, y: 500, angle:   0 },
+];
+catPlacements.forEach(p => {
+    const info = CAT[p.cat];
+    if (!info) return;
+    const g = svgEl('g', { class:'skt-cat', transform:`translate(${p.x},${p.y}) rotate(${p.angle})` });
+
+    const line = svgEl('line', { x1:-30, y1:-13, x2:30, y2:-13,
+        stroke: info.color, 'stroke-width':'0.5', opacity:'0.3' });
+    const t1 = svgEl('text', { class:'skt-cat-title', fill: info.color, 'font-size':'9', y:'-4' });
+    t1.textContent = info.label;
+    const t2 = svgEl('text', { class:'skt-cat-sub', fill: info.color, 'font-size':'6', y:'7' });
+    t2.textContent = info.sub;
+
+    g.appendChild(line); g.appendChild(t1); g.appendChild(t2);
+    catLayer.appendChild(g);
+});
+
+/* ── Hover / Active ── */
+function onEnter(n, e) {
+    if (n.id === activeId) return;
+    setNodeHighlight(n.id, n.color, false);
+    if (n.dbSkill || n.isHub) showTip(n, e);
+}
+function onLeave() {
+    hideTip();
+    if (activeId) return;
+    nodes.forEach(n => resetNode(n.id));
+}
+
+function toggleActive(id) {
+    const prev = activeId;
+    activeId = id === activeId ? null : id;
+    nodes.forEach(n => {
+        if (n.id === activeId) setNodeHighlight(n.id, n.color, true);
+        else resetNode(n.id);
+    });
+    /* Edge highlight */
+    edgeLayer.querySelectorAll('.skt-edge').forEach(p => {
+        const f = p.dataset.from, t = p.dataset.to;
+        const lit = f === activeId || t === activeId;
+        const col = lit ? (byId[f]?.color || byId[t]?.color || '#fbbf24') : 'rgba(200,185,155,0.18)';
+        p.setAttribute('stroke', col);
+        p.setAttribute('stroke-width', lit ? '2.5' : '1.5');
+        p.style.filter = lit ? `drop-shadow(0 0 4px ${col})` : '';
+    });
+}
+
+function setNodeHighlight(id, color, active) {
+    const c = nodeLayer.querySelector(`circle[data-nid="${id}"]`);
+    const d = nodeLayer.querySelector(`[data-nid="${id}"]`);
+    const l = lblLayer.querySelector(`[data-nlbl="${id}"]`);
+    if (c) {
+        c.setAttribute('stroke', color);
+        c.setAttribute('fill', 'rgba(34,30,24,0.96)');
+        c.style.filter = `drop-shadow(0 0 ${active ? 9 : 6}px ${color})`;
+    }
+    if (d) d.style.color = color;
+    if (l) l.setAttribute('fill', color);
+}
+function resetNode(id) {
+    const c = nodeLayer.querySelector(`circle[data-nid="${id}"]`);
+    const d = nodeLayer.querySelector(`[data-nid="${id}"]`);
+    const l = lblLayer.querySelector(`[data-nlbl="${id}"]`);
+    if (c) { c.setAttribute('stroke','rgba(200,185,155,0.3)'); c.setAttribute('fill','rgba(22,20,26,0.93)'); c.style.filter=''; }
+    if (d) d.style.color = 'rgba(210,200,185,0.55)';
+    if (l) l.setAttribute('fill','rgba(200,185,155,0.55)');
+}
+
+/* ── Tooltip ── */
+function showTip(n, e) {
+    const cat = CAT[n.category] || {};
+    document.getElementById('sT2Cat').textContent  = cat.label || '';
+    document.getElementById('sT2Cat').style.color  = n.color;
+    document.getElementById('sT2Name').textContent = n.label;
+    document.getElementById('sT2Name').style.color = n.color;
+    document.getElementById('sT2Sub').textContent  = n.isHub
+        ? (cat.sub || '')
+        : (n.dbSkill?.subtitle || '');
+    const projEl = document.getElementById('sT2Proj');
+    if (n.dbSkill) {
+        const pc = n.dbSkill.projects_count || 0;
+        projEl.textContent = pc + (pc === 1 ? ' project' : ' projects');
+        projEl.style.display = '';
+    } else {
+        projEl.style.display = 'none';
+    }
+    moveTip(e);
+    tip.classList.add('show');
+}
+function moveTip(e) {
+    const TW = 220, TH = 120;
+    let tx = e.clientX + 16, ty = e.clientY - TH / 2;
+    if (tx + TW > window.innerWidth)  tx = e.clientX - TW - 16;
+    if (ty < 6)                        ty = 6;
+    if (ty + TH > window.innerHeight)  ty = window.innerHeight - TH - 6;
+    tip.style.left = tx + 'px'; tip.style.top = ty + 'px';
+}
+function hideTip() { tip.classList.remove('show'); }
+
+/* ── Edge draw-in on scroll into view ── */
+const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+        if (!en.isIntersecting) return;
+        edgeLayer.querySelectorAll('.skt-edge').forEach(p => {
+            const len = parseFloat(p.getAttribute('stroke-dasharray')) || 400;
+            p.style.transition = 'none';
+            p.style.strokeDashoffset = len;
+            requestAnimationFrame(() => {
+                p.style.transition = `stroke-dashoffset ${0.5 + len/900}s ease`;
+                p.style.strokeDashoffset = '0';
+            });
+        });
+        obs.unobserve(en.target);
+    });
+}, { threshold: 0.1 });
+obs.observe(document.getElementById('skills'));
+
+})();
+</script>
 
 <section class="relative z-10 py-36 border-t border-border overflow-hidden">
 

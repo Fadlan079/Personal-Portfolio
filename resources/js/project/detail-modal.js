@@ -72,7 +72,7 @@ document.querySelectorAll('.project-open').forEach(card => {
                     images.forEach(img => {
                         screenshotContainer.innerHTML += `
                         <div class="aspect-video overflow-hidden border border-border/50 bg-surface/40 group">
-                            <img src="${img.url}"
+                            <img src="${img}"
                                 class="w-full h-full object-cover transition duration-500 group-hover:scale-105 cursor-pointer">
                         </div>
                         `;

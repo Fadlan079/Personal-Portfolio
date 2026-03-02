@@ -86,7 +86,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($projects as $project)
             <div class="project-folder group relative border border-border bg-surface p-6 pt-12 ">
                 <div class="absolute top-0 left-6 -translate-y-1/2 flex gap-2 z-20">
@@ -168,15 +168,16 @@
     </div>
 
     @if ($projects->hasPages())
-    <div class="flex justify-center">
+    <div class="flex justify-center" id="projects-pagination">
         <nav class="flex items-center gap-2 text-sm">
 
             @if ($projects->onFirstPage())
                 <span class="px-3 py-2 text-muted border border-border">Prev</span>
             @else
-                <a href="{{ $projects->previousPageUrl() }}"
-                class="px-3 py-2 border border-border hover:border-primary">
-                Prev
+                <a href="javascript:void(0)"
+                   data-page="{{ $projects->currentPage() - 1 }}"
+                   class="ajax-page px-3 py-2 border border-border hover:border-primary">
+                   Prev
                 </a>
             @endif
 
@@ -185,9 +186,10 @@
             </span>
 
             @if ($projects->hasMorePages())
-                <a href="{{ $projects->nextPageUrl() }}"
-                class="px-3 py-2 border border-border hover:border-primary">
-                Next
+                <a href="javascript:void(0)"
+                   data-page="{{ $projects->currentPage() + 1 }}"
+                   class="ajax-page px-3 py-2 border border-border hover:border-primary">
+                   Next
                 </a>
             @else
                 <span class="px-3 py-2 text-muted border border-border">Next</span>
@@ -195,6 +197,8 @@
 
         </nav>
     </div>
+    @else
+    <div id="projects-pagination"></div>
     @endif
 </section>
 

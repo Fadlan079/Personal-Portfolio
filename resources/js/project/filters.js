@@ -1,128 +1,232 @@
-document.addEventListener('DOMContentLoaded', () => {
+/* ================================================================
+   PROJECT FILTERS — AJAX (no reload)
+   Search: debounce 400ms
+   Filter buttons: instant
+   Pagination: ajax-page links (delegated)
+   ================================================================ */
+
+(function () {
 
     const searchInput = document.getElementById('project-search');
-    const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const grid = document.getElementById('projects-grid');
+    const paginationWrap = document.getElementById('projects-pagination');
 
-    if (!searchInput && filterButtons.length === 0) return;
+    if (!grid) return; // not on project page
 
-    const params = new URLSearchParams(window.location.search);
+    // ── State ──────────────────────────────────────────────────
+    let currentSearch = new URLSearchParams(window.location.search).get('search') ?? '';
+    let currentType = new URLSearchParams(window.location.search).get('type') ?? 'all';
+    let currentPage = 1;
+    let debounceTimer = null;
 
-    // =========================
-    // SET INITIAL SEARCH VALUE
-    // =========================
-    if (searchInput) {
-        searchInput.value = params.get('search') ?? '';
+    // ── Set initial UI state ───────────────────────────────────
+    if (searchInput) searchInput.value = currentSearch;
 
-        searchInput.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                params.set('search', searchInput.value);
-                params.delete('page');
-                window.location.search = params.toString();
-            }
-        });
-    }
-
-    // =========================
-    // FILTER BUTTONS
-    // =========================
-    filterButtons.forEach(btn => {
-
-        if (btn.dataset.filter === (params.get('type') ?? 'all')) {
+    filterBtns.forEach(btn => {
+        if (btn.dataset.filter === currentType) {
             btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
         }
-
-        btn.addEventListener('click', () => {
-
-            const filter = btn.dataset.filter;
-
-            if (filter === 'all') {
-                params.delete('type');
-            } else {
-                params.set('type', filter);
-            }
-
-            params.delete('page');
-            window.location.search = params.toString();
-        });
-
     });
 
-    // =========================
-    // HIGHLIGHT SEARCH RESULT
-    // =========================
-    const keyword = params.get('search');
+    // ── Core AJAX fetch ────────────────────────────────────────
+    async function fetchProjects() {
+        const params = new URLSearchParams();
+        if (currentSearch) params.set('search', currentSearch);
+        if (currentType && currentType !== 'all') params.set('type', currentType);
+        if (currentPage > 1) params.set('page', currentPage);
 
-    if (keyword) {
-        highlightText(keyword);
+        // Loading state
+        grid.style.opacity = '0.4';
+        grid.style.pointerEvents = 'none';
+
+        try {
+            const res = await fetch(`/projects?${params.toString()}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            if (!res.ok) throw new Error('Network error');
+
+            const data = await res.json();
+
+            // Update DOM
+            grid.innerHTML = data.html;
+            if (paginationWrap) paginationWrap.innerHTML = data.pagination;
+
+            // Translate newly injected elements (e.g. empty state text)
+            if (typeof window.applyI18n === 'function') window.applyI18n(grid);
+
+            // Re-bind modal openers on newly rendered cards
+            bindModalOpeners();
+
+            // Re-apply search highlight
+            if (currentSearch) highlightText(currentSearch);
+
+            // Sync URL without reload
+            const url = new URL(window.location);
+            currentSearch ? url.searchParams.set('search', currentSearch)
+                : url.searchParams.delete('search');
+            currentType !== 'all' ? url.searchParams.set('type', currentType)
+                : url.searchParams.delete('type');
+            currentPage > 1 ? url.searchParams.set('page', currentPage)
+                : url.searchParams.delete('page');
+            window.history.replaceState({}, '', url);
+
+        } catch (e) {
+            console.warn('AJAX fetch error:', e);
+        } finally {
+            grid.style.opacity = '1';
+            grid.style.pointerEvents = '';
+        }
     }
 
-});
+    // ── Search — debounce 400ms ────────────────────────────────
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                currentSearch = searchInput.value.trim();
+                currentPage = 1;
+                fetchProjects();
+            }, 400);
+        });
+    }
+
+    // ── Filter buttons ─────────────────────────────────────────
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b =>
+                b.classList.remove('border-primary', 'bg-primary/10', 'text-primary')
+            );
+            btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+
+            currentType = btn.dataset.filter;
+            currentPage = 1;
+            fetchProjects();
+        });
+    });
+
+    // ── Pagination — delegated click on #projects-pagination ───
+    if (paginationWrap) {
+        paginationWrap.addEventListener('click', e => {
+            const link = e.target.closest('.ajax-page');
+            if (!link) return;
+            e.preventDefault();
+            currentPage = parseInt(link.dataset.page, 10);
+            fetchProjects();
+            // Scroll to top of grid
+            grid.closest('section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    // ── Re-bind detail modal after AJAX ───────────────────────
+    function bindModalOpeners() {
+        document.querySelectorAll('.project-open').forEach(card => {
+            card.addEventListener('click', () => {
+                // copy all data attributes to modal
+                const modal = document.getElementById('projectDetailModal');
+                if (!modal) return;
+
+                modal.dataset.id = card.dataset.id;
+                modal.dataset.tech = card.dataset.tech;
+                modal.dataset.type = card.dataset.type;
+                modal.dataset.status = card.dataset.status;
+                modal.dataset.title = card.dataset.title;
+                modal.dataset.desc = card.dataset.desc;
+                modal.dataset.role = card.dataset.role;
+                modal.dataset.team = card.dataset.team;
+                modal.dataset.responsibilities = card.dataset.responsibilities;
+                modal.dataset.repo = card.dataset.repo;
+                modal.dataset.live = card.dataset.live;
+                modal.dataset.screenshot = card.dataset.screenshot;
+
+                // Basic text fields
+                document.getElementById('detailType').textContent = card.dataset.type;
+                document.getElementById('detailStatus').textContent = card.dataset.status;
+                document.getElementById('detailTitle').textContent = card.dataset.title;
+                document.getElementById('detailDesc').textContent = card.dataset.desc;
+                document.getElementById('detailRole').textContent = card.dataset.role || '-';
+                document.getElementById('detailTeamSize').textContent = card.dataset.team || '-';
+                document.getElementById('detailResponsibilities').textContent = card.dataset.responsibilities || '-';
+                document.getElementById('detailCreated').textContent = card.dataset.created;
+                document.getElementById('detailUpdated').textContent = card.dataset.updated;
+
+                // Tech stack
+                const techContainer = document.getElementById('detailTech');
+                techContainer.innerHTML = '';
+                if (card.dataset.tech) {
+                    try {
+                        JSON.parse(card.dataset.tech).forEach(t => {
+                            techContainer.innerHTML += `<span class="px-2 py-1 text-xs border border-border">${t}</span>`;
+                        });
+                    } catch { techContainer.innerHTML = '-'; }
+                }
+
+                // Screenshots
+                const screenshotContainer = document.getElementById('detailScreenshots');
+                const wrapper = document.getElementById('detailScreenshotsWrapper');
+                screenshotContainer.innerHTML = '';
+
+                if (card.dataset.screenshot) {
+                    try {
+                        const images = JSON.parse(card.dataset.screenshot);
+                        if (images.length > 0) {
+                            images.forEach(img => {
+                                screenshotContainer.innerHTML += `
+                                    <div class="aspect-video overflow-hidden border border-border/50 bg-surface/40 group">
+                                        <img src="${img}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105 cursor-pointer">
+                                    </div>`;
+                            });
+                            wrapper.classList.remove('hidden');
+                        } else {
+                            wrapper.classList.add('hidden');
+                        }
+                    } catch { wrapper.classList.add('hidden'); }
+                } else {
+                    wrapper.classList.add('hidden');
+                }
+
+                // Links
+                const live = document.getElementById('detailLive');
+                const repo = document.getElementById('detailRepo');
+                card.dataset.live ? (live.href = card.dataset.live, live.classList.remove('hidden'))
+                    : live.classList.add('hidden');
+                card.dataset.repo ? (repo.href = card.dataset.repo, repo.classList.remove('hidden'))
+                    : repo.classList.add('hidden');
+
+                window.openProjectModal();
+                document.body.classList.add('overflow-hidden');
+            });
+        });
+    }
+
+    // bind on initial page load
+    bindModalOpeners();
+
+})();
 
 
-// ========================================
-// HIGHLIGHT FUNCTION
-// ========================================
+// ── Helpers ──────────────────────────────────────────────────────
 function highlightText(keyword) {
-
-    const safeKeyword = escapeRegex(keyword);
+    const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`(${safeKeyword})`, 'gi');
 
-    // Highlight normal visible text
-    const elements = document.querySelectorAll(
-        '.project-folder h3, .project-folder p, .tech-row span'
-    );
+    document.querySelectorAll('.project-folder h3, .project-folder p, .tech-row span')
+        .forEach(el => {
+            if (el.children.length > 0) return;
+            const orig = el.textContent;
+            if (regex.test(orig)) {
+                el.innerHTML = orig.replace(regex, '<span class="search-highlight">$1</span>');
+            }
+        });
 
-    elements.forEach(el => {
-
-        if (el.children.length > 0) return;
-
-        const originalText = el.textContent;
-
-        if (regex.test(originalText)) {
-            el.innerHTML = originalText.replace(
-                regex,
-                '<span class="search-highlight">$1</span>'
-            );
-        }
-    });
-
-
-    // ===============================
-    // HANDLE HIDDEN TECH TOOLTIP
-    // ===============================
-    const tooltips = document.querySelectorAll('.tech-tooltip');
-
-    tooltips.forEach(tooltip => {
-
-        const original = tooltip.innerHTML;
-
+    document.querySelectorAll('.tech-tooltip').forEach(tooltip => {
+        const orig = tooltip.innerHTML;
         if (regex.test(tooltip.textContent)) {
-
-            tooltip.innerHTML = original.replace(
-                regex,
-                '<span class="search-highlight">$1</span>'
-            );
-
-            // buka tooltip otomatis
+            tooltip.innerHTML = orig.replace(regex, '<span class="search-highlight">$1</span>');
             tooltip.style.opacity = '1';
             tooltip.style.visibility = 'visible';
-
-            // tambahin indicator di +X
-            const parent = tooltip.closest('.tech-more');
-            if (parent) {
-                parent.classList.add('tech-match');
-            }
+            tooltip.closest('.tech-more')?.classList.add('tech-match');
         }
-
     });
-
-}
-
-
-
-// ========================================
-// ESCAPE REGEX (biar aman karakter aneh)
-// ========================================
-function escapeRegex(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

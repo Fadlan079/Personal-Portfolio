@@ -214,31 +214,50 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Draw connecting lines with dynamic ViewBox for perfect connection
+    // Draw connecting lines with orthogonal (L-shaped) paths — AC Origins style
+    function orthogonalD(sx, sy, tx, ty) {
+        /* Go down vertically from source to target Y, then across.
+           This produces clean circuit-board / AC Origins style connectors. */
+        if (Math.abs(sx - tx) < 2) return `M ${sx} ${sy} L ${tx} ${ty}`; // pure vertical
+        if (Math.abs(sy - ty) < 2) return `M ${sx} ${sy} L ${tx} ${ty}`; // pure horizontal
+        // Midpoint approach: go halfway down then sideways (more readable for radial layouts)
+        const my = sy + (ty - sy) * 0.5;
+        return `M ${sx} ${sy} L ${sx} ${my} L ${tx} ${my} L ${tx} ${ty}`;
+    }
+
     function drawLines() {
         svgLayer.innerHTML = '';
         svgLayer.style.overflow = 'visible';
         const rect = container.getBoundingClientRect();
-
-        // Setting ViewBox eliminates all issues of relative sizing offset bugs
         svgLayer.setAttribute('viewBox', `${-rect.width / 2} ${-rect.height / 2} ${rect.width} ${rect.height}`);
 
         links.forEach(link => {
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line.setAttribute('x1', link.source.x);
-            line.setAttribute('y1', link.source.y);
-            line.setAttribute('x2', link.target.x);
-            line.setAttribute('y2', link.target.y);
-            line.setAttribute('stroke', 'var(--color-border)');
-            line.setAttribute('stroke-width', '2');
-            line.classList.add('skill-link');
-            line.style.opacity = '0.4';
-            line.style.transition = 'stroke 0.3s ease, stroke-width 0.3s ease';
+            const d = orthogonalD(link.source.x, link.source.y, link.target.x, link.target.y);
+            const totalLen = Math.abs(link.target.x - link.source.x) + Math.abs(link.target.y - link.source.y);
 
-            line.dataset.source = link.source.id;
-            line.dataset.target = link.target.id;
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', d);
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', 'var(--color-border)');
+            path.setAttribute('stroke-width', '2');
+            path.setAttribute('stroke-linecap', 'square');  /* flat ends for circuit look */
+            path.classList.add('skill-link');
+            path.style.opacity = '0.45';
+            path.style.transition = 'stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease';
+            /* Line draw-in animation */
+            path.style.strokeDasharray = totalLen * 3;
+            path.style.strokeDashoffset = totalLen * 3;
 
-            svgLayer.appendChild(line);
+            path.dataset.source = link.source.id;
+            path.dataset.target = link.target.id;
+
+            svgLayer.appendChild(path);
+
+            /* Animate draw */
+            requestAnimationFrame(() => {
+                path.style.transition = `stroke-dashoffset ${0.5 + totalLen / 600}s ease, stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease`;
+                path.style.strokeDashoffset = '0';
+            });
         });
     }
 
@@ -262,55 +281,33 @@ document.addEventListener('DOMContentLoaded', () => {
         delay: 0.5
     });
 
-    // Subtle parallax effect on container mouse move
+    // Subtle parallax effect on container mouse move — nodes only
+    // (paths are static; they highlight on hover instead)
     container.addEventListener('mousemove', (e) => {
         const rect = container.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        // Normalize coordinates (-1 to 1)
         const normalizeX = (e.clientX - centerX) / (rect.width / 2);
         const normalizeY = (e.clientY - centerY) / (rect.height / 2);
 
         nodes.forEach((node) => {
             let depth = 0;
-            if (node.id === 'root') depth = 0.02;
-            else if (node.children) depth = 0.05;
-            else depth = 0.08;
+            if (node.id === 'root') depth = 0.015;
+            else if (node.children && node.children.length) depth = 0.04;
+            else depth = 0.065;
 
             gsap.to(node.el, {
-                x: normalizeX * 60 * depth,
-                y: normalizeY * 60 * depth,
+                x: normalizeX * 40 * depth,
+                y: normalizeY * 40 * depth,
                 duration: 1,
                 ease: 'power2.out',
                 overwrite: 'auto'
             });
         });
-
-        // Move lines with the nodes within the SVG Viewbox
-        links.forEach(link => {
-            const line = document.querySelector(`.skill-link[data-source="${link.source.id}"][data-target="${link.target.id}"]`);
-            if (line) {
-                let sourceDepth = link.source.id === 'root' ? 0.02 : (link.source.children ? 0.05 : 0.08);
-                let targetDepth = link.target.id === 'root' ? 0.02 : (link.target.children ? 0.05 : 0.08);
-
-                const sX = link.source.x + (normalizeX * 60 * sourceDepth);
-                const sY = link.source.y + (normalizeY * 60 * sourceDepth);
-                const tX = link.target.x + (normalizeX * 60 * targetDepth);
-                const tY = link.target.y + (normalizeY * 60 * targetDepth);
-
-                gsap.to(line, {
-                    attr: { x1: sX, y1: sY, x2: tX, y2: tY },
-                    duration: 1,
-                    ease: 'power2.out',
-                    overwrite: 'auto'
-                });
-            }
-        });
     });
 
     container.addEventListener('mouseleave', () => {
-        // Reset node positions
         nodes.forEach(node => {
             gsap.to(node.el, {
                 x: 0,
@@ -320,23 +317,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 overwrite: 'auto'
             });
         });
-
-        // Reset line positions
-        links.forEach(link => {
-            const line = document.querySelector(`.skill-link[data-source="${link.source.id}"][data-target="${link.target.id}"]`);
-            if (line) {
-                gsap.to(line, {
-                    attr: {
-                        x1: link.source.x,
-                        y1: link.source.y,
-                        x2: link.target.x,
-                        y2: link.target.y
-                    },
-                    duration: 1.5,
-                    ease: 'elastic.out(1, 0.5)',
-                    overwrite: 'auto'
-                });
-            }
-        });
+        /* Reset line colors */
+        const allPaths = document.querySelectorAll('.skill-link');
+        gsap.to(allPaths, { stroke: 'var(--color-border)', strokeWidth: 2, opacity: 0.45, duration: 0.4 });
     });
 });

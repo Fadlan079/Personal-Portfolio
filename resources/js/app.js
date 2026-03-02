@@ -228,25 +228,33 @@ window.matchMedia('(prefers-color-scheme: dark)')
 async function loadLanguage(locale) {
     const res = await fetch(`/api/lang/${locale}`);
     const dict = await res.json();
+    window.__i18nDict = dict; // cache for re-use after AJAX
+    applyI18n(document);
+    document.documentElement.lang = locale;
+}
+
+// Reusable: apply translations to any root element (document or AJAX-injected subtree)
+window.applyI18n = function (root) {
+    const dict = window.__i18nDict;
+    if (!dict) return;
 
     function getNestedValue(obj, path) {
         return path.split('.').reduce((o, k) => (o || {})[k], obj);
     }
 
-    const elements = document.querySelectorAll('[data-i18n]');
+    const elements = (root === document)
+        ? root.querySelectorAll('[data-i18n]')
+        : root.querySelectorAll('[data-i18n]');
+
     elements.forEach(el => {
         const key = el.dataset.i18n;
         const text = getNestedValue(dict, key);
-        if (text) el.innerHTML = text;
+        if (text) {
+            el.innerHTML = text;
+            el.style.visibility = 'visible';
+        }
     });
-
-    elements.forEach(el => {
-        el.style.visibility = 'visible';
-    });
-
-    document.documentElement.lang = locale;
-}
-
+};
 
 const langToggle = document.getElementById('langToggle');
 

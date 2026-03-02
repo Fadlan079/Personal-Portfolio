@@ -31,8 +31,19 @@ class HomeController extends Controller
             $query->filterType($request->type);
         }
 
-        $projects = $query->latest()->paginate(3)->withQueryString();
+        $projects = $query->latest()->paginate(6)->withQueryString();
         $summary  = Project::summary();
+
+        // AJAX: return JSON with rendered HTML partials
+        if ($request->ajax() || $request->boolean('ajax')) {
+            return response()->json([
+                'html'        => view('pages._projects-list', compact('projects'))->render(),
+                'pagination'  => view('pages._projects-pagination', compact('projects'))->render(),
+                'total'       => $projects->total(),
+                'currentPage' => $projects->currentPage(),
+                'lastPage'    => $projects->lastPage(),
+            ]);
+        }
 
         return view('pages.project', compact('projects', 'summary'));
     }

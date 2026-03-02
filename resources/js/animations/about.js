@@ -13,16 +13,16 @@ export function aboutAnimation() {
             anticipatePin: 1
         }
     })
-    
-    .fromTo("#about-title",
-        { scale: 1, y: 0 },
-        { scale: 0.55, y: -120, ease: "none" }
-    )
-    .fromTo("#about-outline",
-        { y: 0, opacity: 1 },
-        { y: 160, opacity: 0.40, ease: "none" },
-        0
-    );
+
+        .fromTo("#about-title",
+            { scale: 1, y: 0 },
+            { scale: 0.55, y: -120, ease: "none" }
+        )
+        .fromTo("#about-outline",
+            { y: 0, opacity: 1 },
+            { y: 160, opacity: 0.40, ease: "none" },
+            0
+        );
 
     gsap.from("#about-narrative", {
         scrollTrigger: {
@@ -105,64 +105,64 @@ export function aboutAnimation() {
     });
 
     gsap.fromTo(
-    {
-        WebkitTextStrokeColor: "var(--color-primary)",
-        scrollTrigger: {
-        trigger: "#about-hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
+        {
+            WebkitTextStrokeColor: "var(--color-primary)",
+            scrollTrigger: {
+                trigger: "#about-hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
         }
-    }
     );
 
     gsap.set("#about-title", {
-    y: 80,
-    scale: 1.1,
-    opacity: 0
+        y: 80,
+        scale: 1.1,
+        opacity: 0
     });
 
     gsap.set("#about-outline", {
-    y: 120,
-    opacity: 0
+        y: 120,
+        opacity: 0
     });
 
     const intro = gsap.timeline({
-    defaults: {
-        ease: "power3.out"
-    }
+        defaults: {
+            ease: "power3.out"
+        }
     });
 
     intro
-    .to("#about-title", {
-        y: 0,
-        opacity: 1,
-        duration: 0.8
-    })
-    .to("#about-title", {
-        scale: 1,
-        duration: 0.6
-    }, "<")
-    .to("#about-outline", {
-        y: 0,
-        opacity: 1,
-        duration: 0.9
-    }, "-=0.4");
+        .to("#about-title", {
+            y: 0,
+            opacity: 1,
+            duration: 0.8
+        })
+        .to("#about-title", {
+            scale: 1,
+            duration: 0.6
+        }, "<")
+        .to("#about-outline", {
+            y: 0,
+            opacity: 1,
+            duration: 0.9
+        }, "-=0.4");
 
     intro.fromTo(
-    "#about-outline",
-    {
-        WebkitTextStrokeWidth: "0px"
-    },
-    {
-        WebkitTextStrokeWidth: "2px",
-        duration: 0.6,
-        ease: "power2.out"
-    },
-    "-=0.5"
+        "#about-outline",
+        {
+            WebkitTextStrokeWidth: "0px"
+        },
+        {
+            WebkitTextStrokeWidth: "2px",
+            duration: 0.6,
+            ease: "power2.out"
+        },
+        "-=0.5"
     );
     intro.call(() => {
-    ScrollTrigger.refresh();
+        ScrollTrigger.refresh();
     });
     intro.to({}, { duration: 0.15 });
 }
