@@ -280,7 +280,23 @@
                 </div>
             </div>
 
-            <div class="pt-4" x-data="{ currentProject: 0, totalProjects: {{ count($recentProjects) }} }">
+            <div class="pt-4" x-data="{
+                    currentProject: 0,
+                    totalProjects: {{ count($recentProjects) }},
+                    timer: null,
+                    init() {
+                        this.startAuto();
+                        this.$el.addEventListener('mouseenter', () => this.stopAuto());
+                        this.$el.addEventListener('mouseleave', () => this.startAuto());
+                    },
+                    startAuto() {
+                        this.stopAuto();
+                        this.timer = setInterval(() => {
+                            this.currentProject = (this.currentProject + 1) % this.totalProjects;
+                        }, 4000);
+                    },
+                    stopAuto() { clearInterval(this.timer); }
+                }">
                 <div class="flex justify-between items-end mb-6">
                     <div>
                         <p class="text-sm uppercase tracking-widest text-muted mb-2">
