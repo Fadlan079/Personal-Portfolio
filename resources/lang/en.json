@@ -6,7 +6,12 @@
         "cta_desc": "Whether it's a structural web application, a modern dashboard, or a dynamic interface, I'm ready to turn your vision into reality.",
         "cta_btn_primary": "Start a Project",
         "cta_btn_secondary": "Send an Email",
-        "cta_marquee": "LET'S BUILD IT — GOT A PROJECT? —"
+        "cta_marquee": "LET'S BUILD IT — GOT A PROJECT? —",
+        "skills_cad": {
+            "title_system": "System",
+            "title_arch": "Architecture",
+            "desc": "Specification of technical capabilities. Select a sector to isolate and expand the schematic view."
+        }
     },
     "nav": {
         "home": "Home",

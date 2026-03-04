@@ -6,7 +6,12 @@
         "cta_desc": "Baik itu struktur aplikasi web, dasbor modern, maupun antarmuka dinamis, saya siap mengubah visi Anda menjadi kenyataan.",
         "cta_btn_primary": "Mulai Proyek",
         "cta_btn_secondary": "Kirim Email",
-        "cta_marquee": "MARI KITA BANGUN — PUNYA PROYEK? —"
+        "cta_marquee": "MARI KITA BANGUN — PUNYA PROYEK? —",
+        "skills_cad": {
+            "title_system": "Sistem",
+            "title_arch": "Arsitektur",
+            "desc": "Spesifikasi kemampuan teknis. Pilih salah satu sektor untuk mengisolasi dan memperluas tampilan skema."
+        }
     },
     "nav": {
         "home": "Beranda",

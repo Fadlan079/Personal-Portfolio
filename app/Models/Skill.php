@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Skill extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name', 'category', 'icon'];
+    protected $fillable = ['name', 'description', 'category', 'icon'];
 
     public function projects()
     {
