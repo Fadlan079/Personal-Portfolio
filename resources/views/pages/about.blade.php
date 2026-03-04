@@ -48,7 +48,7 @@
             </div>
 
             <div class="relative z-10 aspect-[4/5] bg-surface border border-border overflow-hidden flex items-center justify-center filter grayscale group-hover:grayscale-0 transition-all duration-700">
-                <img src="{{ $profilePhoto }}" alt="Fadlan" class="w-4/5 h-4/5 object-contain mx-auto my-auto opacity-80 group-hover:opacity-100 transition-all duration-500">
+                <img src="{{ $profilePhoto }}" alt="Photo Profile" class="w-4/5 h-4/5 object-contain mx-auto my-auto opacity-80 group-hover:opacity-100 transition-all duration-500">
                 <div class="absolute inset-0 scanlines pointer-events-none"></div>
             </div>
         </div>

@@ -164,6 +164,7 @@ function applyTheme(theme) {
     html.classList.remove('theme-light', 'theme-dark');
     html.classList.add(`theme-${theme}`);
 
+    // Pass the original set theme to updateIcon so it can check localStorage
     updateIcon(theme);
 }
 
@@ -177,9 +178,11 @@ function updateIcon(theme) {
         'fa-desktop'
     );
 
-    if (!localStorage.getItem(THEME_KEY)) {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (!savedTheme || savedTheme === 'system') {
         icon.classList.add('fa-desktop');
-    } else if (theme === 'dark') {
+    } else if (savedTheme === 'dark') {
         icon.classList.add('fa-moon');
     } else {
         icon.classList.add('fa-sun');
@@ -263,13 +266,38 @@ function createWipeGrid(theme, textStr) {
 }
 
 window.toggleTheme = function () {
-    const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
-    const nextTheme = savedTheme === 'dark' ? 'light' : 'dark';
+    const savedTheme = localStorage.getItem(THEME_KEY) || 'system';
+    
+    let nextTheme;
+    if (savedTheme === 'system') {
+        nextTheme = 'light';
+    } else if (savedTheme === 'light') {
+        nextTheme = 'dark';
+    } else {
+        nextTheme = 'system';
+    }
+    
+    // Evaluate actual theme colors to use for the screen wipe
+    const actualNextTheme = nextTheme === 'system' ? getSystemTheme() : nextTheme;
 
-    const grid = createWipeGrid(nextTheme, `SYS.THEME_SWAP('${nextTheme.toUpperCase()}')`);
+    const grid = createWipeGrid(actualNextTheme, `SYS.THEME_SWAP('${nextTheme.toUpperCase()}')`);
     if (!grid) return;
 
     const tl = gsap.timeline();
+
+    // Fire AJAX request to sync with backend (if user is authenticated)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (csrfToken) {
+        fetch('/api/theme', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json' // to prevent redirects if not authed
+            },
+            body: JSON.stringify({ theme: nextTheme })
+        }).catch(err => console.error('Theme sync failed:', err));
+    }
 
     tl.to('.theme-glitch-box', {
         scale: 1, opacity: 1, duration: 0.05,
@@ -279,7 +307,13 @@ window.toggleTheme = function () {
         .to('#theme-sys-text', { opacity: 1, duration: 0.1 }, "-=0.2")
         .call(() => {
             localStorage.setItem(THEME_KEY, nextTheme);
-            applyTheme(nextTheme);
+            if (nextTheme === 'system') {
+                applyTheme(getSystemTheme());
+                // We must update the icon separately here because the actual theme applied is dark/light
+                updateIcon('system');
+            } else {
+                applyTheme(nextTheme);
+            }
         })
         .to('#theme-sys-text', { opacity: 0, duration: 0.1 }, "+=0.3")
         .to('.theme-glitch-box', { color: 'transparent', borderColor: 'transparent', duration: 0.1 })
@@ -292,9 +326,10 @@ window.toggleTheme = function () {
 };
 
 function triggerPageWipe(url) {
-    const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
     const path = new URL(url).pathname || '/';
-    const grid = createWipeGrid(savedTheme, `SYS.NAVIGATE('${path}')`);
+    const grid = createWipeGrid(actualTheme, `SYS.NAVIGATE('${path}')`);
 
     if (!grid) {
         window.location.href = url;
@@ -390,8 +425,9 @@ let currentLocale = document.documentElement.lang || 'id';
 langToggle?.addEventListener('click', async () => {
     const next = currentLocale === 'id' ? 'en' : 'id';
 
-    const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
-    const grid = createWipeGrid(savedTheme, `SYS.LANG_SWAP('${next.toUpperCase()}')`);
+    let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
+    const grid = createWipeGrid(actualTheme, `SYS.LANG_SWAP('${next.toUpperCase()}')`);
 
     if (!grid) return; // Prevent spamming
 
@@ -411,6 +447,21 @@ langToggle?.addEventListener('click', async () => {
             await loadLanguage(next);
             localStorage.setItem('locale', next);
             document.cookie = `locale=${next};path=/;max-age=31536000`;
+            
+            // Fire AJAX request to sync with backend
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            if (csrfToken) {
+                fetch('/api/locale', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ locale: next })
+                }).catch(err => console.error('Locale sync failed:', err));
+            }
+
             currentLocale = next;
             updateLangIcon(next);
 
@@ -616,8 +667,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.documentElement.classList.remove('hide-for-transition');
         document.body.style.visibility = 'visible';
 
-        const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
-        const grid = createWipeGrid(savedTheme, '');
+        let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+        const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
+        const grid = createWipeGrid(actualTheme, '');
 
         if (grid) {
             // Pre-fill the screen
