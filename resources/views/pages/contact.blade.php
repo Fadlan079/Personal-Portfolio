@@ -304,22 +304,28 @@
 </section>
 
 
-{{-- END --}}
-<section id="contact-end" class="py-32 border-t border-border overflow-hidden">
-    <div class="max-w-6xl mx-auto px-6 space-y-10">
+<section id="contact-end" class="relative py-32 border-t border-border overflow-hidden">
+    <div class="relative z-10 max-w-6xl mx-auto px-6 grid md:grid-cols-[1fr_auto] gap-10 items-end">
+        
+        <div class="space-y-8">
+            <p class="end-breadcrumb text-xs uppercase tracking-widest text-muted">
+                index / end
+            </p>
+            <h3 class="end-title text-[clamp(2rem,5vw,3rem)] font-semibold leading-tight max-w-2xl" data-i18n="contact.end.title">
+                Good conversations start with a simple message.
+            </h3>
+            <p class="end-desc text-muted max-w-xl leading-relaxed" data-i18n="contact.end.description">
+                Clear intent, honest communication, and mutual respect are the
+                foundation of any meaningful collaboration.
+            </p>
+        </div>
 
-        <p class="end-breadcrumb text-xs uppercase tracking-widest text-muted">
-            index / end
-        </p>
-
-        <h3 class="end-title text-[clamp(2rem,5vw,3rem)] font-semibold leading-tight max-w-2xl" data-i18n="contact.end.title">
-            Good conversations start with a simple message.
-        </h3>
-
-        <p class="end-desc text-muted max-w-xl leading-relaxed" data-i18n="contact.end.description">
-            Clear intent, honest communication, and mutual respect are the
-            foundation of any meaningful collaboration.
-        </p>
+        <div class="hidden md:flex items-center justify-center w-32 h-32 border border-muted/30 rounded-full rotate-12 opacity-60 pointer-events-none select-none">
+            <div class="text-[10px] uppercase tracking-[0.2em] text-muted text-center leading-relaxed">
+                <span class="block border-b border-muted/30 pb-1 mb-1">Status</span>
+                Open for<br>Collabs
+            </div>
+        </div>
 
     </div>
 </section>

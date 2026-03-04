@@ -219,21 +219,47 @@
     @endif
 </section>
 
-<section id="projects-end" class="py-32 border-t border-border overflow-hidden">
-  <div class="max-w-6xl mx-auto px-6 space-y-10">
+<section id="projects-end" class="relative py-40 border-t border-border overflow-hidden">
+    {{-- Subtle Graphic --}}
+    <div class="absolute left-0 bottom-0 opacity-[0.03] pointer-events-none -translate-x-1/4 translate-y-1/4">
+        <svg width="400" height="400" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+            <rect x="20" y="20" width="60" height="60" stroke-width="0.5" stroke-dasharray="2 2" />
+            <circle cx="50" cy="50" r="30" stroke-width="0.5" />
+            <line x1="20" y1="20" x2="80" y2="80" stroke-width="0.5" />
+            <line x1="80" y1="20" x2="20" y2="80" stroke-width="0.5" />
+        </svg>
+    </div>
 
-    <p class="text-xs uppercase tracking-widest text-muted">
-    index / end
-    </p>
+    <div class="max-w-6xl mx-auto px-6 space-y-16 relative z-10">
+        
+        <div class="flex justify-between items-end border-b border-border/40 pb-6">
+            <p class="text-xs uppercase tracking-[0.3em] text-muted">
+                index / end
+            </p>
+            <p class="text-[10px] uppercase tracking-[0.2em] text-muted hidden md:block" data-i18n="project.end.tags">
+                Systems · Interfaces · Tools
+            </p>
+        </div>
 
-    <h3 id="projects-end-title"
-        data-i18n="project.end.title"
-        class="text-[clamp(2rem,5vw,3rem)] font-semibold leading-tight max-w-2xl">
-    </h3>
+        <h3 id="projects-end-title"
+            data-i18n="project.end.title"
+            class="text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tight max-w-4xl">
+        </h3>
 
-    <p class="text-muted max-w-xl leading-relaxed" data-i18n="project.end.description"></p>
+        <div class="grid md:grid-cols-[1fr_auto] gap-10 items-end">
+            <p class="text-muted max-w-xl leading-relaxed text-base md:text-lg" data-i18n="project.end.description"></p>
+            
+            <div class="hidden md:flex flex-col items-center">
+                <a href="#projects-hero" class="group flex items-center justify-center w-16 h-16 rounded-full border border-border bg-surface hover:border-primary transition-all duration-300">
+                    <svg class="w-5 h-5 text-muted group-hover:text-primary transition-transform duration-300 group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                    </svg>
+                </a>
+                <span class="mt-4 text-[10px] uppercase tracking-widest text-muted" data-i18n="project.end.back_to_top">Back to top</span>
+            </div>
+        </div>
 
-  </div>
+    </div>
 </section>
 
 @endsection

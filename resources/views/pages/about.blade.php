@@ -76,4 +76,35 @@
     </div>
 </div>
 </section>
+
+<section id="about-end" class="relative py-40 border-t border-border overflow-hidden">
+    <div class="absolute right-0 bottom-0 opacity-[0.03] pointer-events-none">
+        <svg width="400" height="400" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+            <circle cx="50" cy="50" r="40" stroke-width="0.5" stroke-dasharray="2 2" />
+            <path d="M50 10V90M10 50H90" stroke-width="0.5" />
+        </svg>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 space-y-12 relative z-10">
+        <p class="text-xs uppercase tracking-[0.3em] text-muted">
+            index / end
+        </p>
+
+        <h3 class="text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.1] max-w-4xl tracking-tight">
+            <span data-i18n="about.end.cta_title">Solid structure,</span><br/>
+            <span class="text-muted font-normal" data-i18n="about.end.cta_subtitle">clean execution.</span>
+        </h3>
+
+        <div class="flex flex-col md:flex-row md:items-center gap-8 justify-between">
+            <p class="text-muted max-w-lg leading-relaxed text-base md:text-lg" data-i18n="about.end.cta_desc">
+                Turning complex requirements into scalable web applications. I focus on writing maintainable code and delivering reliable solutions that simply work.
+            </p>
+            
+            <div class="pt-8 md:pt-0">
+                <p class="text-xs uppercase tracking-widest text-muted mb-2" data-i18n="about.end.auth_by">Authenticated by</p>
+                <p class="font-serif text-4xl italic opacity-80">Fadlan Firdaus</p>
+            </div>
+        </div>
+    </div>
+</section>
 @endsection

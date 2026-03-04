@@ -1,4 +1,13 @@
 {
+    "home": {
+        "cta_label": "Available for work",
+        "cta_title": "Got a project in mind?",
+        "cta_subtitle": "Let’s build it.",
+        "cta_desc": "Whether it's a structural web application, a modern dashboard, or a dynamic interface, I'm ready to turn your vision into reality.",
+        "cta_btn_primary": "Start a Project",
+        "cta_btn_secondary": "Send an Email",
+        "cta_marquee": "LET'S BUILD IT — GOT A PROJECT? —"
+    },
     "nav": {
         "home": "Home",
         "about": "About",
@@ -64,7 +73,13 @@
             "NO DECORATION WITHOUT FUNCTION",
             "MOTION MUST EXPLAIN",
             "STRUCTURE BEFORE STYLE"
-        ]
+        ],
+        "end": {
+            "cta_title": "Solid structure,",
+            "cta_subtitle": "clean execution.",
+            "cta_desc": "Turning complex requirements into scalable web applications. I focus on writing maintainable code and delivering reliable solutions that simply work.",
+            "auth_by": "Authenticated by"
+        }
     },
     "project": {
         "hero": {
@@ -94,7 +109,9 @@
         },
         "end": {
             "title": "Good projects are shaped by constraints.",
-            "description": "Clear constraints force clear decisions. Through scope, limitations, and iteration, structure emerges and solutions become intentional."
+            "description": "Clear constraints force clear decisions. Through scope, limitations, and iteration, structure emerges and solutions become intentional.",
+            "tags": "Systems · Interfaces · Tools",
+            "back_to_top": "Back to top"
         }
     },
     "contact": {
@@ -138,7 +155,6 @@
             "description": "Clear intent, honest communication, and mutual respect are the foundation of any meaningful collaboration."
         }
     },
-
     "footer": {
         "description": "Built with structure, clarity, and intention.",
         "quick_links": "Quick Links",

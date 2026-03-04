@@ -943,54 +943,43 @@ obs.observe(document.getElementById('skills'));
 })();
 </script>
 
-<section class="relative z-10 py-36 border-t border-border overflow-hidden">
+<section class="relative z-10 py-40 border-t border-border overflow-hidden bg-background flex items-center justify-center min-h-[60vh]">
+    
+    <div class="absolute w-[200%] flex whitespace-nowrap opacity-[0.03] hover:opacity-10 transition-opacity duration-700 cursor-default pointer-events-auto z-0 select-none" aria-hidden="true">
+        <div class="animate-marquee text-[clamp(8rem,15vw,12rem)] font-extrabold tracking-tighter leading-none flex gap-8 text-text">
+            <span data-i18n="home.cta_marquee">LET'S BUILD IT — GOT A PROJECT? —</span>
+            <span data-i18n="home.cta_marquee">LET'S BUILD IT — GOT A PROJECT? —</span>
+        </div>
+    </div>
 
-    <div class="relative max-w-4xl mx-auto px-6 text-center">
-
-        <!-- Small Label -->
-        <p class="text-sm uppercase tracking-widest text-muted mb-6">
-            Let’s Collaborate
-        </p>
-
-        <!-- Headline -->
-        <h3 class="text-4xl md:text-5xl font-semibold leading-tight mb-6">
-            Let’s build something meaningful together.
-        </h3>
-
-        <!-- Description -->
-        <p class="text-muted max-w-2xl mx-auto mb-12 leading-loose">
-            Whether you need a structured web application,
-            a modern dashboard system, or a clean portfolio site —
-            I’m ready to help turn your ideas into scalable solutions.
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="flex justify-center gap-6 flex-wrap">
-
-            <a href="{{ route('portofolio.contact') }}"
-               class="cta-btn relative overflow-hidden px-10 py-4
-                      bg-primary text-text font-semibold border-2 border-border"
-               style="--cta-bubble-color: var(--color-bg);">
-
-                <span class="cta-bubble"></span>
-                <span class="cta-text relative z-10">
-                    Start a Project
-                </span>
-            </a>
-
-            <a href="mailto:fadlanfirdaus220@gmail.com"
-               class="cta-btn relative overflow-hidden px-10 py-4
-                      border-2 border-border text-text font-semibold"
-               style="--cta-bubble-color: var(--color-primary);">
-
-                <span class="cta-bubble"></span>
-                <span class="cta-text relative z-10">
-                    Send Email
-                </span>
-            </a>
-
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center flex flex-col items-center group">
+        
+        <div class="inline-flex items-center gap-2 mb-8 bg-surface/50 border border-border px-4 py-2 rounded-full backdrop-blur-md">
+            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+            <p class="text-xs uppercase tracking-widest text-muted" data-i18n="home.cta_label">Available for work</p>
         </div>
 
+        <h3 class="text-[clamp(3rem,7vw,5rem)] font-semibold leading-[1.05] mb-10 tracking-tight">
+            <span data-i18n="home.cta_title">Got a project in mind?</span>
+        </h3>
+
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+            <a href="{{ route('portofolio.contact') }}" class="relative overflow-hidden px-10 py-4 bg-primary text-text font-semibold border-2 border-primary hover:bg-transparent transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.3)] group-hover:shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.5)]">
+                <span class="relative z-10 flex items-center gap-3">
+                    <span data-i18n="home.cta_btn_primary">Start a Project</span>
+                    <svg class="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </span>
+            </a>
+
+            <a href="mailto:fadlanfirdaus220@gmail.com" class="px-10 py-4 border-2 border-border bg-surface/30 backdrop-blur-sm text-text font-semibold hover:border-primary transition-colors duration-300">
+                <span class="flex items-center gap-3">
+                    <span data-i18n="home.cta_btn_secondary">Send an Email</span>
+                </span>
+            </a>
+        </div>
+        
     </div>
 </section>
 

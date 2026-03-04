@@ -1,4 +1,13 @@
 {
+    "home": {
+        "cta_label": "Tersedia untuk bekerja",
+        "cta_title": "Punya proyek yang ingin diwujudkan?",
+        "cta_subtitle": "Mari kita bangun.",
+        "cta_desc": "Baik itu struktur aplikasi web, dasbor modern, maupun antarmuka dinamis, saya siap mengubah visi Anda menjadi kenyataan.",
+        "cta_btn_primary": "Mulai Proyek",
+        "cta_btn_secondary": "Kirim Email",
+        "cta_marquee": "MARI KITA BANGUN — PUNYA PROYEK? —"
+    },
     "nav": {
         "home": "Beranda",
         "about": "Tentang",
@@ -64,7 +73,13 @@
             "TIDAK ADA DEKORASI TANPA TUJUAN",
             "GERAKAN HARUS MENJELASKAN TUJUAN",
             "STRUKTUR LEBIH DULU ,GAYA MENYUSUL"
-        ]
+        ],
+        "end": {
+            "cta_title": "Struktur yang kokoh,",
+            "cta_subtitle": "eksekusi yang bersih.",
+            "cta_desc": "Mengubah kebutuhan kompleks menjadi aplikasi web yang dapat diskalakan. Saya berfokus pada penulisan kode yang mudah dipelihara dan memberikan solusi andal yang berfungsi dengan baik.",
+            "auth_by": "Diautentikasi oleh"
+        }
     },
     "project": {
         "hero": {
@@ -94,7 +109,9 @@
         },
         "end": {
             "title": "Proyek yang baik dibentuk oleh batasan.",
-            "description": "Batasan yang jelas memaksa keputusan yang tepat. Melalui cakupan, keterbatasan, dan iterasi, struktur terbentuk dan solusi menjadi lebih bermakna."
+            "description": "Batasan yang jelas memaksa keputusan yang tepat. Melalui cakupan, keterbatasan, dan iterasi, struktur terbentuk dan solusi menjadi lebih bermakna.",
+            "tags": "Sistem · Antarmuka · Alat",
+            "back_to_top": "Kembali ke atas"
         }
     },
     "contact": {
