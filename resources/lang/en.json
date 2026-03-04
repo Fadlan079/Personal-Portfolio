@@ -110,7 +110,8 @@
         },
         "empty": {
             "title": "Nothing here yet.",
-            "desc": "No projects match the current search or filter."
+            "desc": "No projects match the current search or filter.",
+            "reset": "Clear Search & Filters"
         },
         "end": {
             "title": "Good projects are shaped by constraints.",

@@ -172,14 +172,27 @@
                 </div>
             </div>
         @empty
-            <div class="col-span-full">
+            <div class="col-span-full flex flex-col items-start py-10">
                 <p class="text-xs uppercase tracking-widest text-muted">
                     index / empty
                 </p>
 
-                <h3 class="mt-6 text-[clamp(1.5rem,4vw,2rem)] font-semibold max-w-xl" data-i18n="project.empty.title"></h3>
+                <h3 class="mt-6 text-[clamp(1.5rem,4vw,2rem)] font-semibold max-w-xl" data-i18n="project.empty.title">
+                    {{-- Judul fallback jika i18n belum jalan --}}
+                </h3>
 
-                <p class="mt-2 text-muted max-w-md leading-relaxed" data-i18n="project.empty.desc"></p>
+                <p class="mt-2 text-muted max-w-md leading-relaxed" data-i18n="project.empty.desc">
+                    {{-- Deskripsi fallback --}}
+                </p>
+
+                {{-- Tombol Reset --}}
+                <button 
+                    id="reset-filters-btn" 
+                    class="mt-8 px-6 py-2.5 border border-border bg-surface hover:border-primary hover:text-primary transition-colors text-sm flex items-center gap-3 group"
+                >
+                    <i class="fas fa-redo text-xs text-muted group-hover:text-primary transition-colors"></i>
+                    <span data-i18n="project.empty.reset">Clear Search & Filters</span>
+                </button>
             </div>
         @endforelse
     </div>

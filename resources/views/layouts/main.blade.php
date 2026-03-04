@@ -80,29 +80,44 @@
         -webkit-text-stroke: 1px var(--color-muted);
         }
 
-        /* .page-texture {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            background-image:
-                linear-gradient(to right, var(--color-surface) 1px, transparent 1px),
-                linear-gradient(to bottom, var(--color-surface) 1px, transparent 1px);
-            background-size: 60px 60px;
-        } */
+        .cursor-plus {
+            position: relative;
+            width: 10px;
+            height: 10px;
+        }
 
-                /* .page-texture {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        background-image:
-            radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 20px 20px; /* jarak antar titik */
-        } */
+        .cursor-plus::before,
+        .cursor-plus::after {
+            content: "";
+            position: absolute;
+            background: black; /* supaya kontras dengan white blob */
+        }
 
+        /* Horizontal */
+        .cursor-plus::before {
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            transform: translateY(-50%);
+        }
+
+        /* Vertical */
+        .cursor-plus::after {
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            transform: translateX(-50%);
+        }
 </style>
     @stack('head')
+    <script>
+        if (sessionStorage.getItem('sysTransition')) {
+            document.documentElement.classList.add('hide-for-transition');
+            document.write('<style id="sys-trans-style">body { visibility: hidden; }</style>');
+        }
+    </script>
 </head>
 <body class="bg-bg text-text overflow-x-hidden" style="cursor: none;">
     <!-- Invert Cursor (mix-blend-mode: difference) -->
@@ -120,7 +135,12 @@
         transition: opacity 0.3s ease, width 0.18s ease, height 0.18s ease;
         opacity: 0;
         will-change: left, top;
-    "></div>
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    ">
+        <div class="cursor-plus"></div>
+    </div>
     <div id="cursor-trail" style="
         position: fixed;
         pointer-events: none;

@@ -200,24 +200,143 @@ function initTheme() {
 
 initTheme();
 
+function getThemeColors(theme) {
+    const bg = theme === 'dark' ? '#0e0c12' : '#f8f9fa';
+    let primary = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+    if (!primary) primary = theme === 'dark' ? '#fbbf24' : '#2563eb';
+    const border = theme === 'dark' ? '#1f1f2e' : '#e2e8f0';
+    return { bg, primary, border };
+}
+
+function createWipeGrid(theme, textStr) {
+    if (document.getElementById('sys-transition-overlay')) return null;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'sys-transition-overlay';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: 999999; display: flex; flex-wrap: wrap; pointer-events: none;
+    `;
+
+    const colors = getThemeColors(theme);
+    const colCount = Math.ceil(window.innerWidth / 80);
+    const rowCount = Math.ceil(window.innerHeight / 80);
+    const totalBoxes = colCount * rowCount;
+
+    for (let i = 0; i < totalBoxes; i++) {
+        const box = document.createElement('div');
+        box.classList.add('theme-glitch-box');
+
+        let textContent = '';
+        let fontColor = colors.bg;
+
+        if (Math.random() > 0.85) {
+            textContent = '0x' + Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+            fontColor = colors.primary;
+        }
+
+        box.style.cssText = `
+            width: ${100 / colCount}vw; height: ${100 / rowCount}vh; 
+            background: ${colors.bg}; border: 1px solid ${colors.border};
+            color: ${fontColor}; font-family: monospace; font-size: 10px;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transform: scale(0.9);
+        `;
+        box.innerText = textContent;
+        overlay.appendChild(box);
+    }
+
+    const sysText = document.createElement('div');
+    sysText.id = 'theme-sys-text';
+    sysText.style.cssText = `
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-family: 'Space Grotesk', monospace; font-weight: bold; font-size: 1.25rem;
+        color: ${colors.bg}; background: ${colors.primary}; padding: 12px 24px;
+        z-index: 10; opacity: 0; text-transform: uppercase; letter-spacing: 0.2em;
+    `;
+    if (textStr) sysText.innerText = textStr;
+    overlay.appendChild(sysText);
+
+    document.body.appendChild(overlay);
+
+    return { overlay, colCount, rowCount };
+}
+
 window.toggleTheme = function () {
-    const savedTheme = localStorage.getItem(THEME_KEY);
+    const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    const nextTheme = savedTheme === 'dark' ? 'light' : 'dark';
 
-    if (!savedTheme) {
-        localStorage.setItem(THEME_KEY, 'dark');
-        applyTheme('dark');
-        return;
-    }
+    const grid = createWipeGrid(nextTheme, `SYS.THEME_SWAP('${nextTheme.toUpperCase()}')`);
+    if (!grid) return;
 
-    if (savedTheme === 'dark') {
-        localStorage.setItem(THEME_KEY, 'light');
-        applyTheme('light');
-        return;
-    }
+    const tl = gsap.timeline();
 
-    localStorage.removeItem(THEME_KEY);
-    applyTheme(getSystemTheme());
+    tl.to('.theme-glitch-box', {
+        scale: 1, opacity: 1, duration: 0.05,
+        stagger: { amount: 0.4, grid: [grid.rowCount, grid.colCount], from: "random" },
+        ease: "power0.none"
+    })
+        .to('#theme-sys-text', { opacity: 1, duration: 0.1 }, "-=0.2")
+        .call(() => {
+            localStorage.setItem(THEME_KEY, nextTheme);
+            applyTheme(nextTheme);
+        })
+        .to('#theme-sys-text', { opacity: 0, duration: 0.1 }, "+=0.3")
+        .to('.theme-glitch-box', { color: 'transparent', borderColor: 'transparent', duration: 0.1 })
+        .to('.theme-glitch-box', {
+            scale: 0.2, opacity: 0, duration: 0.15,
+            stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "center" },
+            ease: "expo.out"
+        }, "+=0.1")
+        .call(() => grid.overlay.remove());
 };
+
+function triggerPageWipe(url) {
+    const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    const path = new URL(url).pathname || '/';
+    const grid = createWipeGrid(savedTheme, `SYS.NAVIGATE('${path}')`);
+
+    if (!grid) {
+        window.location.href = url;
+        return;
+    }
+
+    const tl = gsap.timeline();
+    tl.to('.theme-glitch-box', {
+        scale: 1, opacity: 1, duration: 0.05,
+        stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "random" },
+        ease: "power0.none"
+    })
+        .to('#theme-sys-text', { opacity: 1, duration: 0.1 }, "-=0.15")
+        .call(() => {
+            sessionStorage.setItem('sysTransition', 'true');
+            window.location.href = url;
+        });
+}
+
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link || !link.href) return; // Ignore non-links or links without href
+
+    // Must be same origin
+    const url = new URL(link.href, window.location.origin);
+    if (url.origin !== window.location.origin) return;
+
+    // Ignore anchors targeting the same page
+    if (url.pathname === window.location.pathname && url.hash) return;
+
+    // Ignore target blank
+    if (link.target === '_blank') return;
+
+    // Ignore javascript: links or specific protocols
+    if (link.href.startsWith('javascript:') || link.href.includes('mailto:') || link.href.includes('tel:')) return;
+
+    // Ignore download links, HTMX, or explicit no-transition elements
+    if (link.hasAttribute('download') || link.hasAttribute('hx-get') || link.hasAttribute('hx-post') || link.closest('[hx-boost="true"]') || link.classList.contains('no-transition')) return;
+
+    e.preventDefault();
+    triggerPageWipe(link.href);
+});
 
 window.matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', e => {
@@ -271,14 +390,46 @@ let currentLocale = document.documentElement.lang || 'id';
 langToggle?.addEventListener('click', async () => {
     const next = currentLocale === 'id' ? 'en' : 'id';
 
-    await loadLanguage(next);
+    const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    const grid = createWipeGrid(savedTheme, `SYS.LANG_SWAP('${next.toUpperCase()}')`);
 
-    localStorage.setItem('locale', next);
-    document.cookie = `locale=${next};path=/;max-age=31536000`;
+    if (!grid) return; // Prevent spamming
 
-    currentLocale = next;
-    updateLangIcon(next);
-});
+    const tl = gsap.timeline();
+
+    // Wipe IN
+    tl.to('.theme-glitch-box', {
+        scale: 1, opacity: 1, duration: 0.05,
+        stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "random" },
+        ease: "power0.none"
+    })
+        .to('#theme-sys-text', { opacity: 1, duration: 0.1 }, "-=0.15")
+
+        // Execute logic while screen is covered
+        .call(async () => {
+            tl.pause(); // Pause exactly when screen is covered
+            await loadLanguage(next);
+            localStorage.setItem('locale', next);
+            document.cookie = `locale=${next};path=/;max-age=31536000`;
+            currentLocale = next;
+            updateLangIcon(next);
+
+            // Resume timeline AFTER language is loaded
+            tl.play();
+        })
+
+         // Wipe OUT (after resume)
+        tl.to('#theme-sys-text', { opacity: 0, duration: 0.1 }, "+=0.3")
+            .to('.theme-glitch-box', { color: 'transparent', borderColor: 'transparent', duration: 0.1 })
+            .to('.theme-glitch-box', {
+                scale: 0.2, opacity: 0, duration: 0.15,
+                stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "center" },
+                ease: "expo.out"
+            }, "+=0.1")
+
+            // Cleanup
+                .call(() => grid.overlay.remove());
+        });
 
 function updateLangIcon(currentLocale) {
     const flag = document.getElementById('langFlag');
@@ -454,6 +605,36 @@ window.imageUpload = function (config = {}) {
 Alpine.start()
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // ---------------------------------
+    // TRANSITION OUT ON PAGE LOAD
+    // ---------------------------------
+    if (sessionStorage.getItem('sysTransition')) {
+        sessionStorage.removeItem('sysTransition');
+
+        const styleRemover = document.getElementById('sys-trans-style');
+        if (styleRemover) styleRemover.remove();
+        document.documentElement.classList.remove('hide-for-transition');
+        document.body.style.visibility = 'visible';
+
+        const savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+        const grid = createWipeGrid(savedTheme, '');
+
+        if (grid) {
+            // Pre-fill the screen
+            gsap.set('.theme-glitch-box', { scale: 1, opacity: 1 });
+            gsap.set('.theme-glitch-box', { color: 'transparent', borderColor: 'transparent' });
+            gsap.set('#theme-sys-text', { opacity: 0 });
+
+            // Stagger out 
+            gsap.to('.theme-glitch-box', {
+                scale: 0.2, opacity: 0, duration: 0.15,
+                stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "center" },
+                ease: "expo.out",
+                onComplete: () => grid.overlay.remove()
+            });
+        }
+    }
+
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('nav a[href^="#"]');
     const observer = new IntersectionObserver(entries => {

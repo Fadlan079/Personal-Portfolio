@@ -79,6 +79,37 @@
         color: transparent;
         -webkit-text-stroke: 1px var(--color-muted);
         }
+
+        .cursor-plus {
+            position: relative;
+            width: 10px;
+            height: 10px;
+        }
+
+        .cursor-plus::before,
+        .cursor-plus::after {
+            content: "";
+            position: absolute;
+            background: black; /* supaya kontras dengan white blob */
+        }
+
+        /* Horizontal */
+        .cursor-plus::before {
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            transform: translateY(-50%);
+        }
+
+        /* Vertical */
+        .cursor-plus::after {
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            transform: translateX(-50%);
+        }        
     </style>
 </head>
 
@@ -98,7 +129,12 @@
         transition: opacity 0.3s ease, width 0.18s ease, height 0.18s ease;
         opacity: 0;
         will-change: left, top;
-    "></div>
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    ">
+        <div class="cursor-plus"></div>
+    </div>
     <div id="cursor-trail" style="
         position: fixed;
         pointer-events: none;

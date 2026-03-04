@@ -4,19 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\User;
 
 class HomeController extends Controller
 {
+    /**
+     * Resolve the profile photo URL (from storage or default public file).
+     */
+    private function profilePhotoUrl(): string
+    {
+        $user = User::first();
+        if ($user && $user->profile_photo) {
+            return asset('storage/' . $user->profile_photo);
+        }
+        return asset('profile.jpg');
+    }
+
     public function index()
     {
         $recentProjects = Project::recent(5)->get();
         // Only fetch skills that have at least 1 associated project (unlocked)
         $skills = \App\Models\Skill::has('projects')->withCount('projects')->get();
-        return view('pages.home', compact('recentProjects', 'skills'));
+        $profilePhoto = $this->profilePhotoUrl();
+        return view('pages.home', compact('recentProjects', 'skills', 'profilePhoto'));
     }
 
-    public function Showabout(){
-        return view('pages.about');
+    public function Showabout()
+    {
+        $profilePhoto = $this->profilePhotoUrl();
+        return view('pages.about', compact('profilePhoto'));
     }
 
     public function Showproject(Request $request)
@@ -33,7 +49,7 @@ class HomeController extends Controller
 
         $sort = $request->input('sort', 'latest');
         $projects = $query->when($sort === 'oldest', fn($q) => $q->oldest(), fn($q) => $q->latest())
-                          ->paginate(6)->withQueryString();
+            ->paginate(6)->withQueryString();
         $summary  = Project::summary();
 
         // AJAX: return JSON with rendered HTML partials
@@ -50,7 +66,8 @@ class HomeController extends Controller
         return view('pages.project', compact('projects', 'summary'));
     }
 
-    public function Showcontact(){
+    public function Showcontact()
+    {
         return view('pages.contact');
     }
 }

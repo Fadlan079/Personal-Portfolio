@@ -159,6 +159,38 @@
         });
     });
 
+    // ── Reset Button — Delegated Click ─────────────────────────
+    grid.addEventListener('click', (e) => {
+        const resetBtn = e.target.closest('#reset-filters-btn');
+        if (!resetBtn) return;
+
+        // 1. Reset State
+        currentSearch = '';
+        currentType = 'all';
+        currentSort = 'latest';
+        currentPage = 1;
+
+        // 2. Reset UI: Search Input
+        if (searchInput) searchInput.value = '';
+
+        // 3. Reset UI: Filter Buttons
+        filterBtns.forEach(b => {
+            b.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
+            if (b.dataset.filter === 'all') {
+                b.classList.add('border-primary', 'bg-primary/10', 'text-primary');
+            }
+        });
+
+        // 4. Reset UI: Sort Dropdown
+        if (sortLabel && sortToggle) {
+            sortLabel.textContent = 'Newest'; // Sesuaikan teks default sort
+            sortToggle.classList.remove('border-primary', 'text-primary');
+        }
+
+        // 5. Fetch Ulang Data
+        fetchProjects();
+    });
+
     // ── Pagination — delegated click on #projects-pagination ───
     if (paginationWrap) {
         paginationWrap.addEventListener('click', e => {

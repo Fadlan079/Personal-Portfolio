@@ -110,7 +110,8 @@
         },
         "empty": {
             "title": "Belum ada apa pun di sini.",
-            "desc": "Tidak ada proyek yang sesuai dengan pencarian atau filter saat ini."
+            "desc": "Tidak ada proyek yang sesuai dengan pencarian atau filter saat ini.",
+            "reset": "Hapus Pencarian & Filter"
         },
         "end": {
             "title": "Proyek yang baik dibentuk oleh batasan.",

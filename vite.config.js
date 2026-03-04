@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [
     laravel({
       input: [
+        
         'resources/css/app.css',
+        'resources/css/hero.css',
         'resources/css/contact.css',
         'resources/css/project.css',
         'resources/css/dashboard_project.css',
@@ -20,4 +22,7 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
 })
