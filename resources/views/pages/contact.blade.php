@@ -72,11 +72,11 @@
                         </div>
                         
                         {{-- Method Tabs --}}
-                        <div class="flex bg-surface border border-border rounded-lg p-0.5" id="contact-method-tabs">
-                            <button type="button" data-method="email" class="method-tab active px-3 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md transition-all bg-primary text-bg">
+                        <div class="flex items-center gap-1 bg-muted/5 p-1 rounded-full border border-border/40" id="contact-method-tabs">
+                            <button type="button" data-method="email" class="method-tab active px-4 py-1.5 text-[10px] uppercase tracking-[0.15em] font-medium rounded-full transition-all duration-300 bg-surface text-text shadow-sm border border-border/50">
                                 Email
                             </button>
-                            <button type="button" data-method="wa" class="method-tab px-3 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md transition-all text-muted hover:text-text">
+                            <button type="button" data-method="wa" class="method-tab px-4 py-1.5 text-[10px] uppercase tracking-[0.15em] font-medium rounded-full transition-all duration-300 text-muted hover:text-text border border-transparent">
                                 WhatsApp
                             </button>
                         </div>
@@ -376,11 +376,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update styling
         tabs.forEach(t => {
             if (t.dataset.method === method) {
-                t.classList.remove('text-muted', 'hover:text-text');
-                t.classList.add('bg-primary', 'text-bg');
+                // Active styles
+                t.classList.remove('text-muted', 'hover:text-text', 'border-transparent');
+                t.classList.add('bg-surface', 'text-text', 'shadow-sm', 'border-border/50');
             } else {
-                t.classList.add('text-muted', 'hover:text-text');
-                t.classList.remove('bg-primary', 'text-bg');
+                // Inactive styles
+                t.classList.add('text-muted', 'hover:text-text', 'border-transparent');
+                t.classList.remove('bg-surface', 'text-text', 'shadow-sm', 'border-border/50');
             }
         });
 
