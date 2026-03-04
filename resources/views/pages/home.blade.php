@@ -949,6 +949,8 @@ obs.observe(document.getElementById('skills'));
         <div class="animate-marquee text-[clamp(8rem,15vw,12rem)] font-extrabold tracking-tighter leading-none flex gap-8 text-text">
             <span data-i18n="home.cta_marquee">LET'S BUILD IT — GOT A PROJECT? —</span>
             <span data-i18n="home.cta_marquee">LET'S BUILD IT — GOT A PROJECT? —</span>
+            <span data-i18n="home.cta_marquee" aria-hidden="true">LET'S BUILD IT — GOT A PROJECT? —</span>
+            <span data-i18n="home.cta_marquee" aria-hidden="true">LET'S BUILD IT — GOT A PROJECT? —</span>
         </div>
     </div>
 

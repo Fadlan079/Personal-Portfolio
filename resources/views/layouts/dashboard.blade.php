@@ -191,23 +191,25 @@
             'icon'  => 'fa-solid fa-folder'
         ],
         [
-            'label' => 'Trash',
-            'href'  => route('dashboard.trash'),
-            'route' => 'dashboard.trash',
-            'icon'  => 'fa-solid fa-trash'
-        ],
-        [
             'label' => 'Skills',
             'href'  => route('dashboard.skills.index'),
             'route' => 'dashboard.skills.*',
             'icon'  => 'fa-solid fa-code-branch'
         ],
+        [
+            'label' => 'Trash',
+            'href'  => route('dashboard.trash'),
+            'route' => 'dashboard.trash',
+            'icon'  => 'fa-solid fa-trash'
+        ],
+
         // [
         //     'label' => 'Setting',
         //     'href'  => route('dashboard.settings'),
         //     'route' => 'dashboard.settings*',
         //     'icon'  => 'fa-solid fa-gear'
         // ],
+        
         [
             'label' => 'Account',
             'href'  => route('dashboard.account.edit'),

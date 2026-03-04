@@ -60,22 +60,34 @@
                 {{-- ── OPEN DOCUMENT (the form) ── --}}
                 <div class="folder-doc">
 
-                    {{-- Doc top bar --}}
-                    <div class="folder-doc-header">
-                        <div class="folder-doc-icon">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v12a2 2 0 01-2 2z"/>
-                            </svg>
+                    <div class="folder-doc-header flex justify-between items-center bg-bg/50 px-4 py-3 border-b border-border">
+                        <div class="flex items-center gap-2">
+                            <div class="folder-doc-icon text-muted">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v12a2 2 0 01-2 2z"/>
+                                </svg>
+                            </div>
+                            <span class="folder-doc-title text-sm font-medium">request_new.txt</span>
                         </div>
-                        <span class="folder-doc-title">request_new.txt</span>
-                        <span class="folder-doc-status" data-i18n="contact.folder.doc_status">● Draft</span>
+                        
+                        {{-- Method Tabs --}}
+                        <div class="flex bg-surface border border-border rounded-lg p-0.5" id="contact-method-tabs">
+                            <button type="button" data-method="email" class="method-tab active px-3 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md transition-all bg-primary text-bg">
+                                Email
+                            </button>
+                            <button type="button" data-method="wa" class="method-tab px-3 py-1 text-[10px] uppercase tracking-widest font-semibold rounded-md transition-all text-muted hover:text-text">
+                                WhatsApp
+                            </button>
+                        </div>
                     </div>
 
                     {{-- Doc fields --}}
                     <form action="{{ route('portofolio.contact.send') }}" method="POST">
                     @csrf
                     <div class="folder-doc-body">
+
+                        <input type="hidden" name="method" id="input-method" value="{{ old('method', 'email') }}">
 
                         {{-- Metadata: type --}}
                         <div class="folder-doc-field">
@@ -98,13 +110,14 @@
 
                         {{-- Metadata: sender --}}
                         <div class="folder-doc-field">
-                            <span class="folder-field-key" data-i18n="contact.folder.field_from">From</span>
+                            <span class="folder-field-key" id="label-sender" data-i18n="contact.folder.field_from">From</span>
                             <div class="folder-field-val">
-                                <input type="email" name="email" class="folder-field-input {{ $errors->has('email') ? 'border-red-500' : '' }}"
+                                <input type="text" name="sender" id="input-sender" class="folder-field-input {{ $errors->has('sender') ? 'border-red-500' : '' }}"
                                        placeholder="your@email.com"
-                                       value="{{ old('email') }}"
+                                       value="{{ old('sender') }}"
                                        data-i18n-placeholder="contact.folder.field_from_placeholder">
-                                @error('email')<span class="text-[10px] text-red-400 mt-1 block">{{ $message }}</span>@enderror
+                                @error('sender')<span class="text-[10px] text-red-400 mt-1 block">{{ $message }}</span>@enderror
+                                <p id="helper-sender" class="text-[10px] text-muted mt-1 hidden">Enter your WhatsApp number (e.g., 0812... or +62812...)</p>
                             </div>
                         </div>
 
@@ -331,3 +344,66 @@
 </section>
 
 @endsection
+
+@push('head')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.method-tab');
+    const inputMethod = document.getElementById('input-method');
+    const inputSender = document.getElementById('input-sender');
+    const labelSender = document.getElementById('label-sender');
+    const helperSender = document.getElementById('helper-sender');
+    
+    // Translations logic if available via i18n
+    const transFromEmail = "From"; // default fallback
+    const transFromWa = "WhatsApp"; // default fallback
+    
+    // Check session for wa url
+    @if(session('wa_url'))
+        window.open('{{ session('wa_url') }}', '_blank');
+    @endif
+
+    // Initialization using old input if validation failed
+    setMethod(inputMethod.value || 'email');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            setMethod(this.dataset.method);
+        });
+    });
+
+    function setMethod(method) {
+        // Update styling
+        tabs.forEach(t => {
+            if (t.dataset.method === method) {
+                t.classList.remove('text-muted', 'hover:text-text');
+                t.classList.add('bg-primary', 'text-bg');
+            } else {
+                t.classList.add('text-muted', 'hover:text-text');
+                t.classList.remove('bg-primary', 'text-bg');
+            }
+        });
+
+        // Update hidden input
+        inputMethod.value = method;
+
+        // Update fields based on method
+        if (method === 'wa') {
+            labelSender.textContent = transFromWa;
+            labelSender.removeAttribute('data-i18n'); // disable generic translation for this
+            inputSender.type = 'tel';
+            inputSender.placeholder = '0812...';
+            inputSender.removeAttribute('data-i18n-placeholder');
+            helperSender.classList.remove('hidden');
+        } else {
+            labelSender.textContent = transFromEmail;
+            labelSender.setAttribute('data-i18n', 'contact.folder.field_from');
+            inputSender.type = 'email';
+            inputSender.placeholder = 'your@email.com';
+            inputSender.setAttribute('data-i18n-placeholder', 'contact.folder.field_from_placeholder');
+            helperSender.classList.add('hidden');
+        }
+    }
+});
+</script>
+@endpush
