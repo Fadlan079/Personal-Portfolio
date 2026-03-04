@@ -102,6 +102,7 @@
         } */
 
 </style>
+    @stack('head')
 </head>
 <body class="bg-bg text-text overflow-x-hidden" style="cursor: none;">
     <!-- Invert Cursor (mix-blend-mode: difference) -->

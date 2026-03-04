@@ -15,6 +15,7 @@ import { aboutAnimation } from "./animations/about";
 import { projectAnimation } from "./animations/project";
 import { projectModalAnimation } from "./animations/project-modal";
 import { initmodal } from "./animations/modal";
+import { initContactAnimations } from "./animations/contact";
 
 const THEME_KEY = 'theme';
 const html = document.documentElement;
@@ -484,4 +485,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     try { projectAnimation(); } catch (e) { console.warn(e) }
     try { projectModalAnimation(); } catch (e) { console.warn(e) }
     try { initmodal(); } catch (e) { console.warn(e) }
+    try { initContactAnimations(); } catch (e) { console.warn(e) }
 });
