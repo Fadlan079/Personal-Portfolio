@@ -4,8 +4,7 @@
         "cta_title": "Got a project in mind?",
         "cta_subtitle": "Let’s build it.",
         "cta_desc": "Whether it's a structural web application, a modern dashboard, or a dynamic interface, I'm ready to turn your vision into reality.",
-        "cta_btn_primary": "Start a Project",
-        "cta_btn_secondary": "Send an Email",
+        "cta_btn_primary": "[ EXEC: NEW_PROJECT ]",
         "cta_marquee": "LET'S BUILD IT — GOT A PROJECT? —",
         "skills_cad": {
             "title_system": "System",
@@ -43,9 +42,7 @@
     "hero": {
         "collaboration": "<i class='fa-solid fa-code text-primary'></i> Available for Collaboration",
         "hi": "Hi, I'm",
-        "description": "Focus on building modern web applications with clear <strong class='text-text'>backend</strong> structures, responsive <strong class='text-text'>frontend</strong> and production-ready systems.",
-        "view_projects": "View Projects",
-        "contact_me": "Contact Me"
+        "description": "Focus on building modern web applications with clear <strong class='text-text'>backend</strong> structures, responsive <strong class='text-text'>frontend</strong> and production-ready systems."
     },
     "about": {
         "title": "ABOUT",

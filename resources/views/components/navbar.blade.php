@@ -57,15 +57,16 @@
 }
 </style>
 
-<nav  id="mainNavbar"  class="nav-float fixed top-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl
-    md:w-[90%] md:max-w-3xl bg-surface/50 z-50">
+<nav id="mainNavbar" class="nav-float fixed top-4 lg:top-6 left-1/2 -translate-x-1/2 
+    w-[calc(100%-2rem)] md:w-[90%] md:max-w-2xl lg:max-w-[650px] xl:max-w-3xl 
+    bg-surface/50 z-50">
 
-  <div class="px-4 py-2 flex justify-between items-center">
-    <h1 class="nav-brand">
+  <div class="px-4 xl:px-6 py-2 flex justify-between items-center">
+    <h1 class="nav-brand text-base lg:text-sm xl:text-lg">
       {{ $brand ?? 'App' }}
     </h1>
 
-    <ul class="hidden md:flex gap-8 text-[15px]">
+    <ul class="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-8 text-[13px] lg:text-[12px] xl:text-[15px]">
       @foreach ($menus as $menu)
       <li>
         <a href="{{ $menu['href'] }}" data-i18n="{{ $menu['key'] }}" class="nav-link">
@@ -75,16 +76,16 @@
       @endforeach
     </ul>
 
-    <div class="flex items-center gap-2">
-      <button onclick="toggleTheme()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/20 transition">
-        <i id="themeIcon" class="fa-solid fa-moon"></i>
+    <div class="flex items-center gap-1 xl:gap-2">
+      <button onclick="toggleTheme()" class="w-8 h-8 lg:w-7 lg:h-7 xl:w-9 xl:h-9 rounded-full flex items-center justify-center hover:bg-white/20 transition">
+        <i id="themeIcon" class="fa-solid fa-moon text-sm xl:text-base"></i>
       </button>
 
-      <button id="langToggle" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/20 transition">
-        <span id="langFlag" class="fi fi-id w-6 h-4 rounded-sm"></span>
+      <button id="langToggle" class="w-8 h-8 lg:w-7 lg:h-7 xl:w-9 xl:h-9 rounded-full flex items-center justify-center hover:bg-white/20 transition">
+        <span id="langFlag" class="fi fi-id w-5 h-3 xl:w-6 xl:h-4 rounded-sm"></span>
       </button>
 
-      <button id="mobileMenuBtn" class="md:hidden w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/20 transition">
+      <button id="mobileMenuBtn" class="md:hidden w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition">
         <i class="fa-solid fa-bars"></i>
       </button>
     </div>

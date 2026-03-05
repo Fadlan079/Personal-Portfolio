@@ -149,6 +149,59 @@
                 </div>
             </div>
 
+            <div class="space-y-6 pt-6 border-t border-border/50">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-bold font-mono uppercase tracking-widest text-text">
+                        <i class="fa-regular fa-clock mr-2 text-primary"></i> System Clock
+                    </h2>
+                    <span class="text-[10px] text-muted font-mono uppercase">Parameter_03</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <div
+                        class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm text-text">Display Live Clock</h4>
+                            <p class="text-xs text-muted font-mono mt-1">Show running time on hero</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="hidden" name="show_clock" value="0">
+                            <input type="checkbox" name="show_clock" value="1" class="sr-only peer"
+                                {{ auth()->user()->show_clock ? 'checked' : '' }}>
+                            <div
+                                class="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner">
+                            </div>
+                        </label>
+                    </div>
+
+                    <div
+                        class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm text-text">Clock Format</h4>
+                            <p class="text-xs text-muted font-mono mt-1">12-hour (AM/PM) or 24-hour</p>
+                        </div>
+                        <div class="inline-flex bg-background border border-border rounded-lg p-1">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="clock_format" value="12" class="peer sr-only"
+                                    {{ auth()->user()->clock_format === '12' ? 'checked' : '' }}>
+                                <div
+                                    class="px-4 py-1.5 text-xs font-mono font-bold rounded-md text-muted peer-checked:bg-primary/10 peer-checked:text-primary transition-colors">
+                                    12H</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="clock_format" value="24" class="peer sr-only"
+                                    {{ auth()->user()->clock_format === '24' ? 'checked' : '' }}>
+                                <div
+                                    class="px-4 py-1.5 text-xs font-mono font-bold rounded-md text-muted peer-checked:bg-primary/10 peer-checked:text-primary transition-colors">
+                                    24H</div>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <div class="pt-10 flex justify-end">
                 <button type="submit"
                     class="group relative overflow-hidden px-8 py-3 bg-primary text-text font-bold uppercase tracking-widest text-xs rounded hover:bg-text hover:text-background transition-colors duration-300 flex items-center gap-3 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)]">

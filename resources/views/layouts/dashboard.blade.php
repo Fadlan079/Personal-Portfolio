@@ -77,38 +77,6 @@
             color: transparent;
             -webkit-text-stroke: 1px var(--color-muted);
         }
-
-        .cursor-plus {
-            position: relative;
-            width: 10px;
-            height: 10px;
-        }
-
-        .cursor-plus::before,
-        .cursor-plus::after {
-            content: "";
-            position: absolute;
-            background: black;
-            /* supaya kontras dengan white blob */
-        }
-
-        /* Horizontal */
-        .cursor-plus::before {
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            transform: translateY(-50%);
-        }
-
-        /* Vertical */
-        .cursor-plus::after {
-            left: 50%;
-            top: 0;
-            height: 100%;
-            width: 2px;
-            transform: translateX(-50%);
-        }
     </style>
 
     <script>
@@ -162,117 +130,162 @@
 </head>
 
 <body id="mainBody" class="bg-bg text-text overflow-x-hidden" style="cursor: none;">
-    <!-- Invert Cursor (mix-blend-mode: difference) -->
-    <div id="cursor-blob"
-        style="
-        position: fixed;
-        pointer-events: none;
-        z-index: 9999;
-        top: 0; left: 0;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: #ffffff;
-        transform: translate(-50%, -50%);
-        mix-blend-mode: difference;
-        transition: opacity 0.3s ease, width 0.18s ease, height 0.18s ease;
-        opacity: 0;
-        will-change: left, top;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    ">
-        <div class="cursor-plus"></div>
+<div id="sys-cursor-dot"></div>
+    <div id="sys-cursor-box">
+        <div class="sys-corner top-left"></div>
+        <div class="sys-corner top-right"></div>
+        <div class="sys-corner bottom-left"></div>
+        <div class="sys-corner bottom-right"></div>
     </div>
-    <div id="cursor-trail"
-        style="
-        position: fixed;
-        pointer-events: none;
-        z-index: 9998;
-        top: 0; left: 0;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #ffffff;
-        transform: translate(-50%, -50%);
-        mix-blend-mode: difference;
-        transition: opacity 0.3s ease;
-        opacity: 0;
-        will-change: left, top;
-    ">
-    </div>
+
     <style>
-        *,
-        a,
-        button,
-        [role="button"],
-        input,
-        select,
-        textarea,
-        label,
-        .device-btn {
+        /* Sembunyikan kursor bawaan */
+        *, a, button, [role="button"], input, select, textarea, label, .device-btn {
             cursor: none !important;
         }
+
+        /* Titik Presisi di Tengah */
+        #sys-cursor-dot {
+            position: fixed;
+            top: 0; left: 0;
+            width: 4px; height: 4px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 10px var(--color-primary);
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s, border 0.2s;
+            will-change: left, top;
+        }
+
+        /* Kotak Scanner/Viewfinder di Luar */
+        #sys-cursor-box {
+            position: fixed;
+            top: 0; left: 0;
+            width: 32px; height: 32px;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9998;
+            transition: width 0.3s ease, height 0.3s ease, transform 0.3s ease;
+            will-change: left, top, width, height, transform;
+        }
+
+        /* 4 Sudut Viewfinder (Brackets) */
+        .sys-corner {
+            position: absolute;
+            width: 8px; height: 8px;
+            border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+            border-style: solid;
+            border-width: 0;
+            transition: border-color 0.3s, border-width 0.3s;
+        }
+        .top-left { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+        .top-right { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+        .bottom-left { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+        .bottom-right { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+        /* =========================================
+           HOVER STATES (Saat kena tombol/link)
+           ========================================= */
+        #sys-cursor-box.is-hovering {
+            width: 48px; 
+            height: 48px;
+            /* Berputar jadi diamond */
+            transform: translate(-50%, -50%) rotate(45deg); 
+        }
+        #sys-cursor-box.is-hovering .sys-corner {
+            border-color: var(--color-primary);
+            border-width: 2px;
+        }
+
+        #sys-cursor-dot.is-hovering {
+            transform: translate(-50%, -50%) scale(2.5);
+            background: transparent;
+            border: 1px solid var(--color-primary);
+            box-shadow: inset 0 0 8px color-mix(in srgb, var(--color-primary) 30%, transparent);
+        }
+
+        /* =========================================
+           CLICK STATES (Saat mouse ditekan)
+           ========================================= */
+        #sys-cursor-box.is-clicking {
+            width: 20px; 
+            height: 20px;
+        }
+        #sys-cursor-dot.is-clicking {
+            transform: translate(-50%, -50%) scale(0.5);
+        }
     </style>
+
     <script>
         (function() {
-            const blob = document.getElementById('cursor-blob');
-            const trail = document.getElementById('cursor-trail');
-            let mouseX = 0,
-                mouseY = 0;
-            let trailX = 0,
-                trailY = 0;
-            let visible = false;
+            const dot = document.getElementById('sys-cursor-dot');
+            const box = document.getElementById('sys-cursor-box');
+            
+            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+            let boxX = mouseX, boxY = mouseY;
+            let isVisible = false;
 
-            document.addEventListener('mousemove', function(e) {
+            // Update koordinat mouse
+            document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
-                blob.style.left = mouseX + 'px';
-                blob.style.top = mouseY + 'px';
-                if (!visible) {
-                    blob.style.opacity = '1';
-                    trail.style.opacity = '1';
-                    visible = true;
+                
+                // Titik tengah pindah instan (tanpa delay) untuk presisi klik
+                dot.style.left = mouseX + 'px';
+                dot.style.top = mouseY + 'px';
+
+                if (!isVisible) {
+                    dot.style.opacity = '1';
+                    box.style.opacity = '1';
+                    isVisible = true;
                 }
             });
 
-            document.addEventListener('mouseleave', function() {
-                blob.style.opacity = '0';
-                trail.style.opacity = '0';
-                visible = false;
+            document.addEventListener('mouseleave', () => {
+                dot.style.opacity = '0';
+                box.style.opacity = '0';
+                isVisible = false;
             });
 
-            function animate() {
-                trailX += (mouseX - trailX) * 0.18;
-                trailY += (mouseY - trailY) * 0.18;
-                trail.style.left = trailX + 'px';
-                trail.style.top = trailY + 'px';
-                requestAnimationFrame(animate);
+            // Animasi lerp untuk kotak luar (delay mengikuti mouse)
+            function renderBox() {
+                // Kecepatan ngikutin mouse (0.15 = smooth delay)
+                boxX += (mouseX - boxX) * 0.15;
+                boxY += (mouseY - boxY) * 0.15;
+                
+                box.style.left = boxX + 'px';
+                box.style.top = boxY + 'px';
+                
+                requestAnimationFrame(renderBox);
             }
-            animate();
+            renderBox();
 
-            document.addEventListener('mouseover', function(e) {
-                const el = e.target.closest(
-                    'a, button, [role="button"], .device-btn, input, select, textarea, label');
-                if (el) {
-                    blob.style.width = '56px';
-                    blob.style.height = '56px';
+            // Efek Hover pada elemen yang bisa diklik
+            document.addEventListener('mouseover', (e) => {
+                const clickable = e.target.closest('a, button, [role="button"], .device-btn, input, select, textarea, label');
+                if (clickable) {
+                    dot.classList.add('is-hovering');
+                    box.classList.add('is-hovering');
                 } else {
-                    blob.style.width = '28px';
-                    blob.style.height = '28px';
+                    dot.classList.remove('is-hovering');
+                    box.classList.remove('is-hovering');
                 }
             });
 
-            document.addEventListener('mousedown', function() {
-                blob.style.width = '18px';
-                blob.style.height = '18px';
+            // Efek saat diklik
+            document.addEventListener('mousedown', () => {
+                dot.classList.add('is-clicking');
+                box.classList.add('is-clicking');
             });
-            document.addEventListener('mouseup', function() {
-                blob.style.width = '28px';
-                blob.style.height = '28px';
+            document.addEventListener('mouseup', () => {
+                dot.classList.remove('is-clicking');
+                box.classList.remove('is-clicking');
             });
         })();
     </script>
+    
     <x-sidebar brand="Fadlan" :menus="[
         [
             'label' => 'Overview',

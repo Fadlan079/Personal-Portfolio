@@ -26,7 +26,10 @@ class HomeController extends Controller
         // Only fetch skills that have at least 1 associated project (unlocked)
         $skills = \App\Models\Skill::has('projects')->withCount('projects')->get();
         $profilePhoto = $this->profilePhotoUrl();
-        return view('pages.home', compact('recentProjects', 'skills', 'profilePhoto'));
+        $user = User::first();
+        $showClock = $user->show_clock ?? true;
+        $clockFormat = $user->clock_format ?? '24';
+        return view('pages.home', compact('recentProjects', 'skills', 'profilePhoto', 'showClock', 'clockFormat'));
     }
 
     public function Showabout()

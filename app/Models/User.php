@@ -24,6 +24,8 @@ class User extends Authenticatable
         'profile_photo',
         'theme',
         'locale',
+        'show_clock',
+        'clock_format',
     ];
 
     /**

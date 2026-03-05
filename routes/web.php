@@ -13,6 +13,9 @@ Route::middleware(['auth', 'verified'])
     ->prefix('dashboard')
     ->as('dashboard.')
     ->group(function () {
+        Route::get('/test', function () {
+            return view('pages.test');
+        })->name('test');
 
         Route::get('/', [DashboardController::class, 'index'])
             ->name('home');

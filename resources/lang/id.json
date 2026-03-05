@@ -4,8 +4,7 @@
         "cta_title": "Punya proyek yang ingin diwujudkan?",
         "cta_subtitle": "Mari kita bangun.",
         "cta_desc": "Baik itu struktur aplikasi web, dasbor modern, maupun antarmuka dinamis, saya siap mengubah visi Anda menjadi kenyataan.",
-        "cta_btn_primary": "Mulai Proyek",
-        "cta_btn_secondary": "Kirim Email",
+        "cta_btn_primary": "[ EKSEKUSI: PROYEK_BARU ]",
         "cta_marquee": "MARI KITA BANGUN — PUNYA PROYEK? —",
         "skills_cad": {
             "title_system": "Sistem",
@@ -43,9 +42,7 @@
     "hero": {
         "collaboration": "<i class='fa-solid fa-code text-primary'></i> Tersedia untuk Kolaborasi",
         "hi": "Hai, saya",
-        "description": "Fokus membangun aplikasi web modern dengan struktur <strong class='text-text'>backend</strong> yang jelas, <strong class='text-text'>frontend</strong> responsif, dan sistem siap produksi.",
-        "view_projects": "Lihat Proyek",
-        "contact_me": "Hubungi Saya"
+        "description": "Fokus membangun aplikasi web modern dengan struktur <strong class='text-text'>backend</strong> yang jelas, <strong class='text-text'>frontend</strong> responsif, dan sistem siap produksi."
     },
     "about": {
         "title": "TENTANG",

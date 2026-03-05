@@ -85,7 +85,7 @@
             @csrf
             <button type="submit"
                 class="w-full group flex items-center justify-between px-3 py-2 rounded-lg text-xs font-mono uppercase tracking-widest text-muted hover:bg-red-500/10 hover:text-red-500 transition-colors border border-border hover:border-red-500/20">
-                <span>Terminate Session</span>
+                <span>End_Session</span>
                 <i class="fa-solid fa-power-off opacity-50 group-hover:opacity-100 group-hover:animate-pulse"></i>
             </button>
         </form>
