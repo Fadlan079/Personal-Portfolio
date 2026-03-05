@@ -26,6 +26,9 @@ class Project extends Model
         'live_url',
         'live_url',
         'screenshot',
+        'image_desktop',
+        'image_tablet',
+        'image_mobile',
     ];
 
     public function skills()
@@ -56,11 +59,11 @@ class Project extends Model
     {
         return $query->where(function ($q) {
             $q->where('visibility', 'published')
-            ->orWhere(function ($q2) {
-                $q2->where('visibility', 'scheduled')
-                    ->whereNotNull('published_at')
-                    ->where('published_at', '<=', now());
-            });
+                ->orWhere(function ($q2) {
+                    $q2->where('visibility', 'scheduled')
+                        ->whereNotNull('published_at')
+                        ->where('published_at', '<=', now());
+                });
         });
     }
 
@@ -70,10 +73,10 @@ class Project extends Model
 
         return $query->where(function ($q) use ($keyword) {
             $q->whereRaw('LOWER(title) LIKE ?', ["%{$keyword}%"])
-            ->orWhereRaw('LOWER(`type`) LIKE ?', ["%{$keyword}%"])
-            ->orWhereRaw('LOWER(`desc`) LIKE ?', ["%{$keyword}%"])
-            ->orWhereRaw('LOWER(status) LIKE ?', ["%{$keyword}%"])
-            ->orWhereRaw('LOWER(tech) LIKE ?', ["%{$keyword}%"]);
+                ->orWhereRaw('LOWER(`type`) LIKE ?', ["%{$keyword}%"])
+                ->orWhereRaw('LOWER(`desc`) LIKE ?', ["%{$keyword}%"])
+                ->orWhereRaw('LOWER(status) LIKE ?', ["%{$keyword}%"])
+                ->orWhereRaw('LOWER(tech) LIKE ?', ["%{$keyword}%"]);
         });
     }
 
@@ -127,12 +130,10 @@ class Project extends Model
             'totalProjects'   => $projects->count(),
             'totalCategories' => $projects->pluck('type')->filter()->unique()->count(),
 
-            'activeCount' =>
-                ($statusCount['Shipped'] ?? 0) +
+            'activeCount' => ($statusCount['Shipped'] ?? 0) +
                 ($statusCount['In Progress'] ?? 0),
 
-            'inactiveCount' =>
-                ($statusCount['Prototype'] ?? 0) +
+            'inactiveCount' => ($statusCount['Prototype'] ?? 0) +
                 ($statusCount['Archived'] ?? 0),
 
             'statusBreakdown' => [

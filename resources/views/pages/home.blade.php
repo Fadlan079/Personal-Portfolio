@@ -148,17 +148,22 @@
 
     </div>
 
-    @if($showClock ?? true)
+    @if ($showClock ?? true)
         <div class="hidden md:flex fixed top-8 left-6 z-50 flex-col gap-1 font-mono tracking-widest cursor-default">
             <div class="flex items-center gap-2 text-primary text-[10px] uppercase font-bold">
-                <span class="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--color-primary)]"></span>
+                <span
+                    class="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--color-primary)]"></span>
                 SYS.TIME
             </div>
-            
-            <div id="hero-live-clock" data-format="{{ $clockFormat ?? '24' }}" class="text-text text-sm font-semibold opacity-80">
+
+            <div id="hero-live-clock" data-format="{{ $clockFormat ?? '24' }}" data-seconds="{{ $showSeconds ?? '1' }}"
+                class="text-text text-sm font-semibold opacity-80">
                 00:00:00 WITA
             </div>
-            
+
+            <div id="hero-live-date" data-date="{{ $showDate ?? '1' }}" class="text-muted text-[10px] hidden">
+            </div>
+
             <div class="text-muted text-[9px] uppercase mt-1 border-t border-border/50 pt-1 w-max">
                 Local Env
             </div>
@@ -170,7 +175,7 @@
             @if (!session('is_login'))
                 <a href="/login"
                     class="cta-btn relative overflow-hidden px-4 py-2
-                    border-2 border-border text-text font-mono text-xs font-bold uppercase tracking-widest"
+                border-2 border-border text-text font-mono text-xs font-bold uppercase tracking-widest"
                     style="--cta-bubble-color: var(--color-primary);">
 
                     <span class="cta-bubble"></span>
@@ -184,7 +189,8 @@
                     <button type="submit"
                         class="group flex items-center gap-3 px-4 py-2 text-xs font-mono uppercase tracking-widest text-muted hover:bg-red-500/10 hover:text-red-500 transition-colors border border-border hover:border-red-500/20">
                         <span>End_Session</span>
-                        <i class="fa-solid fa-power-off opacity-50 group-hover:opacity-100 group-hover:animate-pulse"></i>
+                        <i
+                            class="fa-solid fa-power-off opacity-50 group-hover:opacity-100 group-hover:animate-pulse"></i>
                     </button>
                 </form>
             @endif
@@ -195,7 +201,7 @@
         <div class="text-center">
             <span data-i18n="hero.collaboration"
                 class="hero-badge inline-flex items-center gap-2 px-4 py-1 mb-6
-            rounded-full border border-border bg-surface text-sm text-muted">
+        rounded-full border border-border bg-surface text-sm text-muted">
             </span>
 
             <h2 class="hero-title mb-6 leading-tight text-center">
@@ -216,7 +222,7 @@
 
             <p
                 class="hero-desc max-w-xl mb-5 text-sm md:text-base leading-loose
-                tracking-wide text-muted/80 relative">
+            tracking-wide text-muted/80 relative">
                 <span class="hero-desc-line"></span>
                 <span data-i18n="hero.description"></span>
             </p>
@@ -225,10 +231,10 @@
                 <div class="flex justify-center">
                     <a href="{{ route('portofolio.projects') }}"
                         class="cta-btn relative overflow-hidden px-6 py-3
-                        bg-primary text-background border-2 border-primary"
+                    bg-primary text-background border-2 border-primary"
                         style="--cta-bubble-color: var(--color-bg);">
                         <span class="cta-bubble"></span>
-                        
+
                         <span class="cta-text relative z-10 flex items-center gap-2">
                             <i class="fa-regular fa-folder-open"></i>
                             <span>/DIR_PROJECTS</span>
@@ -238,7 +244,7 @@
                 <div class="flex justify-center">
                     <a href="{{ route('portofolio.contact') }}"
                         class="cta-btn relative overflow-hidden px-6 py-3
-                            border-2 border-border text-text"
+                        border-2 border-border text-text"
                         style="--cta-bubble-color: var(--color-primary);">
 
                         <span class="cta-bubble"></span>
@@ -253,150 +259,215 @@
     </div>
 </section>
 
-<section class="py-16 ">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-                <div class="rounded-3xl overflow-hidden max-w-full">
-                    <div class="relative ">
-                        <div id="three-canvas" class="max-w-full h-70 sm:h-90 md:h-105 lg:h-110 rounded-2xl ">
-                        </div>
+<section class="py-24 border-t border-border/50 relative overflow-hidden" id="featured-projects">
+    <div class="absolute inset-0 z-0 opacity-5"
+         style="background-image: linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px); background-size: 40px 40px;">
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 relative z-10" 
+         x-data="{
+             currentProject: 0,
+             totalProjects: {{ count($recentProjects) }},
+             deviceView: 'desktop', // desktop, tablet, mobile
+             timer: null,
+             init() {
+                 this.startAuto();
+             },
+             startAuto() {
+                 this.stopAuto();
+                 this.timer = setInterval(() => {
+                     // Auto-slide setiap 5 detik
+                     this.currentProject = (this.currentProject + 1) % this.totalProjects;
+                 }, 5000);
+             },
+             stopAuto() { clearInterval(this.timer); },
+             setDevice(type) {
+                 this.deviceView = type;
+                 this.stopAuto(); // Pause auto-slide saat user interact ganti device
+             }
+         }">
+
+        <div class="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            <div class="lg:col-span-7 flex flex-col items-center w-full" @mouseenter="stopAuto()" @mouseleave="startAuto()">
+                
+                <div class="w-full relative bg-surface/30 border border-border/50 p-4 md:p-8 flex items-center justify-center min-h-[400px] md:min-h-[500px] overflow-hidden">
+                    
+                    <div class="absolute top-0 left-0 w-4 h-4 border-t border-l border-primary/50"></div>
+                    <div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-primary/50"></div>
+                    <div class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-primary/50"></div>
+                    <div class="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-primary/50"></div>
+
+                    <div class="absolute top-3 left-4 text-[9px] font-mono text-muted uppercase tracking-widest">Viewport_Sim</div>
+                    <div class="absolute top-3 right-4 text-[9px] font-mono text-primary uppercase tracking-widest" x-text="'RES: ' + deviceView.toUpperCase()"></div>
+
+                    <div class="relative bg-background border border-border shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-all duration-700 ease-in-out overflow-hidden flex items-start justify-center group"
+                         :class="{
+                             'w-full aspect-[16/9] rounded-sm': deviceView === 'desktop',
+                             'w-[320px] md:w-[400px] aspect-[3/4] rounded-xl': deviceView === 'tablet',
+                             'w-[240px] md:w-[280px] aspect-[9/16] rounded-[2rem] border-4 border-surface': deviceView === 'mobile'
+                         }">
+                         
+                         <div class="absolute inset-0 z-30 pointer-events-none opacity-20" style="background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 6px 100%;"></div>
+
+                         @foreach($recentProjects as $index => $project)
+                            <div class="absolute inset-0 w-full h-full overflow-y-auto overflow-x-hidden custom-scrollbar z-10 bg-background"
+                                 x-show="currentProject === {{ $index }}"
+                                 x-transition:enter="ease-out duration-500"
+                                 x-transition:enter-start="opacity-0 scale-105"
+                                 x-transition:enter-end="opacity-100 scale-100"
+                                 x-transition:leave="ease-in duration-300"
+                                 x-transition:leave-start="opacity-100"
+                                 x-transition:leave-end="opacity-0">
+                                 
+                                 <img :src="{
+                                          'desktop': '{{ $project->image_desktop ? asset("storage/" . $project->image_desktop) : "https://via.placeholder.com/1280x2500/121212/38bdf8?text=DESKTOP+LAYOUT" }}',
+                                          'tablet': '{{ $project->image_tablet ? asset("storage/" . $project->image_tablet) : "https://via.placeholder.com/768x2500/121212/a3e635?text=TABLET+LAYOUT" }}',
+                                          'mobile': '{{ $project->image_mobile ? asset("storage/" . $project->image_mobile) : "https://via.placeholder.com/375x2500/121212/f87171?text=MOBILE+LAYOUT" }}'
+                                      }[deviceView]" 
+                                      alt="{{ $project->title }}"
+                                      class="w-full h-auto block object-top transition-opacity duration-300 ease-in">
+                            </div>
+                         @endforeach
                     </div>
+                </div>
 
-                    <div class="flex justify-center">
-                        <div
-                            class="flex max-w-full justify-center bg-surface/80 backdrop-blur border border-border rounded-full p-1 text-s overflow-x-hiddden relative">
-
-                            <div id="btn-highlight"
-                                class="absolute top-1 left-1 h-[calc(100%-0.5rem)] rounded-full bg-bg z-0"></div>
-
-                            <button data-device="desktop"
-                                class="device-btn px-4 py-2 rounded-full font-medium relative z-10">
-                                Desktop
-                            </button>
-
-                            <button data-device="tablet"
-                                class="device-btn px-5 py-2 rounded-full text-muted relative z-10">
-                                Tablet
-                            </button>
-
-                            <button data-device="mobile"
-                                class="device-btn px-5 py-2 rounded-full text-muted relative z-10">
-                                Mobile
-                            </button>
-                        </div>
-                    </div>
+                <div class="flex items-center gap-2 mt-6 p-1.5 bg-surface border border-border rounded-lg font-mono text-[10px] uppercase tracking-widest">
+                    <button @click="setDevice('desktop')" class="px-4 py-2 rounded transition-colors"
+                        :class="deviceView === 'desktop' ? 'bg-text text-background font-bold' : 'text-muted hover:text-text'">
+                        <i class="fa-solid fa-display mr-1"></i> Desk
+                    </button>
+                    <button @click="setDevice('tablet')" class="px-4 py-2 rounded transition-colors"
+                        :class="deviceView === 'tablet' ? 'bg-text text-background font-bold' : 'text-muted hover:text-text'">
+                        <i class="fa-solid fa-tablet-screen-button mr-1"></i> Tab
+                    </button>
+                    <button @click="setDevice('mobile')" class="px-4 py-2 rounded transition-colors"
+                        :class="deviceView === 'mobile' ? 'bg-text text-background font-bold' : 'text-muted hover:text-text'">
+                        <i class="fa-solid fa-mobile-screen mr-1"></i> Mob
+                    </button>
                 </div>
             </div>
 
-            <div class="pt-4" x-data="{
-                currentProject: 0,
-                totalProjects: {{ count($recentProjects) }},
-                timer: null,
-                init() {
-                    this.startAuto();
-                    this.$el.addEventListener('mouseenter', () => this.stopAuto());
-                    this.$el.addEventListener('mouseleave', () => this.startAuto());
-                },
-                startAuto() {
-                    this.stopAuto();
-                    this.timer = setInterval(() => {
-                        this.currentProject = (this.currentProject + 1) % this.totalProjects;
-                    }, 4000);
-                },
-                stopAuto() { clearInterval(this.timer); }
-            }">
-                <div class="flex justify-between items-end mb-6">
+            <div class="lg:col-span-5" @mouseenter="stopAuto()" @mouseleave="startAuto()">
+
+                <div class="flex justify-between items-end mb-8 border-b border-border/50 pb-4">
                     <div>
-                        <p class="text-sm uppercase tracking-widest text-muted mb-2">
-                            Selected Work
+                        <p class="text-[10px] font-mono uppercase tracking-widest text-primary mb-2">
+                            >> Execution_Logs
                         </p>
-                        <h3 class="text-3xl font-semibold leading-tight">
-                            Featured Projects
+                        <h3 class="text-3xl font-bold tracking-tight uppercase">
+                            Featured Works
                         </h3>
                     </div>
                     <div class="flex gap-2">
                         <button @click="currentProject = currentProject > 0 ? currentProject - 1 : totalProjects - 1"
-                            class="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-surface hover:text-primary transition focus:outline-none">
-                            <i class="fas fa-chevron-left"></i>
+                            class="w-8 h-8 flex items-center justify-center border border-border text-muted hover:text-text hover:border-text transition-colors">
+                            <i class="fa-solid fa-angle-left"></i>
                         </button>
                         <button @click="currentProject = currentProject < totalProjects - 1 ? currentProject + 1 : 0"
-                            class="w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-surface hover:text-primary transition focus:outline-none">
-                            <i class="fas fa-chevron-right"></i>
+                            class="w-8 h-8 flex items-center justify-center border border-border text-muted hover:text-text hover:border-text transition-colors">
+                            <i class="fa-solid fa-angle-right"></i>
                         </button>
                     </div>
                 </div>
 
                 <div class="relative w-full h-[clamp(320px,45vw,380px)] perspective-1000">
                     @forelse($recentProjects as $index => $project)
+                        
                         <div x-show="currentProject === {{ $index }}"
-                            x-transition:enter="transition ease-out duration-500 transform"
-                            x-transition:enter-start="opacity-0 translate-x-8 z-10"
-                            x-transition:enter-end="opacity-100 translate-x-0 z-10"
-                            x-transition:leave="transition ease-in duration-300 transform"
-                            x-transition:leave-start="opacity-100 translate-x-0 z-0"
-                            x-transition:leave-end="opacity-0 -translate-x-8 z-0"
-                            class="project-folder group absolute inset-0 border border-border bg-surface p-6 pt-12 w-full h-full"
-                            {{ $index === 0 ? '' : 'style="display: none;"' }}>
+                             x-transition:enter="transition ease-out duration-500 transform"
+                             x-transition:enter-start="opacity-0 translate-x-8 z-10"
+                             x-transition:enter-end="opacity-100 translate-x-0 z-10"
+                             x-transition:leave="transition ease-in duration-300 transform"
+                             x-transition:leave-start="opacity-100 translate-x-0 z-0"
+                             x-transition:leave-end="opacity-0 -translate-x-8 z-0"
+                             class="absolute inset-0 w-full h-full"
+                             {{ $index === 0 ? '' : 'style="display: none;"' }}>
 
-                            <div class="absolute top-0 left-6 -translate-y-1/2 flex gap-2 z-20">
-                                <span class="px-4 py-1 text-xs uppercase tracking-widest badge-primary font-semibold">
-                                    {{ $project->type }}
-                                </span>
-                                <span
-                                    class="px-3 py-1 text-[10px] uppercase tracking-wide border {{ $project->statusClass }}">
-                                    {{ $project->status }}
-                                </span>
+                            <div class="project-folder group relative border border-border bg-surface p-6 pt-12 w-full h-full">
+                                
+                                <div class="absolute top-0 left-6 -translate-y-1/2 flex gap-2 z-20">
+                                    <span class="px-4 py-1 text-[10px] uppercase tracking-widest badge-primary font-semibold">
+                                        {{ $project->type }}
+                                    </span>
+                                    <span class="px-3 py-1 text-[9px] uppercase tracking-wide border {{ $project->statusClass }}">
+                                        {{ $project->status }}
+                                    </span>
+                                </div>
+
+                                <div class="folder-files absolute inset-0 pointer-events-none z-0">
+                                    <span class="file border-border bg-bg"></span>
+                                    <span class="file border-border bg-bg"></span>
+
+                                    <a href="javascript:void(0)"
+                                       class="file file-front pointer-events-auto p-6 flex flex-col justify-between bg-surface border-border project-open"
+                                       data-id="{{ $project->id }}"
+                                       data-title="{{ $project->title }}"
+                                       data-desc="{{ $project->desc }}"
+                                       data-type="{{ $project->type }}"
+                                       data-status="{{ $project->status }}"
+                                       data-created="{{ $project->created_at->format('d M Y') }}"
+                                       data-updated="{{ $project->updated_at->format('d M Y') }}"
+                                       data-repo="{{ $project->repo }}"
+                                       data-role="{{ $project->role }}"
+                                       data-team="{{ $project->team_size }}"
+                                       data-responsibilities="{{ $project->responsibilities }}"
+                                       data-live="{{ $project->live_url }}"
+                                       data-screenshot='@json(
+                                           $project->screenshot
+                                               ? collect($project->screenshot)
+                                                   ->map(fn($img) => asset("storage/".$img))
+                                                   ->values()
+                                               : []
+                                       )'
+                                       data-tech='@json($project->tech)'>
+                                       
+                                        <div>
+                                            <h3 class="text-2xl font-semibold leading-tight group-hover:text-primary transition-colors">
+                                                {{ $project->title }}
+                                            </h3>
+                                            <p class="text-sm text-muted leading-relaxed mt-4 line-clamp-3">
+                                                {{ $project->desc }}
+                                            </p>
+                                        </div>
+
+                                        <div class="tech-row mt-auto pt-4 flex gap-2 flex-wrap text-[11px] tracking-widest uppercase text-muted font-mono">
+                                            @foreach ($project->visibleTechs as $tech)
+                                                <span class="px-2 py-1 border border-border bg-bg hover:border-primary hover:text-primary transition-colors">{{ strtoupper($tech) }}</span>
+                                            @endforeach
+
+                                            @if (count($project->extraTechs) > 0)
+                                                <span class="tech-more px-2 py-1 border border-border bg-bg relative group/tooltip cursor-help">
+                                                    +{{ count($project->extraTechs) }}
+                                                    <span class="tech-tooltip absolute bottom-full left-1/2 -translate-x-1/2 mb-2 p-2 bg-text text-background text-[10px] rounded opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all whitespace-nowrap z-50">
+                                                        @foreach ($project->extraTechs as $extra)
+                                                            {{ $extra }}<br>
+                                                        @endforeach
+                                                    </span>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
-
-                            <div class="folder-files absolute inset-0 z-0">
-                                <span class="file border-border bg-bg"></span>
-                                <span class="file border-border bg-bg"></span>
-
-                                <a href="{{ route('portofolio.projects', ['search' => $project->title]) }}"
-                                    class="file file-front pointer-events-auto p-5 flex flex-col gap-3 justify-between bg-surface border-border">
-                                    <div>
-                                        <h3
-                                            class="text-2xl font-semibold leading-tight group-hover:text-primary transition-colors">
-                                            {{ $project->title }}
-                                        </h3>
-                                        <p class="text-sm text-muted leading-relaxed mt-3">
-                                            {{ \Illuminate\Support\Str::limit($project->desc, 150) }}
-                                        </p>
-                                    </div>
-                                    <div
-                                        class="tech-row mt-auto pt-4 flex gap-2 flex-wrap text-[11px] tracking-widest uppercase text-muted">
-                                        @foreach ($project->visibleTechs as $tech)
-                                            <span
-                                                class="px-2 py-1 border border-border bg-bg">{{ strtoupper($tech) }}</span>
-                                        @endforeach
-                                        @if (count($project->extraTechs) > 0)
-                                            <span class="px-2 py-1 border border-border bg-bg">
-                                                +{{ count($project->extraTechs) }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                </a>
                             </div>
-                        </div>
                     @empty
-                        <div
-                            class="flex items-center justify-center w-full h-full border border-dashed border-border text-muted">
-                            <p>No projects found.</p>
+                        <div class="flex items-center justify-center w-full h-full border border-dashed border-border text-muted font-mono text-xs uppercase tracking-widest">
+                            [ Null_Data: No Projects Found ]
                         </div>
                     @endforelse
                 </div>
 
-                <div class="flex justify-center mt-8 gap-3">
+                <div class="flex justify-start mt-8 gap-2">
                     @foreach ($recentProjects as $index => $project)
                         <button @click="currentProject = {{ $index }}"
-                            class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-                            :class="currentProject === {{ $index }} ? 'bg-primary w-6' : 'bg-border hover:bg-muted'">
+                            class="h-1.5 transition-all duration-300 rounded-full"
+                            :class="currentProject === {{ $index }} ? 'bg-primary w-8' : 'bg-border hover:bg-muted w-3'">
                         </button>
                     @endforeach
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 </section>
@@ -473,15 +544,15 @@
 
                 <div
                     class="relative z-10 aspect-[4/5] 
-                            bg-surface border border-border overflow-hidden
-                            flex items-center justify-center
-                            filter grayscale group-hover:grayscale-0 
-                            transition-all duration-700">
+                        bg-surface border border-border overflow-hidden
+                        flex items-center justify-center
+                        filter grayscale group-hover:grayscale-0 
+                        transition-all duration-700">
 
                     <img src="{{ $profilePhoto }}" alt="Photo Profile"
                         class="w-4/5 h-4/5 object-contain mx-auto my-auto 
-                            opacity-80 group-hover:opacity-100 
-                            transition-all duration-500">
+                        opacity-80 group-hover:opacity-100 
+                        transition-all duration-500">
 
                     <div
                         class="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.1)_50%)] bg-[length:100%_4px] pointer-events-none">
@@ -811,54 +882,81 @@
             <span data-i18n="home.cta_title">Got a project in mind?</span>
         </h3>
 
-<div class="flex flex-col sm:flex-row justify-center items-center gap-6 font-mono text-sm uppercase tracking-widest font-bold">
-    <a href="{{ route('portofolio.contact') }}"
-        class="relative overflow-hidden px-8 py-4 bg-primary text-background border-2 border-primary hover:bg-transparent hover:text-text transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)] group">
-        <span class="relative z-10 flex items-center gap-3">
-            <span data-i18n="home.cta_btn_primary">[ EXEC: NEW_PROJECT ]</span>
-            <i class="fa-solid fa-angle-right transition-transform duration-300 group-hover:translate-x-1"></i>
-        </span>
-    </a>
+        <div
+            class="flex flex-col sm:flex-row justify-center items-center gap-6 font-mono text-sm uppercase tracking-widest font-bold">
+            <a href="{{ route('portofolio.contact') }}"
+                class="relative overflow-hidden px-8 py-4 bg-primary text-background border-2 border-primary hover:bg-transparent hover:text-text transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)] group">
+                <span class="relative z-10 flex items-center gap-3">
+                    <span data-i18n="home.cta_btn_primary">[ EXEC: NEW_PROJECT ]</span>
+                    <i class="fa-solid fa-angle-right transition-transform duration-300 group-hover:translate-x-1"></i>
+                </span>
+            </a>
 
-    <a href="mailto:fadlanfirdaus220@gmail.com"
-        class="px-8 py-4 border-2 border-border bg-surface/30 backdrop-blur-sm text-text hover:border-primary transition-colors duration-300">
-        <span class="flex items-center gap-3">
-            <i class="fa-regular fa-envelope text-primary"></i>
-            <span>PING_ADMIN</span>
-        </span>
-    </a>
-</div>
+            <a href="mailto:fadlanfirdaus220@gmail.com"
+                class="px-8 py-4 border-2 border-border bg-surface/30 backdrop-blur-sm text-text hover:border-primary transition-colors duration-300">
+                <span class="flex items-center gap-3">
+                    <i class="fa-regular fa-envelope text-primary"></i>
+                    <span>PING_ADMIN</span>
+                </span>
+            </a>
+        </div>
 
     </div>
 </section>
 
 @endsection
-@vite(['resources/js/three-viewer.js', 'resources/js/skill-tree.js'])
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const clockElement = document.getElementById('hero-live-clock');
-        
+        const dateElement = document.getElementById('hero-live-date');
+
         if (clockElement) {
-            // Ambil format dari data attribute HTML (12 atau 24)
-            const formatStr = clockElement.getAttribute('data-format');
-            // Ubah jadi boolean: true jika '12', false jika '24'
-            const use12Hour = (formatStr === '12'); 
+            // Ambil preferensi dari atribut HTML
+            const formatStr = clockElement.getAttribute('data-format') || '24';
+            const showSecondsStr = clockElement.getAttribute('data-seconds') || '1';
+
+            const use12Hour = (formatStr === '12');
+            const showSeconds = (showSecondsStr === '1');
+
+            // Cek pengaturan tanggal
+            let showDate = false;
+            if (dateElement) {
+                showDate = (dateElement.getAttribute('data-date') === '1');
+                if (showDate) dateElement.classList.remove('hidden');
+            }
 
             function updateClock() {
                 const now = new Date();
-                
-                // Format jam otomatis menyesuaikan opsi
-                const timeString = now.toLocaleTimeString('en-US', { 
-                    hour12: use12Hour, 
-                    hour: '2-digit', 
-                    minute: '2-digit', 
-                    second: '2-digit' 
-                });
-                
+
+                // Konfigurasi opsi Jam
+                const timeOptions = {
+                    hour12: use12Hour,
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+
+                // Jika user mengaktifkan detik, tambahkan ke opsi
+                if (showSeconds) {
+                    timeOptions.second = '2-digit';
+                }
+
+                // Eksekusi render jam
+                const timeString = now.toLocaleTimeString('en-US', timeOptions);
                 clockElement.innerText = `${timeString} WITA`;
+
+                // Eksekusi render tanggal (jika diaktifkan)
+                if (showDate && dateElement) {
+                    const dateOptions = {
+                        year: 'numeric',
+                        month: 'short',
+                        day: '2-digit'
+                    };
+                    // Hasil: "Oct 24, 2026"
+                    dateElement.innerText = now.toLocaleDateString('en-US', dateOptions).toUpperCase();
+                }
             }
-            
+
             // Eksekusi awal dan set interval
             updateClock();
             setInterval(updateClock, 1000);

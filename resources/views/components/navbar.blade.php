@@ -94,50 +94,86 @@
 
 <div id="mobileOverlay" class="fixed inset-0 bg-black/30 backdrop-blur-sm z-70 opacity-0 pointer-events-none transition"></div>
 
-<aside id="mobileSidebar" class="fixed top-0 left-0 h-full w-72 bg-surface/50 backdrop-blur-2xl border-r border-white/20 z-100 -translate-x-full pointer-events-none transition-transform duration-300 rounded-r-3xl">
-  <div class="p-6 flex justify-between items-center border-b border-white/20">
-    <span class="nav-brand">{{ $brand ?? 'App' }}</span>
-    <button id="mobileCloseBtn" class="text-xl"><i class="fa-solid fa-xmark"></i></button>
+<aside id="mobileSidebar" class="fixed top-0 left-0 h-full w-[80%] max-w-[300px] bg-background/95 backdrop-blur-2xl border-r border-border z-100 -translate-x-full pointer-events-none transition-transform duration-300 flex flex-col shadow-2xl">
+  
+  <div class="h-16 px-6 flex justify-between items-center border-b border-border/50">
+    <div class="flex items-center gap-3">
+        <div class="w-6 h-6 rounded bg-primary text-background flex items-center justify-center font-bold text-xs">
+            <i class="fa-solid fa-terminal"></i>
+        </div>
+        <span class="font-mono text-sm font-bold tracking-widest text-text uppercase">
+            {{ $brand ?? 'SYS_MENU' }}
+        </span>
+    </div>
+    <button id="mobileCloseBtn" class="w-8 h-8 flex items-center justify-center rounded-md text-muted hover:bg-surface hover:text-text transition-colors">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
-  <nav class="p-6 flex flex-col gap-4 text-sm">
+  <nav class="p-6 flex flex-col gap-2 text-sm flex-1 overflow-y-auto">
+    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 px-2">Navigation</p>
+    
     @foreach ($menus as $menu)
-      <a href="{{ $menu['href'] }}" data-i18n="{{ $menu['key'] }}" class="sidebar-link">
-        {{ __($menu['key']) }}
+      @php
+        $isActive = request()->url() == $menu['href'];
+      @endphp
+      <a href="{{ $menu['href'] }}" data-i18n="{{ $menu['key'] }}" 
+         class="group relative flex items-center gap-3 px-3 py-3 rounded-lg font-medium font-sans transition-all duration-200
+                {{ $isActive ? 'bg-primary/10 text-primary' : 'text-muted hover:bg-surface hover:text-text' }}">
+        
+        @if($isActive)
+            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 rounded-r-full bg-primary shadow-[0_0_8px_var(--color-primary)]"></span>
+        @endif
+        
+        <i class="w-5 text-center {{ $menu['icon'] ?? 'fa-regular fa-folder' }} {{ $isActive ? 'text-primary' : 'text-muted group-hover:text-text' }} transition-colors"></i>
+        <span>{{ __($menu['key']) }}</span>
       </a>
     @endforeach
 
-    <div class="flex justify-center mt-4">
-      @if (!session('is_login'))
-        <a
-            href="/login"
-            class="cta-btn w-full relative overflow-hidden px-4 py-2
-                border-2 border-border text-text font-semibold"
-            style="--cta-bubble-color: var(--color-primary);">
-
-            <span class="cta-bubble"></span>
-            <span class="cta-text relative z-10">Login</span>
-        </a>
-      @else
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button
-                type="submit"
-                class="cta-btn w-full relative overflow-hidden px-8 py-3
-                    border-2 border-border text-text font-semibold"
-                style="--cta-bubble-color: #ef4444;">
-
-                <span class="cta-bubble"></span>
-                <span class="cta-text relative z-10">Logout</span>
-            </button>
-        </form>
-      @endif
+    <div class="mt-8 pt-6 border-t border-border/50 space-y-4">
+        <p class="text-[10px] font-mono uppercase tracking-widest text-muted px-2">Authentication</p>
+        
+        @if (!session('is_login'))
+            <a href="/login" class="w-full flex items-center justify-center gap-2 px-4 py-3 border border-primary text-primary font-mono text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-primary hover:text-background transition-colors">
+                <i class="fa-solid fa-terminal"></i> SYS.LOGIN
+            </a>
+        @else
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full flex items-center justify-between px-4 py-3 border border-border text-muted font-mono text-xs uppercase tracking-widest rounded-lg hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-500 transition-colors group">
+                    <span>END_SESSION</span>
+                    <i class="fa-solid fa-power-off opacity-50 group-hover:opacity-100 group-hover:animate-pulse"></i>
+                </button>
+            </form>
+        @endif
     </div>
   </nav>
+
+  @if($showClock ?? true)
+  <div class="p-6 border-t border-border/50 bg-surface/30">
+      <div class="flex items-center gap-2 text-primary text-[10px] uppercase font-bold mb-1 font-mono">
+          <span class="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_var(--color-primary)]"></span>
+          SYS.TIME
+      </div>
+      <div id="mobile-live-clock" 
+           data-format="{{ $clockFormat ?? '24' }}" 
+           data-seconds="{{ $showSeconds ?? '1' }}" 
+           class="text-text text-sm font-semibold font-mono tracking-widest">
+          00:00:00 WITA
+      </div>
+      <div id="mobile-live-date" 
+           data-date="{{ $showDate ?? '1' }}" 
+           class="text-muted text-[10px] font-mono uppercase mt-1 hidden">
+          --
+      </div>
+  </div>
+  @endif
+
 </aside>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // --- MOBILE MENU LOGIC ---
   const openBtn = document.getElementById('mobileMenuBtn');
   const closeBtn = document.getElementById('mobileCloseBtn');
   const sidebar = document.getElementById('mobileSidebar');
@@ -156,5 +192,39 @@ document.addEventListener('DOMContentLoaded', () => {
   openBtn?.addEventListener('click', openSidebar);
   closeBtn?.addEventListener('click', closeSidebar);
   overlay?.addEventListener('click', closeSidebar);
+
+  // --- MOBILE CLOCK LOGIC ---
+  const mClock = document.getElementById('mobile-live-clock');
+  const mDate = document.getElementById('mobile-live-date');
+
+  if (mClock) {
+      const formatStr = mClock.getAttribute('data-format') || '24';
+      const showSecondsStr = mClock.getAttribute('data-seconds') || '1';
+      
+      const use12Hour = (formatStr === '12');
+      const showSeconds = (showSecondsStr === '1');
+      
+      let showDate = false;
+      if (mDate) {
+          showDate = (mDate.getAttribute('data-date') === '1');
+          if (showDate) mDate.classList.remove('hidden');
+      }
+
+      function updateMobileClock() {
+          const now = new Date();
+          
+          const timeOptions = { hour12: use12Hour, hour: '2-digit', minute: '2-digit' };
+          if (showSeconds) timeOptions.second = '2-digit';
+          
+          mClock.innerText = now.toLocaleTimeString('en-US', timeOptions) + ' WITA';
+
+          if (showDate && mDate) {
+              mDate.innerText = now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).toUpperCase(); 
+          }
+      }
+      
+      updateMobileClock();
+      setInterval(updateMobileClock, 1000);
+  }
 });
 </script>

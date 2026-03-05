@@ -69,6 +69,9 @@ class ProjectController extends Controller
             'live_url' => 'nullable|url',
             'screenshot' => 'array|max:8',
             'screenshot.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image_desktop' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image_tablet' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image_mobile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         if ($validated['visibility'] === 'published') {
@@ -92,16 +95,26 @@ class ProjectController extends Controller
         }
 
         $techs = $validated['tech'] ?? [];
-        
+
         $validSkills = \App\Models\Skill::whereIn('name', $techs)->get();
-        
+
         // Update the tech JSON column to only include valid skills
         $validated['tech'] = $validSkills->pluck('name')->toArray();
 
         $validated['screenshot'] = $screenshotPaths;
 
+        if ($request->hasFile('image_desktop')) {
+            $validated['image_desktop'] = $request->file('image_desktop')->store('projects', 'public');
+        }
+        if ($request->hasFile('image_tablet')) {
+            $validated['image_tablet'] = $request->file('image_tablet')->store('projects', 'public');
+        }
+        if ($request->hasFile('image_mobile')) {
+            $validated['image_mobile'] = $request->file('image_mobile')->store('projects', 'public');
+        }
+
         $project = Project::create($validated);
-        
+
         // Sync relations
         $project->skills()->sync($validSkills->pluck('id'));
 
@@ -139,7 +152,10 @@ class ProjectController extends Controller
             'visibility' => 'required|string',
             'repo' => 'nullable|string|max:255',
             'live_url' => 'nullable|string|max:255',
-            'tech' => 'nullable|string'
+            'tech' => 'nullable|string',
+            'image_desktop' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image_tablet' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'image_mobile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
         $validated['tech'] = $request->tech
@@ -149,12 +165,31 @@ class ProjectController extends Controller
         $techs = $validated['tech'] ?? [];
 
         $validSkills = \App\Models\Skill::whereIn('name', $techs)->get();
-        
+
         // Update the tech JSON column to only include valid skills (matching DB names)
         $validated['tech'] = $validSkills->pluck('name')->toArray();
 
+        if ($request->hasFile('image_desktop')) {
+            if ($project->image_desktop) {
+                Storage::disk('public')->delete($project->image_desktop);
+            }
+            $validated['image_desktop'] = $request->file('image_desktop')->store('projects', 'public');
+        }
+        if ($request->hasFile('image_tablet')) {
+            if ($project->image_tablet) {
+                Storage::disk('public')->delete($project->image_tablet);
+            }
+            $validated['image_tablet'] = $request->file('image_tablet')->store('projects', 'public');
+        }
+        if ($request->hasFile('image_mobile')) {
+            if ($project->image_mobile) {
+                Storage::disk('public')->delete($project->image_mobile);
+            }
+            $validated['image_mobile'] = $request->file('image_mobile')->store('projects', 'public');
+        }
+
         $project->update($validated);
-        
+
         // Sync relations for Many-to-Many
         $project->skills()->sync($validSkills->pluck('id'));
 
@@ -210,8 +245,8 @@ class ProjectController extends Controller
             'screenshot' => array_values($existingScreenshots)
         ]);
 
-            return redirect()->route('dashboard.projects.index')
-                ->with('success', 'Project updated successfully!');
+        return redirect()->route('dashboard.projects.index')
+            ->with('success', 'Project updated successfully!');
     }
     public function destroy(Project $project)
     {
@@ -227,7 +262,7 @@ class ProjectController extends Controller
         $search = $request->get('search');
 
         $monthsQuery = Project::onlyTrashed();
-       $multipleSelect = $request->get('multiple_select', 0);
+        $multipleSelect = $request->get('multiple_select', 0);
 
         if ($search) {
             $monthsQuery->where('title', 'like', "%{$search}%");
@@ -264,7 +299,7 @@ class ProjectController extends Controller
 
         $totalTrashed = Project::onlyTrashed()->count();
 
-        $expiringSoon = Project::onlyTrashed()->get()->filter(function($p){
+        $expiringSoon = Project::onlyTrashed()->get()->filter(function ($p) {
             $deleteAt = $p->deleted_at->copy()->addDays(config('app.trash_retention_days'));
             return now()->diffInDays($deleteAt, false) <= 5
                 && now()->diffInDays($deleteAt, false) > 0;

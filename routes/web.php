@@ -106,7 +106,10 @@ Route::post('/api/theme', function (Illuminate\Http\Request $request) {
             'theme' => ['required', 'string', 'in:light,dark,system'],
         ]);
         /** @var \App\Models\User $user */
-        $user->update(['theme' => $validated['theme']]);
+        $user->setting()->updateOrCreate(
+            ['user_id' => $user->id],
+            ['theme' => $validated['theme']]
+        );
     }
     return response()->json(['success' => true]);
 });
@@ -117,7 +120,10 @@ Route::post('/api/locale', function (Illuminate\Http\Request $request) {
             'locale' => ['required', 'string', 'in:en,id'],
         ]);
         /** @var \App\Models\User $user */
-        $user->update(['locale' => $validated['locale']]);
+        $user->setting()->updateOrCreate(
+            ['user_id' => $user->id],
+            ['locale' => $validated['locale']]
+        );
     }
     return response()->json(['success' => true]);
 });

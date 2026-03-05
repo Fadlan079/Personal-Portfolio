@@ -27,9 +27,14 @@ class HomeController extends Controller
         $skills = \App\Models\Skill::has('projects')->withCount('projects')->get();
         $profilePhoto = $this->profilePhotoUrl();
         $user = User::first();
-        $showClock = $user->show_clock ?? true;
-        $clockFormat = $user->clock_format ?? '24';
-        return view('pages.home', compact('recentProjects', 'skills', 'profilePhoto', 'showClock', 'clockFormat'));
+        $setting = $user ? $user->setting : null;
+
+        $showClock = $setting->show_clock ?? true;
+        $clockFormat = $setting->clock_format ?? '24';
+        $showSeconds = $setting->show_seconds ?? true;
+        $showDate = $setting->show_date ?? true;
+
+        return view('pages.home', compact('recentProjects', 'skills', 'profilePhoto', 'showClock', 'clockFormat', 'showSeconds', 'showDate'));
     }
 
     public function Showabout()

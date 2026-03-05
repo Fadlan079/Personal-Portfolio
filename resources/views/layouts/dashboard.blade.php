@@ -82,8 +82,9 @@
     <script>
         (function() {
             // Get user's saved preferences from Laravel (fallback to 'system')
-            const userTheme = '{{ auth()->check() ? auth()->user()->theme : 'system' }}';
-            const userLocale = '{{ auth()->check() && auth()->user()->locale ? auth()->user()->locale : '' }}';
+            const userTheme = '{{ auth()->check() ? auth()->user()->setting->theme ?? 'system' : 'system' }}';
+            const userLocale =
+                '{{ auth()->check() && (auth()->user()->setting->locale ?? false) ? auth()->user()->setting->locale : '' }}';
 
             // Sync Database values to Frontend Storage (so app.js respects them)
             localStorage.setItem('theme', userTheme);
@@ -129,163 +130,355 @@
     </script>
 </head>
 
-<body id="mainBody" class="bg-bg text-text overflow-x-hidden" style="cursor: none;">
-<div id="sys-cursor-dot"></div>
-    <div id="sys-cursor-box">
-        <div class="sys-corner top-left"></div>
-        <div class="sys-corner top-right"></div>
-        <div class="sys-corner bottom-left"></div>
-        <div class="sys-corner bottom-right"></div>
+<body id="mainBody" class="bg-bg text-text overflow-x-hidden"
+    data-cursor-theme="{{ auth()->check() ? auth()->user()->setting->cursor_theme ?? 'viewfinder' : 'viewfinder' }}"
+    style="{{ auth()->check() && (auth()->user()->setting->cursor_theme ?? 'viewfinder') === 'native' ? 'cursor: auto;' : 'cursor: none;' }}">
+
+    <div id="custom-cursor-container" class="fixed inset-0 pointer-events-none z-[9999]">
+
+        <div class="cursor-theme" id="cursor-viewfinder">
+            <div class="v-dot"></div>
+            <div class="v-box">
+                <div class="v-corner top-left"></div>
+                <div class="v-corner top-right"></div>
+                <div class="v-corner bottom-left"></div>
+                <div class="v-corner bottom-right"></div>
+            </div>
+        </div>
+
+        <div class="cursor-theme" id="cursor-blob">
+            <div class="b-circle">
+                <div class="b-plus"></div>
+            </div>
+            <div class="b-trail"></div>
+        </div>
+
+        <div class="cursor-theme" id="cursor-terminal">
+            <div class="t-block"></div>
+        </div>
     </div>
 
     <style>
-        /* Sembunyikan kursor bawaan */
-        *, a, button, [role="button"], input, select, textarea, label, .device-btn {
+        /* Base Setup */
+        body:not([data-cursor-theme="native"]) *,
+        body:not([data-cursor-theme="native"]) a,
+        body:not([data-cursor-theme="native"]) button,
+        body:not([data-cursor-theme="native"]) [role="button"],
+        body:not([data-cursor-theme="native"]) input,
+        body:not([data-cursor-theme="native"]) select,
+        body:not([data-cursor-theme="native"]) textarea,
+        body:not([data-cursor-theme="native"]) label {
             cursor: none !important;
         }
 
-        /* Titik Presisi di Tengah */
-        #sys-cursor-dot {
-            position: fixed;
-            top: 0; left: 0;
-            width: 4px; height: 4px;
+        .cursor-theme {
+            display: none;
+        }
+
+        /* Hide all by default */
+        body[data-cursor-theme="viewfinder"] #cursor-viewfinder {
+            display: block;
+        }
+
+        body[data-cursor-theme="blob"] #cursor-blob {
+            display: block;
+        }
+
+        body[data-cursor-theme="terminal"] #cursor-terminal {
+            display: block;
+        }
+
+        /* --- THEME 1: VIEWFINDER --- */
+        .v-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
             background: var(--color-primary);
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 10px var(--color-primary);
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s, border 0.2s;
+            transition: transform 0.2s, background 0.2s, border 0.2s;
             will-change: left, top;
         }
 
-        /* Kotak Scanner/Viewfinder di Luar */
-        #sys-cursor-box {
-            position: fixed;
-            top: 0; left: 0;
-            width: 32px; height: 32px;
+        .v-box {
+            position: absolute;
+            width: 32px;
+            height: 32px;
             transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 9998;
-            transition: width 0.3s ease, height 0.3s ease, transform 0.3s ease;
+            transition: width 0.3s, height 0.3s, transform 0.3s;
             will-change: left, top, width, height, transform;
         }
 
-        /* 4 Sudut Viewfinder (Brackets) */
-        .sys-corner {
+        .v-corner {
             position: absolute;
-            width: 8px; height: 8px;
+            width: 8px;
+            height: 8px;
             border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
             border-style: solid;
             border-width: 0;
-            transition: border-color 0.3s, border-width 0.3s;
+            transition: border-width 0.3s, border-color 0.3s;
         }
-        .top-left { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
-        .top-right { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
-        .bottom-left { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
-        .bottom-right { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
 
-        /* =========================================
-           HOVER STATES (Saat kena tombol/link)
-           ========================================= */
-        #sys-cursor-box.is-hovering {
-            width: 48px; 
-            height: 48px;
-            /* Berputar jadi diamond */
-            transform: translate(-50%, -50%) rotate(45deg); 
+        .v-corner.top-left {
+            top: 0;
+            left: 0;
+            border-top-width: 1px;
+            border-left-width: 1px;
         }
-        #sys-cursor-box.is-hovering .sys-corner {
+
+        .v-corner.top-right {
+            top: 0;
+            right: 0;
+            border-top-width: 1px;
+            border-right-width: 1px;
+        }
+
+        .v-corner.bottom-left {
+            bottom: 0;
+            left: 0;
+            border-bottom-width: 1px;
+            border-left-width: 1px;
+        }
+
+        .v-corner.bottom-right {
+            bottom: 0;
+            right: 0;
+            border-bottom-width: 1px;
+            border-right-width: 1px;
+        }
+
+        /* Viewfinder Hover */
+        .v-box.is-hovering {
+            width: 48px;
+            height: 48px;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .v-box.is-hovering .v-corner {
             border-color: var(--color-primary);
             border-width: 2px;
         }
 
-        #sys-cursor-dot.is-hovering {
+        .v-dot.is-hovering {
             transform: translate(-50%, -50%) scale(2.5);
             background: transparent;
             border: 1px solid var(--color-primary);
-            box-shadow: inset 0 0 8px color-mix(in srgb, var(--color-primary) 30%, transparent);
         }
 
-        /* =========================================
-           CLICK STATES (Saat mouse ditekan)
-           ========================================= */
-        #sys-cursor-box.is-clicking {
-            width: 20px; 
+        .v-box.is-clicking {
+            width: 20px;
             height: 20px;
         }
-        #sys-cursor-dot.is-clicking {
+
+        .v-dot.is-clicking {
             transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        /* --- THEME 2: INVERTED BLOB --- */
+        .b-circle {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #ffffff;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.18s, height 0.18s;
+            will-change: left, top;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .b-trail {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffffff;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            will-change: left, top;
+        }
+
+        .b-plus {
+            position: relative;
+            width: 10px;
+            height: 10px;
+        }
+
+        .b-plus::before,
+        .b-plus::after {
+            content: "";
+            position: absolute;
+            background: black;
+        }
+
+        .b-plus::before {
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            transform: translateY(-50%);
+        }
+
+        .b-plus::after {
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            transform: translateX(-50%);
+        }
+
+        /* Blob Hover */
+        .b-circle.is-hovering {
+            width: 56px;
+            height: 56px;
+        }
+
+        .b-circle.is-clicking {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* --- THEME 3: TERMINAL BLOCK --- */
+        .t-block {
+            position: absolute;
+            width: 12px;
+            height: 24px;
+            background: var(--color-primary);
+            transform: translate(0, -50%);
+            mix-blend-mode: screen;
+            will-change: left, top;
+            transition: height 0.2s, transform 0.2s;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Terminal Hover */
+        .t-block.is-hovering {
+            width: 24px;
+            height: 2px;
+            transform: translate(-50%, 12px);
+            animation: none;
+            background: var(--color-text);
         }
     </style>
 
     <script>
         (function() {
-            const dot = document.getElementById('sys-cursor-dot');
-            const box = document.getElementById('sys-cursor-box');
-            
-            let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-            let boxX = mouseX, boxY = mouseY;
-            let isVisible = false;
+            const body = document.body;
+            let mouseX = window.innerWidth / 2,
+                mouseY = window.innerHeight / 2;
 
-            // Update koordinat mouse
+            // Viewfinder elements
+            const vDot = document.querySelector('.v-dot');
+            const vBox = document.querySelector('.v-box');
+            let vBoxX = mouseX,
+                vBoxY = mouseY;
+
+            // Blob elements
+            const bCircle = document.querySelector('.b-circle');
+            const bTrail = document.querySelector('.b-trail');
+            let bTrailX = mouseX,
+                bTrailY = mouseY;
+
+            // Terminal elements
+            const tBlock = document.querySelector('.t-block');
+
+            // Mouse Move
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
-                
-                // Titik tengah pindah instan (tanpa delay) untuk presisi klik
-                dot.style.left = mouseX + 'px';
-                dot.style.top = mouseY + 'px';
+                const theme = body.getAttribute('data-cursor-theme');
 
-                if (!isVisible) {
-                    dot.style.opacity = '1';
-                    box.style.opacity = '1';
-                    isVisible = true;
+                if (theme === 'viewfinder') {
+                    vDot.style.left = mouseX + 'px';
+                    vDot.style.top = mouseY + 'px';
+                } else if (theme === 'blob') {
+                    bCircle.style.left = mouseX + 'px';
+                    bCircle.style.top = mouseY + 'px';
+                } else if (theme === 'terminal') {
+                    tBlock.style.left = mouseX + 'px';
+                    tBlock.style.top = mouseY + 'px';
                 }
             });
 
-            document.addEventListener('mouseleave', () => {
-                dot.style.opacity = '0';
-                box.style.opacity = '0';
-                isVisible = false;
-            });
+            // Physics Animation Loop (Lerp)
+            function animateCursor() {
+                const theme = body.getAttribute('data-cursor-theme');
 
-            // Animasi lerp untuk kotak luar (delay mengikuti mouse)
-            function renderBox() {
-                // Kecepatan ngikutin mouse (0.15 = smooth delay)
-                boxX += (mouseX - boxX) * 0.15;
-                boxY += (mouseY - boxY) * 0.15;
-                
-                box.style.left = boxX + 'px';
-                box.style.top = boxY + 'px';
-                
-                requestAnimationFrame(renderBox);
+                if (theme === 'viewfinder') {
+                    vBoxX += (mouseX - vBoxX) * 0.15;
+                    vBoxY += (mouseY - vBoxY) * 0.15;
+                    vBox.style.left = vBoxX + 'px';
+                    vBox.style.top = vBoxY + 'px';
+                } else if (theme === 'blob') {
+                    bTrailX += (mouseX - bTrailX) * 0.18;
+                    bTrailY += (mouseY - bTrailY) * 0.18;
+                    bTrail.style.left = bTrailX + 'px';
+                    bTrail.style.top = bTrailY + 'px';
+                }
+                requestAnimationFrame(animateCursor);
             }
-            renderBox();
+            animateCursor();
 
-            // Efek Hover pada elemen yang bisa diklik
+            // Hover Effects
             document.addEventListener('mouseover', (e) => {
-                const clickable = e.target.closest('a, button, [role="button"], .device-btn, input, select, textarea, label');
+                const clickable = e.target.closest(
+                    'a, button, [role="button"], .device-btn, input, select, textarea, label');
                 if (clickable) {
-                    dot.classList.add('is-hovering');
-                    box.classList.add('is-hovering');
+                    if (vDot) {
+                        vDot.classList.add('is-hovering');
+                        vBox.classList.add('is-hovering');
+                    }
+                    if (bCircle) {
+                        bCircle.classList.add('is-hovering');
+                    }
+                    if (tBlock) {
+                        tBlock.classList.add('is-hovering');
+                    }
                 } else {
-                    dot.classList.remove('is-hovering');
-                    box.classList.remove('is-hovering');
+                    if (vDot) {
+                        vDot.classList.remove('is-hovering');
+                        vBox.classList.remove('is-hovering');
+                    }
+                    if (bCircle) {
+                        bCircle.classList.remove('is-hovering');
+                    }
+                    if (tBlock) {
+                        tBlock.classList.remove('is-hovering');
+                    }
                 }
             });
 
-            // Efek saat diklik
+            // Click Effects
             document.addEventListener('mousedown', () => {
-                dot.classList.add('is-clicking');
-                box.classList.add('is-clicking');
+                if (vDot) {
+                    vDot.classList.add('is-clicking');
+                    vBox.classList.add('is-clicking');
+                }
+                if (bCircle) {
+                    bCircle.classList.add('is-clicking');
+                }
             });
             document.addEventListener('mouseup', () => {
-                dot.classList.remove('is-clicking');
-                box.classList.remove('is-clicking');
+                if (vDot) {
+                    vDot.classList.remove('is-clicking');
+                    vBox.classList.remove('is-clicking');
+                }
+                if (bCircle) {
+                    bCircle.classList.remove('is-clicking');
+                }
             });
         })();
     </script>
-    
+
     <x-sidebar brand="Fadlan" :menus="[
         [
             'label' => 'Overview',

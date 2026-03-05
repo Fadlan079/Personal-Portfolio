@@ -34,7 +34,7 @@
 
                     <label class="relative cursor-pointer group">
                         <input type="radio" name="theme" value="light" class="peer sr-only"
-                            {{ auth()->user()->theme === 'light' ? 'checked' : '' }}>
+                            {{ (auth()->user()->setting->theme ?? 'system') === 'light' ? 'checked' : '' }}>
                         <div
                             class="h-32 rounded-xl border-2 border-border bg-surface/30 p-4 hover:bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary/5">
                             <div
@@ -54,7 +54,7 @@
 
                     <label class="relative cursor-pointer group">
                         <input type="radio" name="theme" value="dark" class="peer sr-only"
-                            {{ auth()->user()->theme === 'dark' ? 'checked' : '' }}>
+                            {{ (auth()->user()->setting->theme ?? 'system') === 'dark' ? 'checked' : '' }}>
                         <div
                             class="h-32 rounded-xl border-2 border-border bg-surface/30 p-4 hover:bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary/5">
                             <div
@@ -75,7 +75,7 @@
 
                     <label class="relative cursor-pointer group">
                         <input type="radio" name="theme" value="system" class="peer sr-only"
-                            {{ auth()->user()->theme === 'system' ? 'checked' : '' }}>
+                            {{ (auth()->user()->setting->theme ?? 'system') === 'system' ? 'checked' : '' }}>
                         <div
                             class="h-32 rounded-xl border-2 border-border bg-surface/30 p-4 hover:bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary/5">
                             <div class="w-full h-12 rounded border border-border mb-4 flex overflow-hidden shadow-sm">
@@ -98,117 +98,212 @@
                     </label>
 
                 </div>
-            </div>
+                
+                <div class="space-y-4 pt-6 border-t border-border/50">
+                    <div class="flex items-center justify-between">
+                        <label
+                            class="text-[10px] font-mono uppercase text-muted tracking-[0.2em]">Interaction_Cursor</label>
+                        <span class="text-[10px] font-mono text-primary uppercase">Parameter_XY</span>
+                    </div>
 
-            <div class="space-y-6 pt-6 border-t border-border/50">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-sm font-bold font-mono uppercase tracking-widest text-text">
-                        <i class="fa-solid fa-language mr-2 text-primary"></i> Localization
-                    </h2>
-                    <span class="text-[10px] text-muted font-mono uppercase">Parameter_02</span>
-                </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                    <label class="relative cursor-pointer group">
-                        <input type="radio" name="language" value="en" class="peer sr-only"
-                            {{ auth()->user()->locale === 'en' ? 'checked' : '' }}>
-                        <div
-                            class="flex items-center gap-4 p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary/5">
+                        <label class="relative cursor-pointer group">
+                            <input type="radio" name="cursor_theme" value="viewfinder" class="peer sr-only"
+                                {{ (auth()->user()->setting->cursor_theme ?? 'viewfinder') === 'viewfinder' ? 'checked' : '' }}>
                             <div
-                                class="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center font-mono font-bold text-lg group-hover:text-primary peer-checked:text-primary peer-checked:border-primary/50 transition-colors">
-                                EN
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-sm text-text">English</h4>
-                                <p class="text-xs text-muted font-mono mt-1">locale: en-US</p>
-                            </div>
-                            <i
-                                class="fa-solid fa-check text-primary scale-0 peer-checked:scale-100 transition-transform text-lg"></i>
-                        </div>
-                    </label>
-
-                    <label class="relative cursor-pointer group">
-                        <input type="radio" name="language" value="id" class="peer sr-only"
-                            {{ auth()->user()->locale === 'id' ? 'checked' : '' }}>
-                        <div
-                            class="flex items-center gap-4 p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary/5">
-                            <div
-                                class="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center font-mono font-bold text-lg group-hover:text-primary peer-checked:text-primary peer-checked:border-primary/50 transition-colors">
-                                ID
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-sm text-text">Bahasa Indonesia</h4>
-                                <p class="text-xs text-muted font-mono mt-1">locale: id-ID</p>
-                            </div>
-                            <i
-                                class="fa-solid fa-check text-primary scale-0 peer-checked:scale-100 transition-transform text-lg"></i>
-                        </div>
-                    </label>
-
-                </div>
-            </div>
-
-            <div class="space-y-6 pt-6 border-t border-border/50">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-sm font-bold font-mono uppercase tracking-widest text-text">
-                        <i class="fa-regular fa-clock mr-2 text-primary"></i> System Clock
-                    </h2>
-                    <span class="text-[10px] text-muted font-mono uppercase">Parameter_03</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                    <div
-                        class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-sm text-text">Display Live Clock</h4>
-                            <p class="text-xs text-muted font-mono mt-1">Show running time on hero</p>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="hidden" name="show_clock" value="0">
-                            <input type="checkbox" name="show_clock" value="1" class="sr-only peer"
-                                {{ auth()->user()->show_clock ? 'checked' : '' }}>
-                            <div
-                                class="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner">
+                                class="flex flex-col items-center justify-center p-4 border border-border bg-surface/30 peer-checked:border-primary peer-checked:bg-primary/5 transition-all h-24">
+                                <div
+                                    class="w-6 h-6 border-2 border-dashed border-muted group-hover:border-primary peer-checked:border-primary flex items-center justify-center mb-3 transition-colors">
+                                    <div class="w-1.5 h-1.5 bg-primary rounded-full"></div>
+                                </div>
+                                <span
+                                    class="text-[9px] font-mono font-bold uppercase tracking-widest text-text">Viewfinder</span>
                             </div>
                         </label>
-                    </div>
 
-                    <div
-                        class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-sm text-text">Clock Format</h4>
-                            <p class="text-xs text-muted font-mono mt-1">12-hour (AM/PM) or 24-hour</p>
-                        </div>
-                        <div class="inline-flex bg-background border border-border rounded-lg p-1">
-                            <label class="cursor-pointer">
-                                <input type="radio" name="clock_format" value="12" class="peer sr-only"
-                                    {{ auth()->user()->clock_format === '12' ? 'checked' : '' }}>
+                        <label class="relative cursor-pointer group">
+                            <input type="radio" name="cursor_theme" value="blob" class="peer sr-only"
+                                {{ (auth()->user()->setting->cursor_theme ?? 'viewfinder') === 'blob' ? 'checked' : '' }}>
+                            <div
+                                class="flex flex-col items-center justify-center p-4 border border-border bg-surface/30 peer-checked:border-primary peer-checked:bg-primary/5 transition-all h-24">
                                 <div
-                                    class="px-4 py-1.5 text-xs font-mono font-bold rounded-md text-muted peer-checked:bg-primary/10 peer-checked:text-primary transition-colors">
-                                    12H</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="clock_format" value="24" class="peer sr-only"
-                                    {{ auth()->user()->clock_format === '24' ? 'checked' : '' }}>
-                                <div
-                                    class="px-4 py-1.5 text-xs font-mono font-bold rounded-md text-muted peer-checked:bg-primary/10 peer-checked:text-primary transition-colors">
-                                    24H</div>
-                            </label>
-                        </div>
-                    </div>
+                                    class="w-6 h-6 rounded-full bg-white flex items-center justify-center mb-3 group-hover:scale-125 transition-transform">
+                                    <i class="fa-solid fa-plus text-[8px] text-black"></i>
+                                </div>
+                                <span
+                                    class="text-[9px] font-mono font-bold uppercase tracking-widest text-text">Invert_Blob</span>
+                            </div>
+                        </label>
 
+                        <label class="relative cursor-pointer group">
+                            <input type="radio" name="cursor_theme" value="terminal" class="peer sr-only"
+                                {{ (auth()->user()->setting->cursor_theme ?? 'viewfinder') === 'terminal' ? 'checked' : '' }}>
+                            <div
+                                class="flex flex-col items-center justify-center p-4 border border-border bg-surface/30 peer-checked:border-primary peer-checked:bg-primary/5 transition-all h-24">
+                                <div class="w-2.5 h-5 bg-primary animate-pulse mb-3"></div>
+                                <span
+                                    class="text-[9px] font-mono font-bold uppercase tracking-widest text-text">Terminal</span>
+                            </div>
+                        </label>
+
+                        <label class="relative cursor-pointer group">
+                            <input type="radio" name="cursor_theme" value="native" class="peer sr-only"
+                                {{ (auth()->user()->setting->cursor_theme ?? 'viewfinder') === 'native' ? 'checked' : '' }}>
+                            <div
+                                class="flex flex-col items-center justify-center p-4 border border-border bg-surface/30 peer-checked:border-primary peer-checked:bg-primary/5 transition-all h-24">
+                                <i
+                                    class="fa-solid fa-arrow-pointer text-lg text-muted group-hover:text-primary peer-checked:text-primary mb-3 transition-colors"></i>
+                                <span
+                                    class="text-[9px] font-mono font-bold uppercase tracking-widest text-text">Native_OS</span>
+                            </div>
+                        </label>
+
+                    </div>
                 </div>
-            </div>
 
-            <div class="pt-10 flex justify-end">
-                <button type="submit"
-                    class="group relative overflow-hidden px-8 py-3 bg-primary text-text font-bold uppercase tracking-widest text-xs rounded hover:bg-text hover:text-background transition-colors duration-300 flex items-center gap-3 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)]">
-                    <span>Save Preferences</span>
-                    <i class="fa-solid fa-floppy-disk group-hover:scale-110 transition-transform"></i>
-                </button>
-            </div>
+
+                <div class="space-y-6 pt-6 border-t border-border/50">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-bold font-mono uppercase tracking-widest text-text">
+                            <i class="fa-solid fa-language mr-2 text-primary"></i> Localization
+                        </h2>
+                        <span class="text-[10px] text-muted font-mono uppercase">Parameter_02</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <label class="relative cursor-pointer group">
+                            <input type="radio" name="language" value="en" class="peer sr-only"
+                                {{ (auth()->user()->setting->locale ?? 'en') === 'en' ? 'checked' : '' }}>
+                            <div
+                                class="flex items-center gap-4 p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary/5">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center font-mono font-bold text-lg group-hover:text-primary peer-checked:text-primary peer-checked:border-primary/50 transition-colors">
+                                    EN
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-sm text-text">English</h4>
+                                    <p class="text-xs text-muted font-mono mt-1">locale: en-US</p>
+                                </div>
+                                <i
+                                    class="fa-solid fa-check text-primary scale-0 peer-checked:scale-100 transition-transform text-lg"></i>
+                            </div>
+                        </label>
+
+                        <label class="relative cursor-pointer group">
+                            <input type="radio" name="language" value="id" class="peer sr-only"
+                                {{ (auth()->user()->setting->locale ?? 'en') === 'id' ? 'checked' : '' }}>
+                            <div
+                                class="flex items-center gap-4 p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary/5">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center font-mono font-bold text-lg group-hover:text-primary peer-checked:text-primary peer-checked:border-primary/50 transition-colors">
+                                    ID
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-sm text-text">Bahasa Indonesia</h4>
+                                    <p class="text-xs text-muted font-mono mt-1">locale: id-ID</p>
+                                </div>
+                                <i
+                                    class="fa-solid fa-check text-primary scale-0 peer-checked:scale-100 transition-transform text-lg"></i>
+                            </div>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="space-y-6 pt-6 border-t border-border/50">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-bold font-mono uppercase tracking-widest text-text">
+                            <i class="fa-regular fa-clock mr-2 text-primary"></i> System Clock
+                        </h2>
+                        <span class="text-[10px] text-muted font-mono uppercase">Parameter_03</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div
+                            class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-sm text-text">Display Live Clock</h4>
+                                <p class="text-xs text-muted font-mono mt-1">Show running time on hero</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="hidden" name="show_clock" value="0">
+                                <input type="checkbox" name="show_clock" value="1" class="sr-only peer"
+                                    {{ auth()->user()->setting->show_clock ?? true ? 'checked' : '' }}>
+                                <div
+                                    class="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner">
+                                </div>
+                            </label>
+                        </div>
+
+                        <div
+                            class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-sm text-text">Clock Format</h4>
+                                <p class="text-xs text-muted font-mono mt-1">12-hour or 24-hour cycle</p>
+                            </div>
+                            <div class="inline-flex bg-background border border-border rounded-lg p-1">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="clock_format" value="12" class="peer sr-only"
+                                        {{ (auth()->user()->setting->clock_format ?? '24') === '12' ? 'checked' : '' }}>
+                                    <div
+                                        class="px-4 py-1.5 text-xs font-mono font-bold rounded-md text-muted peer-checked:bg-primary/10 peer-checked:text-primary transition-colors">
+                                        12H</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="clock_format" value="24" class="peer sr-only"
+                                        {{ (auth()->user()->setting->clock_format ?? '24') === '24' ? 'checked' : '' }}>
+                                    <div
+                                        class="px-4 py-1.5 text-xs font-mono font-bold rounded-md text-muted peer-checked:bg-primary/10 peer-checked:text-primary transition-colors">
+                                        24H</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-sm text-text">Display Seconds</h4>
+                                <p class="text-xs text-muted font-mono mt-1">Show ticking seconds (HH:MM:SS)</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="hidden" name="show_seconds" value="0">
+                                <input type="checkbox" name="show_seconds" value="1" class="sr-only peer"
+                                    {{ auth()->user()->setting->show_seconds ?? true ? 'checked' : '' }}>
+                                <div
+                                    class="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner">
+                                </div>
+                            </label>
+                        </div>
+
+                        <div
+                            class="flex items-center justify-between p-5 rounded-xl border-2 border-border bg-surface/30 hover:bg-surface transition-colors">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-sm text-text">Display Date</h4>
+                                <p class="text-xs text-muted font-mono mt-1">Show current date under clock</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="hidden" name="show_date" value="0">
+                                <input type="checkbox" name="show_date" value="1" class="sr-only peer"
+                                    {{ auth()->user()->setting->show_date ?? true ? 'checked' : '' }}>
+                                <div
+                                    class="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary shadow-inner">
+                                </div>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pt-10 flex justify-end">
+                    <button type="submit"
+                        class="group relative overflow-hidden px-8 py-3 bg-primary text-text font-bold uppercase tracking-widest text-xs rounded hover:bg-text hover:text-background transition-colors duration-300 flex items-center gap-3 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)]">
+                        <span>Save Preferences</span>
+                        <i class="fa-solid fa-floppy-disk group-hover:scale-110 transition-transform"></i>
+                    </button>
+                </div>
 
         </form>
     </div>

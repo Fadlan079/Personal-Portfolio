@@ -22,11 +22,15 @@ class User extends Authenticatable
         'email',
         'password',
         'profile_photo',
-        'theme',
-        'locale',
-        'show_clock',
-        'clock_format',
     ];
+
+    /**
+     * Get the user's settings.
+     */
+    public function setting()
+    {
+        return $this->hasOne(Setting::class);
+    }
 
     /**
      * Get the user's profile photo URL.
