@@ -12,5 +12,6 @@ class Contact extends Model
         'sender',
         'subject',
         'message',
+        'is_read',
     ];
 }

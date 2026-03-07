@@ -1,241 +1,116 @@
 @extends('layouts.main')
-@section('title', 'Curriculum Vitae')
+@section('title', 'SYS_ERR // 404')
 
 @section('content')
-<div class="min-h-screen bg-background pt-24 pb-32 px-6 relative overflow-hidden">
+<div class="relative min-h-screen bg-background flex flex-col items-center justify-center p-6 overflow-hidden font-sans select-none">
     
-    <div class="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
-         style="background-image: linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px); background-size: 32px 32px;">
+    {{-- Global Faint Grid --}}
+    <div class="absolute inset-0 pointer-events-none opacity-[0.03] z-0"
+         style="background-image: linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px); background-size: 48px 48px;">
     </div>
 
-    <div class="max-w-6xl mx-auto relative z-10">
+    {{-- CRT Scanline Overlay --}}
+    <div class="absolute inset-0 pointer-events-none z-50 opacity-10" 
+         style="background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%;">
+    </div>
+
+    {{-- Red Ambient Glow --}}
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] bg-red-600/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+    {{-- ERROR MODULE BOX --}}
+    <div class="relative z-10 w-full max-w-2xl border border-red-500/50 bg-[#050505]/90 backdrop-blur-sm p-8 md:p-12 shadow-[0_0_50px_rgba(239,68,68,0.15)] group animate-[fadeIn_0.5s_ease-out]">
         
-        <header class="border-b border-border/50 pb-10 mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative">
-            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-primary/20 pointer-events-none"></div>
+        {{-- HUD Hazard Lines (Top & Bottom) --}}
+        <div class="absolute top-0 left-0 w-full h-1 bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(239,68,68,0.5)_4px,rgba(239,68,68,0.5)_8px)]"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(239,68,68,0.5)_4px,rgba(239,68,68,0.5)_8px)]"></div>
 
-            <div class="space-y-3">
-                <div class="flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-primary">
-                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--color-primary)]"></span>
-                    >> INIT_USER_PROFILE
+        {{-- HUD Corners --}}
+        <div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-red-500"></div>
+        <div class="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-red-500"></div>
+        <div class="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-red-500"></div>
+        <div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-red-500"></div>
+
+        {{-- Header Status --}}
+        <div class="flex items-center justify-between border-b border-red-500/30 pb-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 flex items-center justify-center border border-red-500/50 bg-red-500/10 text-red-500">
+                    <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
                 </div>
-                <h1 class="text-4xl md:text-6xl font-bold uppercase tracking-tighter text-text leading-none">
-                    Fadlan Firdaus
-                </h1>
-                <p class="text-sm md:text-base font-mono text-muted">
-                    <span class="text-primary">></span> Fullstack Web Developer & System Architect
-                </p>
+                <span class="text-xs md:text-sm font-mono font-bold uppercase tracking-widest text-red-500">
+                    CRITICAL_SYS_FAULT
+                </span>
             </div>
-
-            <div class="flex gap-3 w-full md:w-auto">
-                <button onclick="window.print()" class="flex-1 md:flex-none px-6 py-3 border border-border text-muted font-mono text-xs font-bold uppercase tracking-widest hover:text-text hover:border-text transition-colors flex items-center justify-center gap-2 group">
-                    <i class="fa-solid fa-print group-hover:scale-110 transition-transform"></i> [ PRINT ]
-                </button>
-                <a href="#" class="flex-1 md:flex-none px-6 py-3 bg-primary/10 border border-primary text-primary font-mono text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-background transition-colors flex items-center justify-center gap-2 group shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.1)]">
-                    <i class="fa-solid fa-download group-hover:-translate-y-1 transition-transform"></i> [ PDF_EXPORT ]
-                </a>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            
-            <aside class="lg:col-span-4 space-y-12">
-                
-                <div class="space-y-6">
-                    <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-text flex items-center gap-2">
-                        <i class="fa-solid fa-server text-primary"></i> SYS.INFO
-                    </h2>
-                    
-                    <ul class="space-y-4 font-mono text-xs">
-                        <li class="flex flex-col gap-1 border-l-2 border-border/50 pl-3 hover:border-primary transition-colors">
-                            <span class="text-muted uppercase tracking-widest text-[9px]">Location</span>
-                            <span class="text-text">Indonesia, WITA Zone</span>
-                        </li>
-                        <li class="flex flex-col gap-1 border-l-2 border-border/50 pl-3 hover:border-primary transition-colors">
-                            <span class="text-muted uppercase tracking-widest text-[9px]">Email_Protocol</span>
-                            <a href="mailto:fadlanfirdaus220@gmail.com" class="text-text hover:text-primary transition-colors">fadlanfirdaus220@gmail.com</a>
-                        </li>
-                        <li class="flex flex-col gap-1 border-l-2 border-border/50 pl-3 hover:border-primary transition-colors">
-                            <span class="text-muted uppercase tracking-widest text-[9px]">Secure_Comm</span>
-                            <a href="https://wa.me/6282210732928" target="_blank" class="text-text hover:text-primary transition-colors">+62 822-1073-2928</a>
-                        </li>
-                        <li class="flex flex-col gap-1 border-l-2 border-border/50 pl-3 hover:border-primary transition-colors">
-                            <span class="text-muted uppercase tracking-widest text-[9px]">Repository</span>
-                            <a href="https://github.com/Fadlan079" target="_blank" class="text-text hover:text-primary transition-colors">github.com/Fadlan079</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="space-y-6">
-                    <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-text flex items-center gap-2">
-                        <i class="fa-solid fa-microchip text-primary"></i> TECH_STACK
-                    </h2>
-                    
-                    <div class="space-y-5">
-                        <div>
-                            <div class="flex justify-between font-mono text-[10px] mb-2 uppercase tracking-widest">
-                                <span class="text-text">PHP / Laravel</span>
-                                <span class="text-primary">95%</span>
-                            </div>
-                            <div class="flex gap-1 h-1.5 w-full">
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-border flex-1"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between font-mono text-[10px] mb-2 uppercase tracking-widest">
-                                <span class="text-text">JavaScript / Alpine / Vue</span>
-                                <span class="text-primary">85%</span>
-                            </div>
-                            <div class="flex gap-1 h-1.5 w-full">
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary/30 flex-1"></div>
-                                <div class="h-full bg-border flex-1"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between font-mono text-[10px] mb-2 uppercase tracking-widest">
-                                <span class="text-text">Tailwind / CSS</span>
-                                <span class="text-primary">90%</span>
-                            </div>
-                            <div class="flex gap-1 h-1.5 w-full">
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary/30 flex-1"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="flex justify-between font-mono text-[10px] mb-2 uppercase tracking-widest">
-                                <span class="text-text">MySQL / Database Design</span>
-                                <span class="text-primary">80%</span>
-                            </div>
-                            <div class="flex gap-1 h-1.5 w-full">
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-primary flex-1 shadow-[0_0_5px_var(--color-primary)]"></div>
-                                <div class="h-full bg-border flex-1"></div>
-                                <div class="h-full bg-border flex-1"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-text flex items-center gap-2">
-                        <i class="fa-solid fa-language text-primary"></i> LINGUISTICS
-                    </h2>
-                    <div class="flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-widest text-muted">
-                        <span class="px-3 py-1 border border-border bg-surface/30">Indonesian [Native]</span>
-                        <span class="px-3 py-1 border border-border bg-surface/30">English [Professional]</span>
-                    </div>
-                </div>
-
-            </aside>
-
-            <main class="lg:col-span-8 space-y-16">
-                
-                <div class="p-6 border border-border bg-surface/30 relative group">
-                    <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary"></div>
-                    <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary"></div>
-                    
-                    <p class="font-mono text-xs text-primary mb-3 uppercase tracking-widest">> Exec_Summary</p>
-                    <p class="text-sm text-text leading-relaxed font-sans opacity-90">
-                        Dedicated Web Developer with a strong focus on backend architecture using Laravel and frontend interactivity using Alpine/Vue. Passionate about building highly optimized, secure, and visually distinctive web applications. Seeking to leverage my technical skills to solve complex problems and deliver robust systems.
-                    </p>
-                </div>
-
-                <div class="space-y-8">
-                    <h2 class="text-2xl font-bold uppercase tracking-wide text-text flex items-center gap-3">
-                        <span class="text-primary">>_</span> Execution History
-                    </h2>
-                    
-                    <div class="relative border-l-2 border-border/50 pl-8 space-y-12">
-                        
-                        <div class="relative group cursor-pointer">
-                            <div class="absolute -left-[39px] top-1.5 w-4 h-4 bg-background border-2 border-border rounded-full group-hover:border-primary group-hover:bg-primary/20 transition-colors"></div>
-                            <div class="absolute -left-[38px] top-1.5 bottom-0 w-0.5 bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500"></div>
-
-                            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
-                                <h3 class="text-lg font-bold text-text group-hover:text-primary transition-colors uppercase">Lead Web Developer</h3>
-                                <span class="font-mono text-[10px] text-primary uppercase tracking-widest bg-primary/10 px-2 py-1 mt-2 sm:mt-0 w-max">Present - 2023</span>
-                            </div>
-                            <h4 class="font-mono text-xs text-muted mb-4 uppercase tracking-widest">Freelance / Independent Contractor</h4>
-                            
-                            <ul class="space-y-3 text-sm text-text/80 font-sans list-none">
-                                <li class="relative pl-4 before:content-['>'] before:absolute before:left-0 before:text-primary before:font-mono">
-                                    Engineered and deployed comprehensive backend architectures for multiple client projects using the Laravel framework.
-                                </li>
-                                <li class="relative pl-4 before:content-['>'] before:absolute before:left-0 before:text-primary before:font-mono">
-                                    Integrated dynamic frontend interfaces using Alpine.js and Tailwind CSS, reducing page load times and improving UX.
-                                </li>
-                                <li class="relative pl-4 before:content-['>'] before:absolute before:left-0 before:text-primary before:font-mono">
-                                    Implemented secure authentication protocols, database migrations, and RESTful APIs for seamless data flow.
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="relative group cursor-pointer">
-                            <div class="absolute -left-[39px] top-1.5 w-4 h-4 bg-background border-2 border-border rounded-full group-hover:border-primary group-hover:bg-primary/20 transition-colors"></div>
-                            <div class="absolute -left-[38px] top-1.5 bottom-0 w-0.5 bg-primary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500"></div>
-
-                            <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
-                                <h3 class="text-lg font-bold text-text group-hover:text-primary transition-colors uppercase">Junior Programmer</h3>
-                                <span class="font-mono text-[10px] text-muted uppercase tracking-widest border border-border px-2 py-1 mt-2 sm:mt-0 w-max">2022 - 2023</span>
-                            </div>
-                            <h4 class="font-mono text-xs text-muted mb-4 uppercase tracking-widest">Tech Solutions Inc.</h4>
-                            
-                            <ul class="space-y-3 text-sm text-text/80 font-sans list-none">
-                                <li class="relative pl-4 before:content-['>'] before:absolute before:left-0 before:text-primary before:font-mono">
-                                    Assisted in the maintenance and debugging of legacy PHP applications.
-                                </li>
-                                <li class="relative pl-4 before:content-['>'] before:absolute before:left-0 before:text-primary before:font-mono">
-                                    Developed internal dashboard modules to visualize company metrics, utilizing Chart.js and raw SQL queries.
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="space-y-8 pt-8">
-                    <h2 class="text-2xl font-bold uppercase tracking-wide text-text flex items-center gap-3">
-                        <span class="text-primary">>_</span> Knowledge Base
-                    </h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
-                        <div class="p-6 border border-border bg-surface/20 hover:border-primary/50 transition-colors group">
-                            <div class="font-mono text-[10px] text-primary uppercase tracking-widest mb-3">2020 - 2024</div>
-                            <h3 class="text-base font-bold text-text mb-1 uppercase">S1 Teknik Informatika</h3>
-                            <h4 class="font-mono text-xs text-muted mb-4 uppercase">Universitas Komputer</h4>
-                            <p class="text-sm text-text/80 leading-relaxed">
-                                Focus on Software Engineering, Database Systems, and Advanced Algorithms. Graduated with a focus on web security.
-                            </p>
-                        </div>
-
-                        <div class="p-6 border border-border bg-surface/20 hover:border-primary/50 transition-colors group">
-                            <div class="font-mono text-[10px] text-primary uppercase tracking-widest mb-3">2017 - 2020</div>
-                            <h3 class="text-base font-bold text-text mb-1 uppercase">Rekayasa Perangkat Lunak</h3>
-                            <h4 class="font-mono text-xs text-muted mb-4 uppercase">SMK Negeri Teknologi</h4>
-                            <p class="text-sm text-text/80 leading-relaxed">
-                                Early foundation in programming logic, HTML/CSS, basic PHP, and fundamental computer networking.
-                            </p>
-                        </div>
-
-                    </div>
-                </div>
-
-            </main>
+            <span class="text-[10px] font-mono text-red-500/70 uppercase tracking-widest hidden sm:block">
+                ERR_CODE: HTTP_404
+            </span>
         </div>
+
+        {{-- Main Error Text (Glitch Effect) --}}
+        <div class="text-center mb-10 relative">
+            <h1 class="text-[clamp(5rem,15vw,10rem)] font-bold font-mono tracking-tighter leading-none text-transparent relative inline-block glitch-wrapper" data-text="404">
+                <span class="absolute inset-0 text-red-500 opacity-70 -translate-x-1 animate-[glitch-1_2.5s_infinite_linear_alternate-reverse]">404</span>
+                <span class="absolute inset-0 text-sky-500 opacity-70 translate-x-1 animate-[glitch-2_3s_infinite_linear_alternate-reverse]">404</span>
+                <span class="relative text-text">404</span>
+            </h1>
+            <p class="text-lg md:text-2xl font-mono font-bold uppercase tracking-[0.2em] text-text mt-2">
+                DEAD_END_REACHED
+            </p>
+        </div>
+
+        {{-- Terminal Logs Simulation --}}
+        <div class="bg-black border border-border/50 p-5 font-mono text-xs md:text-sm leading-relaxed text-muted mb-10 space-y-2">
+            <div class="flex gap-2"><span class="text-primary">></span> <span>TRACING_REQUESTED_ROUTE...</span></div>
+            <div class="flex gap-2"><span class="text-primary">></span> <span>SCANNING_ROOT_DIRECTORIES...</span></div>
+            <div class="flex gap-2"><span class="text-red-500">></span> <span class="text-red-400">TARGET_NODE_UNREACHABLE [FAILED]</span></div>
+            <div class="flex gap-2"><span class="text-primary">></span> <span>DIAGNOSTIC: <span class="text-text">The data sector you are attempting to access has been purged, relocated, or never existed in this matrix.</span></span></div>
+            
+            <div class="flex mt-4 items-center gap-2">
+                <span class="text-green-500">guest@sys:~$</span>
+                <div class="w-2 h-4 bg-primary animate-pulse"></div>
+            </div>
+        </div>
+
+        {{-- Actions --}}
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button onclick="window.history.back()" class="w-full sm:w-auto px-6 py-3 border border-border text-[11px] font-mono font-bold uppercase tracking-widest text-muted hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-3">
+                <i class="fa-solid fa-arrow-left"></i> [ TRACE_BACK ]
+            </button>
+
+            <a href="/" class="w-full sm:w-auto relative group px-6 py-3 bg-primary/10 border border-primary text-primary font-mono text-[11px] font-bold uppercase tracking-widest hover:bg-primary hover:text-background transition-colors flex items-center justify-center gap-3 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)]">
+                <span>[ REBOOT_TO_ROOT ]</span>
+                <i class="fa-solid fa-house group-hover:-translate-y-1 transition-transform"></i>
+            </a>
+        </div>
+
     </div>
 </div>
+
 @endsection
+
+@push('head')
+<style>
+    /* Keyframes for text glitch effect */
+    @keyframes glitch-1 {
+        0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+        20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+        40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+        60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+        80% { clip-path: inset(10% 0 70% 0); transform: translate(-1px, 1px); }
+        100% { clip-path: inset(30% 0 50% 0); transform: translate(1px, -1px); }
+    }
+    
+    @keyframes glitch-2 {
+        0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -1px); }
+        20% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 1px); }
+        40% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
+        60% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 2px); }
+        80% { clip-path: inset(20% 0 50% 0); transform: translate(1px, -1px); }
+        100% { clip-path: inset(50% 0 30% 0); transform: translate(-1px, 1px); }
+    }
+
+    .glitch-wrapper:hover span:nth-child(1),
+    .glitch-wrapper:hover span:nth-child(2) {
+        animation-duration: 0.5s;
+    }
+</style>
+@endpush

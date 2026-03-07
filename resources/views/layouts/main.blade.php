@@ -47,8 +47,9 @@
         }
 
         ::selection {
-            background: var(--color-primary);
-            color: var(--color-text);
+            background: color-mix(in srgb, var(--color-primary) 25%, transparent);
+            color: var(--color-primary);
+            text-shadow: 0 0 8px color-mix(in srgb, var(--color-primary) 60%, transparent);
         }
 
         .cta-bubble {

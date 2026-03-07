@@ -71,6 +71,12 @@ Route::middleware(['auth', 'verified'])
 
         Route::resource('projects', ProjectController::class)->except(['show']);
         Route::resource('skills', \App\Http\Controllers\Dashboard\SkillController::class)->except(['show']);
+
+        // Contacts Inbox Routes
+        Route::get('/contacts', [\App\Http\Controllers\Dashboard\ContactController::class, 'index'])->name('contacts.index');
+        Route::patch('/contacts/{contact}/read', [\App\Http\Controllers\Dashboard\ContactController::class, 'markAsRead'])->name('contacts.read');
+        Route::post('/contacts/read-all', [\App\Http\Controllers\Dashboard\ContactController::class, 'markAllAsRead'])->name('contacts.readAll');
+        Route::delete('/contacts/{contact}', [\App\Http\Controllers\Dashboard\ContactController::class, 'destroy'])->name('contacts.destroy');
     });
 
 require __DIR__ . '/auth.php';
