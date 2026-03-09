@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'System Archive // Trash')
+@section('title', 'Trash')
 
 @section('content')
     <div class="min-h-screen bg-background pt-12 pb-32 px-4 md:px-6 relative overflow-hidden">

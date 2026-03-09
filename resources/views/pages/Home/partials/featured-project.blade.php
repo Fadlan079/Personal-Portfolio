@@ -54,7 +54,7 @@
                             style="background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 6px 100%;">
                         </div>
 
-                        @foreach ($recentProjects as $index => $project)
+                        @forelse ($recentProjects as $index => $project)
                             <div class="absolute inset-0 w-full h-full overflow-y-auto overflow-x-hidden custom-scrollbar z-10 bg-background"
                                 x-show="currentProject === {{ $index }}"
                                 x-transition:enter="ease-out duration-500"
@@ -67,10 +67,20 @@
                                     'tablet': '{{ $project->image_tablet ? asset('storage/' . $project->image_tablet) : 'https://via.placeholder.com/768x2500/121212/a3e635?text=TABLET+LAYOUT' }}',
                                     'mobile': '{{ $project->image_mobile ? asset('storage/' . $project->image_mobile) : 'https://via.placeholder.com/375x2500/121212/f87171?text=MOBILE+LAYOUT' }}'
                                 } [deviceView]"
+                                    x-on:error.once="$el.src = {
+                                        'desktop': 'https://via.placeholder.com/1280x2500/121212/38bdf8?text=NO+DESKTOP+IMAGE',
+                                        'tablet': 'https://via.placeholder.com/768x2500/121212/a3e635?text=NO+TABLET+IMAGE',
+                                        'mobile': 'https://via.placeholder.com/375x2500/121212/f87171?text=NO+MOBILE+IMAGE'
+                                    }[deviceView]"
                                     alt="{{ $project->title }}"
                                     class="w-full h-auto block object-top transition-opacity duration-300 ease-in">
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="absolute inset-0 flex flex-col items-center justify-center bg-background text-muted p-4">
+                                <i class="fa-solid fa-image text-4xl mb-3 opacity-20"></i>
+                                <span class="font-mono text-[10px] uppercase tracking-widest">[ Null_Data: No Visual Preview ]</span>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
 

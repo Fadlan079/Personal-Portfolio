@@ -21,7 +21,13 @@ class HomeController extends Controller
     {
         $recentProjects = Project::recent(5)->get();
 
-        $skills = \App\Models\Skill::has('projects')->withCount('projects')->get();
+        $skills = \App\Models\Skill::withCount('projects')
+            ->where(function ($q) {
+                $q->where('is_core', true)
+                    ->orWhereHas('projects');
+            })
+            ->orderByDesc('projects_count')
+            ->get();
 
         $profilePhoto = $this->profilePhotoUrl();
 

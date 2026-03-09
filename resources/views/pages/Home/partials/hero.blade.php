@@ -115,7 +115,7 @@
 
             <h2 class="hero-title mb-6 leading-tight text-center">
                 <div class="hero-big hero-solid" data-text="HI">
-                    <span data-i18n="hero.hi"></span>
+                    <span data-i18n="hero.hi">Hi, I'm</span>
                 </div>
                 <div class="hero-big hero-outline">FADLAN</div>
                 <div class="hero-sub text-muted mt-4 font-semibold">Full Stack Developer</div>
@@ -124,7 +124,9 @@
             <p
                 class="hero-desc max-w-xl mx-auto mb-5 text-sm md:text-base leading-loose tracking-wide text-muted/80 relative">
                 <span class="hero-desc-line"></span>
-                <span data-i18n="hero.description"></span>
+                <span data-i18n="hero.description">
+                    Focus on building modern web applications with clear <strong class='text-text'>backend</strong> structures, responsive <strong class='text-text'>frontend</strong> and production-ready systems.
+                </span>
             </p>
 
             <div class="flex gap-4 flex-wrap justify-center text-sm font-mono uppercase tracking-widest font-bold mt-2">

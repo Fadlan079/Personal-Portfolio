@@ -91,10 +91,13 @@ class SkillController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:skills',
-            'category' => 'required|in:frontend,backend,tools,core',
+            'category' => 'required|in:frontend,backend,tools',
             'icon' => 'nullable|string',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'is_core' => 'nullable|boolean'
         ]);
+
+        $validated['is_core'] = $request->boolean('is_core');
 
         \App\Models\Skill::create($validated);
         return redirect()->route('dashboard.skills.index')->with('success', 'Skill created successfully.');
@@ -117,10 +120,13 @@ class SkillController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:skills,name,' . $skill->id,
-            'category' => 'required|in:frontend,backend,tools,core',
+            'category' => 'required|in:frontend,backend,tools',
             'icon' => 'nullable|string',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'is_core' => 'nullable|boolean'
         ]);
+
+        $validated['is_core'] = $request->boolean('is_core');
 
         $skill->update($validated);
         return redirect()->route('dashboard.skills.index')->with('success', 'Skill updated successfully.');

@@ -59,15 +59,22 @@
 
                     {{-- Image Box --}}
                     <div class="relative z-10 aspect-[4/5] bg-background border border-border/70 overflow-hidden flex items-center justify-center filter grayscale group-hover:grayscale-0 transition-all duration-500">
-                        
                         <img id="profile_preview"
                             src="{{ $user->profile_photo ? Storage::disk('public')->url($user->profile_photo) : asset('profile.jpg') }}"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                             alt="Profile Photo"
                             class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
 
+                        <div style="display:none" class="flex flex-col items-center justify-center w-full h-full font-mono bg-background">
+                            <svg class="w-12 h-12 text-primary/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="text-[8px] uppercase tracking-widest text-muted">Awaiting_Source</span>
+                        </div>
+
                         {{-- CRT Scanline Overlay --}}
                         <div class="absolute inset-0 z-20 pointer-events-none opacity-20" 
-                             style="background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 6px 100%;">
+                            style="background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 6px 100%;">
                         </div>
 
                         {{-- Hover Upload State --}}

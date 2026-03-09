@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'System Config // Skills Node')
+@section('title', 'Skills')
 
 @section('content')
     <div class="min-h-screen bg-background pt-12 pb-32 px-4 md:px-6 relative overflow-hidden">

@@ -159,8 +159,18 @@
 
         {{-- Admin Identity Display --}}
         <div class="flex items-center gap-3 px-2 cursor-default">
-            <img src="{{ auth()->user()?->profile_photo_url ?? asset('profile.jpg') }}" alt="Photo Profile"
-                class="w-9 h-9 rounded bg-surface flex items-center justify-center text-text font-bold text-sm border border-border/50 object-cover">
+            <div class="relative w-9 h-9 flex-shrink-0 flex items-center justify-center">
+                <img src="{{ auth()->user()?->profile_photo_url ?? asset('profile.jpg') }}" 
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                    alt="Photo Profile"
+                    class="w-full h-full rounded bg-surface border border-border/50 object-cover">
+                
+                <div style="display:none" class="flex items-center justify-center w-full h-full rounded bg-surface border border-primary/40">
+                    <svg class="w-5 h-5 text-primary/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
 
             <div class="overflow-hidden">
                 <p class="text-xs font-mono font-bold text-text truncate uppercase">

@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('project', 'projects');
+        Schema::table('skills', function (Blueprint $table) {
+            $table->boolean('is_core')->default(false)->after('category');
+        });
     }
 
     /**
@@ -19,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('projects', 'project');
+        Schema::table('skills', function (Blueprint $table) {
+            //
+        });
     }
 };

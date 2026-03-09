@@ -51,10 +51,19 @@
                     Fig. 01 — Operator
                 </div>
 
-                <div
-                    class="relative z-10 aspect-[4/5] bg-surface border border-border overflow-hidden flex items-center justify-center filter grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div class="relative z-10 aspect-[4/5] bg-surface border border-border overflow-hidden flex items-center justify-center filter grayscale group-hover:grayscale-0 transition-all duration-700">
                     <img src="{{ $profilePhoto }}" alt="Photo Profile"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                         class="w-4/5 h-4/5 object-contain mx-auto my-auto opacity-80 group-hover:opacity-100 transition-all duration-500">
+                    
+                    <div style="display:none" class="flex flex-col items-center justify-center w-full h-full bg-surface/50 font-mono">
+                        <svg class="w-16 h-16 text-primary/40 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="text-[10px] uppercase tracking-[0.3em] text-primary animate-pulse">Data_Not_Found</span>
+                        <span class="text-[8px] uppercase tracking-widest text-muted mt-1">Err_0x00404</span>
+                    </div>
+
                     <div class="absolute inset-0 scanlines pointer-events-none"></div>
                 </div>
             </div>

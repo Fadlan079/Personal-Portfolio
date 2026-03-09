@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'System Node // Projects')
+@section('title', 'Projects')
 @vite(['resources/css/dashboard_project.css', 'resources/js/app.js'])
 
 @section('content')

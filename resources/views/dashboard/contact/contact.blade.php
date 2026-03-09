@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'System Node // Transmission Logs')
+@section('title', 'Contact')
 
 @section('content')
 

@@ -45,6 +45,14 @@
                     </select>
                 </div>
 
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="editSkillCore" name="is_core" value="1"
+                        class="w-4 h-4 border-border bg-surface text-primary focus:ring-primary">
+                    <span class="text-xs text-muted uppercase tracking-wide">
+                        Core Skill (show even without projects)
+                    </span>
+                </div>
+
                 <div>
                     <p class="text-muted uppercase tracking-wide text-xs mb-2">Description</p>
                     <textarea id="editSkillDescription" name="description" rows="3"
@@ -80,18 +88,18 @@
 </div>
 
 <script>
-    window.openEditSkillModal = function(id, name, category, icon, description) {
+    window.openEditSkillModal = function(id, name, category, icon, description, is_core) {
         const modal = document.getElementById('editSkillModal');
         const form = document.getElementById('editSkillForm');
 
-        // Set form action dynamicsally matching route
         form.action = `/dashboard/skills/${id}`;
 
-        // Populate inputs
         document.getElementById('editSkillName').value = name;
         document.getElementById('editSkillCategory').value = category;
         document.getElementById('editSkillIcon').value = icon || '';
         document.getElementById('editSkillDescription').value = description || '';
+
+        document.getElementById('editSkillCore').checked = is_core == 1;
 
         modal.classList.remove('hidden');
         modal.classList.add('flex');

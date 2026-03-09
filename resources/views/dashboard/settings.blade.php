@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', 'System Settings')
+@section('title', 'Settings')
 
 @section('content')
     <div class="min-h-screen bg-background pt-24 pb-12 px-6">

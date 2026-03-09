@@ -2,49 +2,54 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Project;
 use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class ProjectSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        DB::table('project')->insert([
-            [
-                'title' => 'Portfolio Website',
-                'type' => 'Website',
-                'desc' => 'Website portofolio untuk menampilkan karya secara interaktif, menarik, dan mudah diakses oleh semua pengunjung.',
-                'status' => 'In Progress',
-                'tech' => json_encode(['Laravel', 'TailwindCSS', 'GSAP', 'JavaScript']),
-                'repo' => 'https://github.com/Fadlan079/Personal-Portfolio',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'Sistem Manajemen Parkir',
-                'type' => 'Web App',
-                'desc' => 'Sistem web parkir untuk mengelola kendaraan masuk/keluar, kapasitas, dan riwayat secara efisien.',
-                'status' => 'Archived',
-                'tech' => json_encode(['PHPNative', 'TailwindCSS','JavaScript','OCR']),
-                'repo' => 'https://github.com/Fadlan079/Sistem-Manajemen-Parkir.git',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'title' => 'Aplikasi Web Penyewaan Mobil',
-                'type' => 'Web App',
-                'desc' => 'Aplikasi web rental mobil untuk memesan, memantau, dan mengelola penyewaan kendaraan secara mudah.',
-                'status' => 'Archived',
-                'tech' => json_encode(['PHPNative', 'TailwindCSS','JavaScript']),
-                'repo' => 'https://github.com/Fadlan079/FinalProject-RentalMobil.git',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        $faker = Faker::create();
 
+        $types = ['Website','Web App','Application','Design'];
+        $statuses = ['Shipped','In Progress','Prototype','Archived'];
+        $visibilities = ['draft','public'];
+        $skills = [
+            'HTML','CSS','JavaScript','TypeScript','Tailwind','Bootstrap',
+            'React','Vue.js','Alpine.js','Laravel','PHP','Node.js','Express.js','Python','Django','Flask','MySQL','PostgreSQL','MongoDB','OpenCV','Tesseract OCR','Git','Docker','VS Code'
+        ];
+
+        for ($i = 1; $i <= 20; $i++) {
+            $techCount = rand(3,6);
+            shuffle($skills);
+            $techSelected = array_slice($skills, 0, $techCount);
+
+            Project::create([
+                'title' => "Dummy $i",
+                'type' => $types[array_rand($types)],
+                'desc' => "This is a description for Dummy $i project.",
+                'role' => $faker->jobTitle,
+                'team_size' => rand(1,10) . " members",
+                'responsibilities' => "Responsible for " . implode(", ", $techSelected),
+                'status' => $statuses[array_rand($statuses)],
+                'visibility' => $visibilities[array_rand($visibilities)],
+                'published_at' => $faker->dateTimeBetween('-2 years', 'now'),
+                'tech' => null, // kosong dulu
+                'repo' => "https://github.com/dummy/project-$i",
+                'live_url' => "https://dummy-project-$i.example.com",
+                'screenshot' => json_encode([
+                    "desktop" => "https://via.placeholder.com/1200x800?text=Dummy+$i+Desktop",
+                    "tablet" => "https://via.placeholder.com/800x600?text=Dummy+$i+Tablet",
+                    "mobile" => "https://via.placeholder.com/400x800?text=Dummy+$i+Mobile",
+                ]),
+                'image_desktop' => "https://via.placeholder.com/1200x800?text=Dummy+$i+Desktop",
+                'image_tablet' => "https://via.placeholder.com/800x600?text=Dummy+$i+Tablet",
+                'image_mobile' => "https://via.placeholder.com/400x800?text=Dummy+$i+Mobile",
+                'created_at' => $faker->dateTimeBetween('-2 years', 'now'),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

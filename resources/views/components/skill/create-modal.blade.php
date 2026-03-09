@@ -44,6 +44,14 @@
                     </select>
                 </div>
 
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" name="is_core" value="1"
+                        class="w-4 h-4 border-border bg-surface text-primary focus:ring-primary">
+                    <span class="text-xs text-muted uppercase tracking-wide">
+                        Core Skill (show even without projects)
+                    </span>
+                </div>
+                
                 <div>
                     <p class="text-muted uppercase tracking-wide text-xs mb-2">Description</p>
                     <textarea name="description" rows="3"
