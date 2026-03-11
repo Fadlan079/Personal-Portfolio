@@ -48,7 +48,7 @@
                 </div>
 
                 {{-- Action Buttons --}}
-                <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 border border-border/50 p-1">
+                <div class="flex gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity bg-background/80 border border-border/50 p-1">
                     <button type="button" class="edit-skill-btn w-6 h-6 flex items-center justify-center text-muted hover:text-primary transition-colors" 
                         data-id="{{ $skill->id }}" 
                         data-name="{{ $skill->name }}"
