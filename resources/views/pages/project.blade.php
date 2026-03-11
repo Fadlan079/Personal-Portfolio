@@ -199,7 +199,7 @@
                                     </h3>
 
                                     <p class="text-sm text-muted leading-snug mt-1 line-clamp-2">
-                                        {{ $project->desc }}
+                                        {{ \Illuminate\Support\Str::limit($project->desc, 100) }}
                                     </p>
                                 </div>
 
@@ -351,6 +351,61 @@
 
 <x-project.detail-modal />
 
-@section('script')
+@push('script')
+    <script>
+        // Provide the global functions expected by detail-modal.js
+        window.openProjectModal = function() 
+            const modal = document.getElementById('projectDetailModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        };
+
+        window.closeProjectModal = function() {
+            const modal = document.getElementById('projectDetailModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.classList.remove('overflow-hidden');
+            }
+        };
+
+        window.openLightbox = function(src) {
+            const lightbox = document.getElementById('imageLightbox');
+            const lightboxImg = document.getElementById('lightboxImage');
+            if (lightbox && lightboxImg) {
+                lightboxImg.src = src;
+                lightbox.classList.remove('hidden');
+                lightbox.classList.add('flex');
+            }
+        };
+
+        window.closeLightbox = function() {
+            const lightbox = document.getElementById('imageLightbox');
+            if (lightbox) {
+                lightbox.classList.add('hidden');
+                lightbox.classList.remove('flex');
+            }
+        };
+
+        // Attach close event to modal background and close button
+        document.addEventListener('DOMContentLoaded', () => {
+             const detailModal = document.getElementById('projectDetailModal');
+             const closeBtn = document.getElementById('detailModalClose');
+
+             if(closeBtn) {
+                 closeBtn.addEventListener('click', window.closeProjectModal);
+             }
+
+             if(detailModal) {
+                 detailModal.addEventListener('click', (e) => {
+                     if (e.target === detailModal) {
+                         window.closeProjectModal();
+                     }
+                 });
+             }
+        });
+    </script>
     @vite(['resources/js/project/filters.js', 'resources/js/project/detail-modal.js'])
-@endsection
+@endpush

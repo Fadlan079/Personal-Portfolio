@@ -28,7 +28,7 @@
 
                 <div>
                     <h3 class="text-xl font-semibold leading-tight">{{ $project->title }}</h3>
-                    <p class="text-sm text-muted leading-snug mt-1">{{ $project->desc }}</p>
+                    <p class="text-sm text-muted leading-snug mt-1 line-clamp-2">{{ \Illuminate\Support\Str::limit($project->desc, 100) }}</p>
                 </div>
 
                 <div class="tech-row">
