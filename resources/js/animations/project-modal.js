@@ -188,7 +188,23 @@ export function projectModalAnimation() {
 
     if (lightbox) {
 
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+        let currentImages = [];
+        let currentIndex = 0;
+
         window.openLightbox = function (src) {
+
+            // Find all images currently in the detail modal to create the gallery
+            const imgs = Array.from(document.querySelectorAll('#detailScreenshots img'));
+            currentImages = imgs.map(img => img.src);
+            
+            // Find index of clicked image
+            currentIndex = currentImages.indexOf(src);
+            if (currentIndex === -1) {
+                currentImages = [src];
+                currentIndex = 0;
+            }
 
             lightboxImg.src = src;
 
@@ -196,6 +212,15 @@ export function projectModalAnimation() {
             lightbox.style.display = 'flex';
 
             detailModal.style.pointerEvents = "none";
+
+            // Show/hide arrows based on if there's more than 1 image
+            if (currentImages.length > 1) {
+                lightboxPrev?.classList.remove('hidden');
+                lightboxNext?.classList.remove('hidden');
+            } else {
+                lightboxPrev?.classList.add('hidden');
+                lightboxNext?.classList.add('hidden');
+            }
 
             gsap.set(lightbox, { opacity: 0 });
             gsap.set(lightboxImg, { scale: 0.9, opacity: 0, y: 30 });
@@ -237,6 +262,50 @@ export function projectModalAnimation() {
                     ease: "power2.in"
                 }, "-=0.15");
         };
+
+        const navigateLightbox = (direction) => {
+            if (currentImages.length <= 1) return;
+            
+            if (direction === 'next') {
+                currentIndex = (currentIndex + 1) % currentImages.length;
+            } else {
+                currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+            }
+            
+            const nextSrc = currentImages[currentIndex];
+            
+            gsap.to(lightboxImg, {
+                opacity: 0,
+                scale: 0.98,
+                duration: 0.15,
+                onComplete: () => {
+                    lightboxImg.src = nextSrc;
+                    gsap.to(lightboxImg, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.2
+                    });
+                }
+            });
+        };
+
+        lightboxPrev?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateLightbox('prev');
+        });
+
+        lightboxNext?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateLightbox('next');
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('hidden')) {
+                if (e.key === 'ArrowRight') navigateLightbox('next');
+                if (e.key === 'ArrowLeft') navigateLightbox('prev');
+            }
+        });
     }
 }
 

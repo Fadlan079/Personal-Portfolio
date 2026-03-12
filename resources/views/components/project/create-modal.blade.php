@@ -29,22 +29,7 @@
             @csrf
 
             <div class="space-y-4">
-
-                <div>
-                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Title</p>
-                    <input type="text" name="title"
-                        class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary"
-                        required>
-                </div>
-
-                <div>
-                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Description</p>
-                    <textarea name="desc" rows="3"
-                        class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary" required></textarea>
-                </div>
-
                 <div class="grid grid-cols-2 gap-6">
-
                     <div>
                         <p class="text-muted uppercase tracking-wide text-xs mb-2">Type</p>
                         <select name="type"
@@ -66,39 +51,164 @@
                             <option>Archived</option>
                         </select>
                     </div>
-
                 </div>
 
+                <div x-data="{ visibility: 'draft' }">
+                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Visibility</p>
+                    <select name="visibility" x-model="visibility" class="w-full border border-border bg-surface px-4 py-2 text-sm focus:outline-none focus:border-primary">
+                        <option value="draft">Save as Draft</option>
+                        <option value="published">Publish Now</option>
+                    </select>
+                </div>
+
+                <div>
+                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Title</p>
+                    <input type="text" name="title"
+                        class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary"
+                        required>
+                </div>
             </div>
-            <div class="space-y-4 mt-6" x-data="{ visibility: 'draft' }">
 
-                <label class="text-sm uppercase tracking-wide text-muted">
-                    Visibility
-                </label>
+            <div>
+                <p class="text-muted uppercase tracking-wide text-xs mb-2">Description</p>
+                <textarea name="desc" rows="3"
+                    class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary" required></textarea>
+            </div>
 
-                <select name="visibility" x-model="visibility" class="w-full border border-border bg-surface p-3 text-sm">
-                    <option value="draft">Save as Draft</option>
-                    <option value="published">Publish Now</option>
-                </select>
+            <div class="h-px bg-border opacity-40"></div>
 
+            <div class="space-y-6">
+                <div class="space-y-4">
+                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Device Images (Optional)</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border border-border p-3 bg-surface">
+                            <p class="text-[10px] text-muted uppercase tracking-widest mb-2 border-b border-border pb-1">
+                                Desktop view</p>
+                            <input type="file" name="image_desktop" accept="image/*"
+                                class="w-full text-xs text-muted file:mr-2 file:py-1 file:px-2 file:border-0 file:text-[10px] file:uppercase file:bg-primary file:text-background hover:file:bg-primary/90">
+                        </div>
+                        <div class="border border-border p-3 bg-surface">
+                            <p class="text-[10px] text-muted uppercase tracking-widest mb-2 border-b border-border pb-1">
+                                Tablet view</p>
+                            <input type="file" name="image_tablet" accept="image/*"
+                                class="w-full text-xs text-muted file:mr-2 file:py-1 file:px-2 file:border-0 file:text-[10px] file:uppercase file:bg-primary file:text-background hover:file:bg-primary/90">
+                        </div>
+                        <div class="border border-border p-3 bg-surface">
+                            <p class="text-[10px] text-muted uppercase tracking-widest mb-2 border-b border-border pb-1">
+                                Mobile view</p>
+                            <input type="file" name="image_mobile" accept="image/*"
+                                class="w-full text-xs text-muted file:mr-2 file:py-1 file:px-2 file:border-0 file:text-[10px] file:uppercase file:bg-primary file:text-background hover:file:bg-primary/90">
+                        </div>
+                    </div>
+                </div>
+
+                <div x-data="imageUpload()" class="space-y-3">
+                    <p class="text-muted uppercase tracking-wide text-xs">
+                        Screenshots (Max 8)
+                    </p>
+                    <label
+                        class="flex flex-col items-center justify-center
+                            w-full h-40
+                            border border-dashed border-border
+                            bg-surface
+                            cursor-pointer
+                            hover:border-primary
+                            transition">
+                        <div class="text-center space-y-2">
+                            <div class="text-primary text-lg">＋</div>
+                            <p class="text-sm text-muted">
+                                Click to upload (max 8 images)
+                            </p>
+                        </div>
+                        <input type="file" multiple accept="image/*" name="screenshot[]" class="hidden"
+                            x-ref="fileInput" @change="handleFiles($event)">
+                    </label>
+
+                    <div class="grid grid-cols-4 gap-3" x-show="newImages.length">
+                        <template x-for="(img, index) in newImages" :key="index">
+                            <div class="relative border border-border bg-surface group">
+                                <img :src="img.url" class="w-full h-24 object-cover">
+                                <button type="button" @click="removeNew(index)"
+                                    class="absolute top-1 right-1
+                                            bg-black/60 text-white
+                                            text-xs px-2 py-0.5
+                                            opacity-0 group-hover:opacity-100
+                                            transition">
+                                    ✕
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+
+                    <p x-show="newImages.length >= 8" class="text-xs text-red-400">
+                        Maximum 8 images allowed.
+                    </p>
+                </div>
+            </div>
+
+            <div class="h-px bg-border opacity-40"></div>
+
+            <div>
+                <p class="text-muted uppercase tracking-wide text-xs mb-2">Tech Stack</p>
+                <div x-data="tagInput({{ Js::from($technologies) }})" class="w-full relative">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <template x-for="(tag, index) in tags" :key="index">
+                            <div
+                                class="bg-primary/15 text-primary border border-primary/30
+                                        px-3 py-1 flex items-center gap-2
+                                        text-xs tracking-wide">
+                                <span x-text="'#' + tag"></span>
+                                <button type="button" @click="removeTag(index)"
+                                    class="text-primary/60 hover:text-primary transition">
+                                    ✕
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+
+                    <input type="text" x-model="input" @input="search" @keydown.enter.prevent="addTag(input)"
+                        placeholder="#Technology..."
+                        class="w-full px-4 py-2
+                            bg-surface border border-border
+                            text-sm
+                            focus:outline-none focus:border-primary
+                            transition">
+
+                    <div x-show="filtered.length" x-transition
+                        class="absolute left-0 right-0 mt-2
+                            bg-surface border border-border shadow-xl
+                            max-h-48 overflow-y-auto
+                            z-50">
+                        <template x-for="item in filtered" :key="item">
+                            <div @click="addTag(item)"
+                                class="px-4 py-2 text-sm
+                                    cursor-pointer
+                                    text-muted
+                                    hover:bg-primary/10
+                                    hover:text-primary
+                                    transition">
+                                <span x-text="'#' + item"></span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <input type="hidden" name="tech" :value="JSON.stringify(tags)">
+                </div>
             </div>
 
             <div class="h-px bg-border opacity-40"></div>
 
             <div class="grid grid-cols-2 gap-6 text-sm">
-
                 <div>
                     <p class="text-muted uppercase tracking-wide text-xs mb-2">Role</p>
                     <input type="text" name="role"
                         class="w-full px-4 py-2 bg-surface border border-border focus:outline-none focus:border-primary">
                 </div>
-
                 <div>
                     <p class="text-muted uppercase tracking-wide text-xs mb-2">Team Size</p>
                     <input type="number" name="team_size"
                         class="w-full px-4 py-2 bg-surface border border-border focus:outline-none focus:border-primary">
                 </div>
-
             </div>
 
             <div>
@@ -110,151 +220,19 @@
             <div class="h-px bg-border opacity-40"></div>
 
             <div class="grid grid-cols-2 gap-6">
-
                 <div>
                     <p class="text-muted uppercase tracking-wide text-xs mb-2">Repository URL</p>
                     <input type="url" name="repo"
                         class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary">
                 </div>
-
                 <div>
                     <p class="text-muted uppercase tracking-wide text-xs mb-2">Live URL</p>
                     <input type="url" name="live_url"
                         class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary">
                 </div>
-
             </div>
 
-            <div class="h-px bg-border opacity-40"></div>
-
-            <div class="space-y-4">
-                <p class="text-muted uppercase tracking-wide text-xs mb-2">Device Images (Optional)</p>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="border border-border p-3 bg-surface">
-                        <p class="text-[10px] text-muted uppercase tracking-widest mb-2 border-b border-border pb-1">
-                            Desktop view</p>
-                        <input type="file" name="image_desktop" accept="image/*"
-                            class="w-full text-xs text-muted file:mr-2 file:py-1 file:px-2 file:border-0 file:text-[10px] file:uppercase file:bg-primary file:text-background hover:file:bg-primary/90">
-                    </div>
-                    <div class="border border-border p-3 bg-surface">
-                        <p class="text-[10px] text-muted uppercase tracking-widest mb-2 border-b border-border pb-1">
-                            Tablet view</p>
-                        <input type="file" name="image_tablet" accept="image/*"
-                            class="w-full text-xs text-muted file:mr-2 file:py-1 file:px-2 file:border-0 file:text-[10px] file:uppercase file:bg-primary file:text-background hover:file:bg-primary/90">
-                    </div>
-                    <div class="border border-border p-3 bg-surface">
-                        <p class="text-[10px] text-muted uppercase tracking-widest mb-2 border-b border-border pb-1">
-                            Mobile view</p>
-                        <input type="file" name="image_mobile" accept="image/*"
-                            class="w-full text-xs text-muted file:mr-2 file:py-1 file:px-2 file:border-0 file:text-[10px] file:uppercase file:bg-primary file:text-background hover:file:bg-primary/90">
-                    </div>
-                </div>
-            </div>
-
-            <div x-data="tagInput({{ Js::from($technologies) }})" class="w-full relative">
-
-                <div class="flex flex-wrap gap-2 mb-3">
-                    <template x-for="(tag, index) in tags" :key="index">
-                        <div
-                            class="bg-primary/15 text-primary border border-primary/30
-                                    px-3 py-1  flex items-center gap-2
-                                    text-xs tracking-wide">
-
-                            <span x-text="'#' + tag"></span>
-
-                            <button type="button" @click="removeTag(index)"
-                                class="text-primary/60 hover:text-primary transition">
-                                ✕
-                            </button>
-                        </div>
-                    </template>
-                </div>
-
-                <input type="text" x-model="input" @input="search" @keydown.enter.prevent="addTag(input)"
-                    placeholder="#Technology..."
-                    class="w-full px-4 py-2
-                        bg-surface border border-border
-                        text-sm
-                        focus:outline-none focus:border-primary
-                        transition">
-
-                <div x-show="filtered.length" x-transition
-                    class="absolute left-0 right-0 mt-2
-                        bg-surface border border-border shadow-xl
-                        max-h-48 overflow-y-auto
-                        z-50">
-
-                    <template x-for="item in filtered" :key="item">
-                        <div @click="addTag(item)"
-                            class="px-4 py-2 text-sm
-                                cursor-pointer
-                                text-muted
-                                hover:bg-primary/10
-                                hover:text-primary
-                                transition">
-                            <span x-text="'#' + item"></span>
-                        </div>
-                    </template>
-                </div>
-
-                <input type="hidden" name="tech" :value="JSON.stringify(tags)">
-            </div>
-
-            <div x-data="imageUpload()" class="space-y-3">
-
-                <p class="text-muted uppercase tracking-wide text-xs">
-                    Screenshots (Max 8)
-                </p>
-
-                <!-- Upload Area -->
-                <label
-                    class="flex flex-col items-center justify-center
-                        w-full h-40
-                        border border-dashed border-border
-                        bg-surface
-                        cursor-pointer
-                        hover:border-primary
-                        transition">
-
-                    <div class="text-center space-y-2">
-                        <div class="text-primary text-lg">＋</div>
-                        <p class="text-sm text-muted">
-                            Click to upload (max 8 images)
-                        </p>
-                    </div>
-
-                    <input type="file" multiple accept="image/*" name="screenshot[]" class="hidden"
-                        x-ref="fileInput" @change="handleFiles($event)">
-                </label>
-
-                <!-- Preview -->
-                <div class="grid grid-cols-4 gap-3" x-show="newImages.length">
-                    <template x-for="(img, index) in newImages" :key="index">
-                        <div class="relative border border-border bg-surface group">
-
-                            <img :src="img.url" class="w-full h-24 object-cover">
-
-                            <button type="button" @click="removeNew(index)"
-                                class="absolute top-1 right-1
-                                        bg-black/60 text-white
-                                        text-xs px-2 py-0.5
-                                        opacity-0 group-hover:opacity-100
-                                        transition">
-                                ✕
-                            </button>
-                        </div>
-                    </template>
-                </div>
-
-                <!-- Limit Warning -->
-                <p x-show="newImages.length >= 8" class="text-xs text-red-400">
-                    Maximum 8 images allowed.
-                </p>
-
-            </div>
-
-            <div class="flex justify-end gap-3 pt-4">
-
+            <div class="flex justify-end gap-3 pt-4 border-t border-border/50">
                 <button type="button" id="cancelCreateModal"
                     class="px-4 py-2 border border-border text-sm hover:border-primary transition">
                     Cancel
@@ -264,7 +242,6 @@
                     class="px-4 py-2 border border-primary text-primary text-sm hover:bg-primary hover:text-white transition">
                     Save Project
                 </button>
-
             </div>
 
         </form>
