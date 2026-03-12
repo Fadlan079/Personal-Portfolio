@@ -45,20 +45,28 @@
 
         <div
             class="flex flex-col sm:flex-row justify-center items-center gap-6 font-mono text-sm uppercase tracking-widest font-bold">
+
             <a href="{{ route('portofolio.contact') }}"
-                class="relative overflow-hidden px-8 py-4 bg-primary text-background border-2 border-primary hover:bg-transparent hover:text-text transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)] group">
-                <span class="relative z-10 flex items-center gap-3">
-                    <span data-i18n="home.cta_btn_primary">NEW_PROJECT</span>
-                    <i class="fa-solid fa-angle-right transition-transform duration-300 group-hover:translate-x-1"></i>
-                </span>
+                class="relative overflow-hidden flex items-center justify-center gap-3
+                    px-8 py-4 min-w-[220px]
+                    bg-primary text-background border-2 border-primary
+                    hover:bg-transparent hover:text-text
+                    transition-all duration-300 transform hover:-translate-y-1
+                    shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.2)] group">
+
+                <span data-i18n="home.cta_btn_primary">NEW_PROJECT</span>
+                <i class="fa-solid fa-angle-right transition-transform duration-300 group-hover:translate-x-1"></i>
             </a>
 
             <a href="mailto:fadlanfirdaus220@gmail.com"
-                class="px-8 py-4 border-2 border-border bg-surface/30 backdrop-blur-sm text-text hover:border-primary transition-colors duration-300">
-                <span class="flex items-center gap-3">
-                    <span data-i18n="home.cta_btn_secondary">SEND MESSAGE</span>
-                </span>
+                class="flex items-center justify-center gap-3
+                    px-8 py-4 min-w-[220px]
+                    border-2 border-border bg-surface/30 backdrop-blur-sm text-text
+                    hover:border-primary transition-colors duration-300">
+
+                <span data-i18n="home.cta_btn_secondary">SEND MESSAGE</span>
             </a>
+
         </div>
 
     </div>
