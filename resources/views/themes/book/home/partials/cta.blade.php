@@ -34,19 +34,18 @@
                 Jika Anda memiliki ide atau proyek yang ingin dikembangkan, saya terbuka untuk berdiskusi dan bekerja sama.
             </p>
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 w-full">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 w-full mt-6">
 
                 <a href="{{ route('portofolio.contact') }}"
-                   class="w-full sm:w-auto px-8 py-3.5 bg-text text-bg rounded-sm font-bold uppercase tracking-widest text-xs hover:-translate-y-1 transition-transform shadow-md flex items-center justify-center gap-3">
+                   class="w-full sm:w-auto px-6 py-3 bg-[var(--color-warning)] text-text border-2 border-[var(--color-text)] font-mono text-xs md:text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 transform -rotate-1 hover:rotate-0 hover:-translate-y-1 shadow-[4px_4px_0px_var(--color-text)] active:shadow-[0px_0px_0px_var(--color-text)] active:translate-y-[4px] active:translate-x-[4px] flex items-center justify-center gap-3">
                     <span data-i18n="home.cta.button_message">Tulis Pesan</span>
                     <i class="fa-solid fa-feather-pointed text-sm"></i>
                 </a>
 
                 <a href="mailto:fadlanfirdaus220@gmail.com"
-                   class="group flex items-center justify-center gap-2 text-sm font-bold text-muted hover:text-primary transition-colors w-max">
-                    <i class="fa-regular fa-envelope"></i>
-                    <span class="border-b border-border group-hover:border-primary pb-0.5 transition-colors"
-                    data-i18n="home.cta.button_email">Kirim via Email</span>
+                   class="w-full sm:w-auto px-6 py-3 bg-[var(--color-surface)] text-[var(--color-muted)] border-2 border-[var(--color-border)] hover:border-[var(--color-text)] hover:text-[var(--color-text)] font-mono text-xs md:text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 transform rotate-1 hover:rotate-0 hover:-translate-y-1 shadow-[4px_4px_0px_rgba(0,0,0,0.05)] hover:shadow-[4px_4px_0px_var(--color-text)] active:shadow-[0px_0px_0px_var(--color-text)] active:translate-y-[4px] active:translate-x-[4px] flex items-center justify-center gap-3 group">
+                    <i class="fa-regular fa-envelope transition-transform group-hover:scale-110"></i>
+                    <span data-i18n="home.cta.button_email">Kirim via Email</span>
                 </a>
 
             </div>

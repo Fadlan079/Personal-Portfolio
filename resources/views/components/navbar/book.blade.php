@@ -345,27 +345,38 @@ document.addEventListener('DOMContentLoaded', () => {
         clearProps: "all"
     });
 
-    const showHideNav = gsap.to(navbar, {
-        y: -150,
-        rotationZ: 1,
-        paused: true,
-        duration: 0.35,
-        ease: "power2.inOut"
-    });
+    let isNavHidden = false;
 
     ScrollTrigger.create({
         start: "top top",
         end: "max",
         onUpdate: (self) => {
-
             if (self.direction === 1 && self.scroll() > 50) {
-                showHideNav.play();
-            } else if (self.direction === -1) {
-                showHideNav.reverse();
+                if (!isNavHidden) {
+                    gsap.to(navbar, {
+                        y: -150,
+                        rotationZ: 1,
+                        duration: 0.35,
+                        ease: "power2.inOut",
+                        overwrite: "auto"
+                    });
+                    isNavHidden = true;
+                }
+            }
+            
+            else if (self.direction === -1 || self.scroll() <= 50) {
+                if (isNavHidden || self.scroll() <= 50) {
+                    gsap.to(navbar, {
+                        y: 0,
+                        rotationZ: 0,
+                        duration: 0.35,
+                        ease: "power2.out",
+                        overwrite: "auto"
+                    });
+                    isNavHidden = false;
+                }
             }
         }
     });
-
-    const openBtn = document.getElementById('mobileMenuBtn');
 });
 </script>

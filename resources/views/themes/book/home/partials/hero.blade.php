@@ -1,5 +1,4 @@
 <section id="home" class="relative pt-24 md:pt-24 pb-20 px-5 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12 lg:gap-20 min-h-[90vh]">
-
     <div class="w-full md:w-3/5 space-y-8 z-10">
 
         <div class="gsap-hero-item group relative inline-flex items-center gap-2.5 py-1.5 pl-9 pr-6 text-yellow-900 font-serif transition-all duration-300 w-max opacity-0 translate-y-4 hover:-translate-y-0.5 hover:rotate-1"
@@ -115,7 +114,6 @@
         </div>
     </div>
 </section>
-
 
 <script>
     document.addEventListener("DOMContentLoaded", (event) => {

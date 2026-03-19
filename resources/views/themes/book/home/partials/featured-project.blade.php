@@ -68,7 +68,7 @@
 
                                 <div class="relative z-10">
                                     <div class="flex justify-between items-start mb-3 md:mb-4">
-                                        <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-[var(--color-warning)] text-[var(--color-bg)] border border-[var(--color-text)] shadow-sm -rotate-1">
+                                        <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-[var(--color-warning)] text-text border border-[var(--color-text)] shadow-sm -rotate-1">
                                             {{ $project->type }}
                                         </span>
                                         <span class="text-[9px] font-mono text-[var(--color-muted)] uppercase italic">{{ $project->status }}</span>
@@ -160,7 +160,7 @@
                     @foreach(['desktop' => 'fa-display', 'tablet' => 'fa-tablet-screen-button', 'mobile' => 'fa-mobile-screen'] as $view => $icon)
                         <button @click="setDevice('{{ $view }}')"
                             class="px-3 py-1.5 transition-all duration-300 transform hover:-translate-y-1 font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] font-black border-2"
-                            :class="deviceView === '{{ $view }}' ? 'bg-[var(--color-warning)] text-[var(--color-bg)] border-[var(--color-text)] shadow-[4px_4px_0px_var(--color-text)] -rotate-1' : 'bg-[var(--color-surface)] text-[var(--color-muted)] border-[var(--color-border)] hover:border-[var(--color-text)] hover:text-[var(--color-text)]'">
+                            :class="deviceView === '{{ $view }}' ? 'bg-[var(--color-warning)] text-text border-[var(--color-text)] shadow-[4px_4px_0px_var(--color-text)] -rotate-1' : 'bg-[var(--color-surface)] text-[var(--color-muted)] border-[var(--color-border)] hover:border-[var(--color-text)] hover:text-[var(--color-text)]'">
                             <i class="fa-solid {{ $icon }} mr-2"></i> {{ $view }}
                         </button>
                     @endforeach

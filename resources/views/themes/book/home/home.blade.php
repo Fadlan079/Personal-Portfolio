@@ -3,6 +3,14 @@
 @vite(['resources/css/hero.css', 'resources/css/dashboard_project.css'])
 
 @section('content')
+    <a href="/login"
+       class="hidden md:flex absolute -top-6 right-1 lg:right-8 z-50 flex-col items-center px-4 pt-12 pb-4 bg-[#E7F2FF] border-x border-b border-[#BDE0FE] text-blue-900 shadow-[2px_4px_8px_rgba(0,0,0,0.06)] rotate-[3deg] origin-top hover:rotate-0 hover:translate-y-4 transition-all duration-300 group rounded-b-md cursor-pointer">
+
+        <span class="text-[10px] font-bold uppercase tracking-widest" data-i18n="nav.login">Masuk</span>
+
+        <div class="w-2 h-2 rounded-full bg-blue-200/80 mt-2 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.1)] border border-blue-300/50"></div>
+    </a>
+
     <div class="md:px-5 md:py-5">
         @include('themes.book.home.partials.hero')
     </div>

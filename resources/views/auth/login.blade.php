@@ -14,7 +14,7 @@
     }
 </style>
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-bg relative px-4 font-serif">
+<div class="min-h-screen flex items-center justify-center bg-bg relative px-4 font-serif mt-10">
 
     <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
          style="background-image: radial-gradient(var(--color-text) 0.5px, transparent 0.5px); background-size: 12px 12px;">
