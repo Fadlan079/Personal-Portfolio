@@ -8,7 +8,7 @@ $message = session($type);
 @endphp
 
 @if($type)
-<div id="global-modal" class="fixed inset-0 z-[99999] flex items-center justify-center px-4 font-mono select-none">
+<div id="global-modal" class="fixed inset-0 z-99999 flex items-center justify-center px-4 font-mono select-none">
     {{-- Terminal Style Modal --}}
     <div id="modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
 
@@ -49,7 +49,7 @@ $message = session($type);
 
         {{-- Scanning Line Effect --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
-            <div class="w-full h-[1px] bg-primary animate-[scan_3s_linear_infinite]"></div>
+            <div class="w-full h-px bg-primary animate-[scan_3s_linear_infinite]"></div>
         </div>
     </div>
 </div>

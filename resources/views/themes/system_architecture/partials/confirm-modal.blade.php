@@ -1,4 +1,4 @@
-<div id="confirm-modal" class="fixed inset-0 z-[99999] flex items-center justify-center font-sans px-4 pointer-events-none opacity-0">
+<div id="confirm-modal" class="fixed inset-0 z-99999 flex items-center justify-center font-sans px-4 pointer-events-none opacity-0">
 
     <div id="confirm-backdrop" class="absolute inset-0 bg-[#0a0a0a]/80 backdrop-blur-sm cursor-pointer"></div>
 

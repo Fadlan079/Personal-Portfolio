@@ -52,11 +52,19 @@
     <title>Fadlan | @yield('title')</title>
 
     <style>
-        html { scroll-behavior: smooth; }
-        * { scrollbar-width: thin; scrollbar-color: var(--color-primary) transparent; }
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb {
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        body {
+            min-height: 100vh;
+            overflow: visible;
+        }
+        html { scrollbar-width: thin; scrollbar-color: var(--color-primary) transparent; }
+        html::-webkit-scrollbar { width: 10px; }
+        html::-webkit-scrollbar-track { background: transparent; }
+        html::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 90%, white), var(--color-primary));
             border-radius: 999px; border: 2px solid transparent; background-clip: content-box;
         }
@@ -148,11 +156,11 @@
     @stack('head')
 </head>
 
-<body class="bg-bg text-text overflow-x-hidden">
+<body class="bg-bg text-text">
 
-    <div id="transition-indicator" class="fixed inset-0 z-[8000] bg-bg pointer-events-none flex items-center justify-center opacity-0 transition-opacity duration-300">
+    <div id="transition-indicator" class="fixed inset-0 z-8000 bg-bg pointer-events-none flex items-center justify-center opacity-0 transition-opacity duration-300">
 
-        <div id="loader-diary" class="loader-variant hidden flex-col items-center justify-center transform translate-y-6 transition-transform duration-700 z-[9999]">
+        <div id="loader-diary" class="loader-variant hidden flex-col items-center justify-center transform translate-y-6 transition-transform duration-700 z-9999">
             <div class="relative bg-warning p-8 pt-10 border border-yellow-500 shadow-[8px_8px_20px_rgba(0,0,0,0.1)] transform rotate-2 w-64 max-w-[85vw] flex flex-col items-center justify-center font-serif">
                 <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-8 bg-black/10 backdrop-blur-[2px] border border-black/5 shadow-sm z-20 rotate-1"
                     style="clip-path: polygon(2% 10%, 98% 0%, 100% 95%, 0% 100%);">
@@ -186,63 +194,82 @@
 
     </div>
 
-    <div id="page-content-wrapper" class="w-full min-h-screen flex flex-col md:flex-row">
+    <x-sidebar brand="Fadlan" :menuGroups="[
+        'Monitoring' => [
+            [
+                'label' => 'Overview',
+                'href' => route('dashboard.home'),
+                'route' => 'dashboard.home',
+                'icon' => 'fa-solid fa-house',
+            ],
+        ],
+        'Portfolio' => [
+            [
+                'label' => 'Project',
+                'href' => route('dashboard.projects.index'),
+                'route' => 'dashboard.projects.*',
+                'icon' => 'fa-solid fa-folder',
+            ],
+            [
+                'label' => 'Skills',
+                'href' => route('dashboard.skills.index'),
+                'route' => 'dashboard.skills.*',
+                'icon' => 'fa-solid fa-code-branch',
+            ],
+            [
+                'label' => 'Contacts',
+                'href' => route('dashboard.contacts.index'),
+                'route' => 'dashboard.contacts.*',
+                'icon' => 'fa-solid fa-satellite-dish',
+            ],
+        ],
+        'System' => [
+            [
+                'label' => 'Trash',
+                'href' => route('dashboard.trash'),
+                'route' => 'dashboard.trash',
+                'icon' => 'fa-solid fa-trash',
+            ],
+            [
+                'label' => 'Account',
+                'href' => route('dashboard.account.edit'),
+                'route' => 'dashboard.account.*',
+                'icon' => 'fa-solid fa-user-astronaut',
+            ],
+        ],
+    ]" />
 
-        <x-sidebar brand="Fadlan" :menuGroups="[
-            'Monitoring' => [
-                [
-                    'label' => 'Overview',
-                    'href' => route('dashboard.home'),
-                    'route' => 'dashboard.home',
-                    'icon' => 'fa-solid fa-house',
-                ],
-            ],
-            'Portfolio' => [
-                [
-                    'label' => 'Project',
-                    'href' => route('dashboard.projects.index'),
-                    'route' => 'dashboard.projects.*',
-                    'icon' => 'fa-solid fa-folder',
-                ],
-                [
-                    'label' => 'Skills',
-                    'href' => route('dashboard.skills.index'),
-                    'route' => 'dashboard.skills.*',
-                    'icon' => 'fa-solid fa-code-branch',
-                ],
-                [
-                    'label' => 'Contacts',
-                    'href' => route('dashboard.contacts.index'),
-                    'route' => 'dashboard.contacts.*',
-                    'icon' => 'fa-solid fa-satellite-dish',
-                ],
-            ],
-            'System' => [
-                [
-                    'label' => 'Trash',
-                    'href' => route('dashboard.trash'),
-                    'route' => 'dashboard.trash',
-                    'icon' => 'fa-solid fa-trash',
-                ],
-                [
-                    'label' => 'Settings',
-                    'href' => route('dashboard.settings'),
-                    'route' => 'dashboard.settings',
-                    'icon' => 'fa-solid fa-gear',
-                ],
-                [
-                    'label' => 'Account',
-                    'href' => route('dashboard.account.edit'),
-                    'route' => 'dashboard.account.*',
-                    'icon' => 'fa-solid fa-user-astronaut',
-                ],
-            ],
-        ]" />
+    <div id="page-content-wrapper" class="w-full">
+        <main class="relative z-10 flex-1 md:ml-55">
+            <div class="hidden md:block absolute -top-6 right-1 lg:right-8 z-50 group w-24">
 
-        <main class="relative z-10 flex-1 md:ml-54 min-h-screen">
+                <a href="{{ route('logout') }}"
+                    class="relative z-20 flex flex-col items-center w-full pt-12 pb-4
+                    bg-[#E7F2FF] border border-t-0 border-[#BDE0FE] text-blue-900
+                    shadow-[0_4px_8px_rgba(0,0,0,0.08)] rounded-b-md
+                    origin-top rotate-[3deg] group-hover:rotate-0
+                    transition-all duration-300 ease-out">
+
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Keluar</span>
+                    <div class="w-2 h-2 rounded-full bg-blue-200 mt-2 border border-blue-300/50"></div>
+                </a>
+
+                <a href="/" target="_blank" rel="noopener noreferrer"
+                    class="absolute top-0 left-0 z-10 flex flex-col items-center w-full pt-12 pb-4
+                    bg-[#FFF4E6] border border-t-0 border-[#FFD6A5] text-orange-900
+                    shadow-[0_4px_8px_rgba(0,0,0,0.08)] rounded-b-md
+                    origin-top rotate-[6deg] group-hover:rotate-0
+                    group-hover:translate-y-[calc(100%-8px)]
+                    transition-all duration-300 ease-out">
+
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Portfolio</span>
+                    <div class="w-2 h-2 rounded-full bg-orange-200 mt-2 border border-orange-300/50"></div>
+                </a>
+
+            </div>
+
             @yield('content')
         </main>
-
     </div>
 
     <x-global-modal />

@@ -9,7 +9,7 @@
 
     const searchInput = document.getElementById('project-search');
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const grid = document.getElementById('project-list-container');
+    const grid = document.getElementById('projects-grid');
     const paginationWrap = document.getElementById('projects-pagination');
 
     if (!grid) return; // not on project page
@@ -32,9 +32,7 @@
 
     filterBtns.forEach(btn => {
         if (btn.dataset.filter === currentType) {
-            btn.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1";
-        } else {
-            btn.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:rotate-1 transition-all focus:outline-none";
+            btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
         }
     });
 
@@ -59,14 +57,8 @@
 
             const data = await res.json();
 
-            // Update DOM (use outerHTML to avoid nesting the container, or query the wrapper)
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = data.html;
-            
-            // Re-select the container and replace its content
-            const newGridContent = tempDiv.querySelector('#project-list-container')?.innerHTML || data.html;
-            grid.innerHTML = newGridContent;
-            
+            // Update DOM
+            grid.innerHTML = data.html;
             if (paginationWrap) paginationWrap.innerHTML = data.pagination;
 
             // Translate newly injected elements (e.g. empty state text)
@@ -160,10 +152,10 @@
     // ── Filter buttons ─────────────────────────────────────────
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            filterBtns.forEach(b => {
-                b.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:rotate-1 transition-all focus:outline-none";
-            });
-            btn.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1";
+            filterBtns.forEach(b =>
+                b.classList.remove('border-primary', 'bg-primary/10', 'text-primary')
+            );
+            btn.classList.add('border-primary', 'bg-primary/10', 'text-primary');
 
             currentType = btn.dataset.filter;
             currentPage = 1;
@@ -187,10 +179,9 @@
 
         // 3. Reset UI: Filter Buttons
         filterBtns.forEach(b => {
+            b.classList.remove('border-primary', 'bg-primary/10', 'text-primary');
             if (b.dataset.filter === 'all') {
-                b.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1";
-            } else {
-                b.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:rotate-1 transition-all focus:outline-none";
+                b.classList.add('border-primary', 'bg-primary/10', 'text-primary');
             }
         });
 

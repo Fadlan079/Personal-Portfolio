@@ -35,18 +35,11 @@ class ProjectController extends Controller
         $summary = Project::summary();
         $technologies = \App\Models\Skill::pluck('name');
 
-        // ==========================================
-        // DATA VISUALIZATION MATRIX (CHART.JS)
-        // ==========================================
-        
-        // 1. Projects by Type
         $typesChart = Project::selectRaw('type, count(*) as count')
             ->groupBy('type')
             ->pluck('count', 'type')
             ->toArray();
 
-        // 2. Team Size Distribution (Solo vs Team)
-        // Asumsi value 'Solo' atau '1' dihitung sebagai Solo. Sisanya Team.
         $soloCount = Project::whereIn('team_size', ['Solo', '1'])->count();
         $totalWithTeam = Project::whereNotNull('team_size')->where('team_size', '!=', '')->count();
         $teamChart = [
@@ -59,12 +52,12 @@ class ProjectController extends Controller
         // Setup array 6 bulan terakhir dengan nilai awal 0
         for ($i = 5; $i >= 0; $i--) {
             $monthName = now()->subMonths($i)->format('M'); // Contoh: Oct, Nov, Dec
-            $timelineChart[$monthName] = 0; 
+            $timelineChart[$monthName] = 0;
         }
 
         // Ambil data project 6 bulan terakhir
         $recentProjects = Project::where('created_at', '>=', now()->subMonths(5)->startOfMonth())->get(['created_at']);
-        
+
         // Kelompokkan dan hitung berdasarkan bulan (menggunakan collection agar aman di semua DB)
         $timelineData = $recentProjects->groupBy(function($item) {
             return $item->created_at->format('M');
@@ -82,12 +75,16 @@ class ProjectController extends Controller
             'timeline' => $timelineChart,
         ];
 
+        $translations = json_decode(file_get_contents(resource_path('lang/id.json')), true);
+        $projectPlaceholders = $translations['project']['search']['placeholder'];
+
         return view('dashboard.project', compact(
             'projects',
             'summary',
             'technologies',
             'multipleSelect',
-            'chartData' // <- Passing datanya ke Blade
+            'chartData', // <- Passing datanya ke Blade
+            'projectPlaceholders'
         ));
     }
 
@@ -180,11 +177,6 @@ class ProjectController extends Controller
         Project::whereIn('id', $request->projects)
             ->update(['visibility' => 'published', 'published_at' => now()]);
         return back()->with('success', 'Selected projects published.');
-    }
-
-    public function edit(Project $project)
-    {
-        return view('projects.edit', compact('project'));
     }
 
     public function update(Request $request, Project $project)

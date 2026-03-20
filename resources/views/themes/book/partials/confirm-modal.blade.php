@@ -1,4 +1,4 @@
-<div id="confirm-modal" class="fixed inset-0 z-[99999] flex items-center justify-center px-4 overflow-hidden select-none pointer-events-none opacity-0" style="font-family: 'Kalam', 'Segoe UI', cursive;">
+<div id="confirm-modal" class="fixed inset-0 z-99999 flex items-center justify-center px-4 overflow-hidden select-none pointer-events-none opacity-0" style="font-family: 'Kalam', 'Segoe UI', cursive;">
     {{-- Backdrop --}}
     <div id="confirm-backdrop" class="absolute inset-0 bg-[#E5E4DF]/70 backdrop-blur-sm cursor-pointer"></div>
 

@@ -75,7 +75,7 @@
 
                         <div class="pt-3 border-t border-border/50 flex justify-between items-center mt-auto">
                             <span class="text-[10px] font-medium text-muted italic">
-                                Diarsipkan: {{ $project->created_at->format('Y') }}
+                                Diarsipkan: {{ $project->created_at->format('d F Y') }}
                             </span>
 
                             <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">

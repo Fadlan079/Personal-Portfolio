@@ -125,7 +125,7 @@
                 $randomRotation = ['rotate-0', 'rotate-1', '-rotate-1', 'rotate-1'][$index % 4];
                 $mobileLinkClass = $isActive
                     ? 'bg-white text-primary border-2 border-primary/30 rotate-0 translate-x-1'
-                    : 'bg-white/70 text-muted hover:bg-white hover:text-neutral-900 border border-gray-300/70 ' . $randomRotation;
+                    : 'bg-surface text-muted hover:bg-white hover:text-neutral-900 border border-primary/70 ' . $randomRotation;
             @endphp
             <a href="{{ $menu['href'] }}"
                 class="group relative flex items-center gap-5 px-3 py-2 rounded-xl font-bold text-sm transition-all duration-300 shadow-sm {{ $mobileLinkClass }}">
@@ -135,7 +135,7 @@
         @endforeach
 
         <div class="mt-6 pt-6 border-t border-gray-300/70">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 px-2" data-i18n="nav.settings">Pengaturan</p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 px-2">Personalisasi</p>
             <div class="flex gap-2 px-2">
                 {{-- <button id="layoutToggleBtnMobile" class="flex-1 h-10 rounded-xl flex items-center justify-center border border-gray-300/70 bg-white text-muted hover:text-primary transition-colors shadow-sm" title="Switch Design Layout">
                     <i id="layoutIconMobile" class="fa-solid fa-book text-sm"></i>
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     isNavHidden = true;
                 }
             }
-            
+
             else if (self.direction === -1 || self.scroll() <= 50) {
                 if (isNavHidden || self.scroll() <= 50) {
                     gsap.to(navbar, {

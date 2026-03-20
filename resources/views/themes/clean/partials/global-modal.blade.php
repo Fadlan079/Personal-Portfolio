@@ -22,12 +22,12 @@ $icons = [
 @endphp
 
 @if($type)
-<div id="global-modal" class="fixed inset-0 z-[99999] flex items-end sm:items-center justify-center px-4 py-6 pointer-events-none">
+<div id="global-modal" class="fixed inset-0 z-99999 flex items-end sm:items-center justify-center px-4 py-6 pointer-events-none">
     {{-- Modern Minimalist Toast/Modal --}}
     <div id="modal-box"
          class="w-full max-w-md bg-surface border border-white/10 shadow-2xl rounded-2xl p-4 flex items-start gap-4 transform translate-y-20 opacity-0 transition-all duration-500 ease-out pointer-events-auto">
 
-        <div class="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-{{ $colors[$type] }}/10 text-{{ $colors[$type] }}">
+        <div class="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-{{ $colors[$type] }}/10 text-{{ $colors[$type] }}">
             <i class="fa-solid {{ $icons[$type] }} text-xl"></i>
         </div>
 
@@ -40,7 +40,7 @@ $icons = [
             </p>
         </div>
 
-        <button id="modal-close-btn" class="flex-shrink-0 text-white/30 hover:text-white transition-colors">
+        <button id="modal-close-btn" class="shrink-0 text-white/30 hover:text-white transition-colors">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>

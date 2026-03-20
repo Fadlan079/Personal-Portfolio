@@ -60,7 +60,7 @@ $randomRotation = $type ? $rotations[array_rand($rotations)] : '';
 @endphp
 
 @if($type)
-<div id="global-modal" class="fixed inset-0 z-[99999] flex items-center justify-center px-4 overflow-hidden select-none" style="font-family: 'Kalam', 'Segoe UI', cursive;">
+<div id="global-modal" class="fixed inset-0 z-99999 flex items-center justify-center px-4 overflow-hidden select-none" style="font-family: 'Kalam', 'Segoe UI', cursive;">
     {{-- Kalam adalah font Google yang mirip tulisan tangan. Jika tidak ada, fallback ke cursive --}}
     {{-- Muat font Kalam di head link: <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet"> --}}
 

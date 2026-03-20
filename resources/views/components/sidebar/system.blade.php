@@ -86,7 +86,7 @@
 
 {{-- DASHBOARD SIDEBAR (Dengan gaya Glassmorphism HUD) --}}
 <aside id="dashboardSidebar"
-    class="fixed top-0 left-0 h-full w-[80%] max-w-[300px] md:w-50 bg-background/95 backdrop-blur-2xl border-r border-border flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 z-50 shadow-2xl md:shadow-none">
+    class="fixed top-0 left-0 h-full w-[80%] max-w-[300px] md:w-64 bg-background/95 backdrop-blur-2xl border-r border-border flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0 z-50 shadow-2xl md:shadow-none">
 
     <div class="h-16 flex items-center justify-between px-6 border-b border-border/50 shrink-0">
         <div class="flex items-center gap-3">

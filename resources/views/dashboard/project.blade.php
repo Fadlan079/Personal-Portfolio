@@ -4,7 +4,6 @@
 
 @section('content')
 
-    {{-- Global Error Handler --}}
     @if ($errors->any())
         <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.500ms
             class="fixed top-24 left-1/2 -translate-x-1/2 z-100 w-[90%] max-w-lg border-l-2 border-red-500 bg-red-500/10 p-4 shadow-[0_0_20px_rgba(239,68,68,0.2)] backdrop-blur-md">
@@ -28,129 +27,165 @@
         </div>
     @endif
 
-    <div class="min-h-screen bg-background pt-12 pb-32 px-4 md:px-6 relative overflow-hidden">
+    <style>
+        .diary-page { border-radius: 1rem; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 
-        {{-- Global Faint Grid --}}
-        <div class="absolute inset-0 pointer-events-none opacity-[0.02]"
-            style="background-image: linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px); background-size: 64px 64px;">
+    <div class="min-h-screen bg-background pt-6 sm:pt-12 pb-24 px-4 md:px-6 relative overflow-hidden">
+
+        <div class="absolute inset-0 pointer-events-none opacity-[0.03] z-0"
+            style="background-image: radial-gradient(var(--color-text) 1px, transparent 1px); background-size: 24px 24px;">
         </div>
 
-        <section class="max-w-7xl mx-auto relative z-10 space-y-12">
+        <section class="max-w-7xl mx-auto relative z-10 space-y-12 mt-4 md:mt-8">
 
-            {{-- HEADER MODULE --}}
-            <header class="relative space-y-6 border-b border-border/50 pb-8 mt-4 md:mt-8">
-                <div
-                    class="absolute top-0 right-0 w-1/3 h-px bg-linear-to-r from-transparent to-primary/50 pointer-events-none">
-                </div>
+            <header class="relative space-y-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="space-y-6">
+                        <div class="relative inline-flex items-center gap-2 py-1.5 pl-8 pr-6 transition-all duration-300 w-max group hover:-translate-y-0.5 hover:rotate-1"
+                            style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.06));">
 
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-primary">
-                        <i class="fa-solid fa-microchip"></i>
-                        >> SYS_DIR / DASHBOARD / PROJECT_NODES
+                            <div class="absolute inset-0 bg-warning border border-yellow-500 rounded-l-md z-0 transition-colors"
+                                style="clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);">
+                            </div>
+
+                            <div class="absolute top-1/2 -left-4 w-6 h-[1.5px] bg-[#8B0000]/80 -translate-y-[calc(50%+1px)] origin-right -rotate-12 group-hover:-rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+                            <div class="absolute top-1/2 -left-3 w-5 h-[1.5px] bg-[#B22222]/80 -translate-y-[calc(50%-1px)] origin-right rotate-12 group-hover:rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+
+                            <div class="absolute left-2.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-surface shadow-[inset_1px_1px_3px_rgba(0,0,0,0.3)] border border-yellow-700/30 z-10"></div>
+
+                            <i class="fa-regular fa-folder-open relative z-10 text-yellow-800 text-[11px] mt-px"></i>
+
+                            <span class="relative z-10 text-[10px] sm:text-xs font-black tracking-[0.15em] uppercase text-yellow-900 mt-px">
+                                Arsip Proyek
+                            </span>
+                        </div>
+
+                        <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter leading-[1.05] text-text">
+                            <span class="block">Manajer Proyek</span>
+                            <span class="block text-muted mt-2 text-[clamp(1.5rem,4vw,2.5rem)]">Karya & Eksplorasi</span>
+                        </h1>
+
+                        <p class="text-base text-muted max-w-2xl leading-relaxed font-medium">
+                            Mengelola, memantau, dan memperbarui portofolio Anda.
+                        </p>
                     </div>
 
-                    {{-- Quick Actions --}}
-                    <div class="hidden md:flex items-center gap-3">
+                    <div class="flex items-center gap-4">
                         <a href="{{ route('dashboard.trash') }}"
-                            class="px-4 py-2 border border-border text-[10px] font-mono font-bold uppercase tracking-widest text-muted hover:border-red-500 hover:text-red-500 transition-colors group flex items-center gap-2">
-                            <i class="fa-solid fa-trash-can group-hover:scale-110 transition-transform"></i> [ RECYCLE_BIN ]
+                            class="px-3 py-1.5 bg-container border-2 border-border rounded-lg text-xs font-bold uppercase tracking-widest text-muted hover:border-red-500 hover:text-red-500 hover:-translate-y-1 hover:-rotate-2 transition-all shadow-[3px_3px_0px_var(--color-border)] group flex items-center gap-2">
+                            <i class="fa-solid fa-trash-can group-hover:scale-110 transition-transform"></i>
+                            Trash Bin
                         </a>
                         <button
-                            class="open-create-modal px-4 py-2 bg-primary/10 border border-primary text-[10px] font-mono font-bold uppercase tracking-widest text-primary hover:bg-primary hover:text-background transition-colors group flex items-center gap-2 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)]">
-                            <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i> [ NEW_INSTANCE ]
+                            class="open-create-modal px-3 py-1.5 bg-warning border-2 border-yellow-600 rounded-lg text-xs font-bold uppercase tracking-widest text-yellow-900 hover:-translate-y-1 hover:rotate-2 transition-all shadow-[4px_4px_0px_var(--color-border)] group flex items-center gap-2">
+                            <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform text-yellow-700"></i>
+                            New Project
                         </button>
                     </div>
                 </div>
-
-                <div class="flex items-end gap-3 pt-2">
-                    <h1
-                        class="text-4xl md:text-5xl lg:text-6xl font-bold font-mono tracking-tighter uppercase text-text leading-none">
-                        Project_Manager
-                    </h1>
-                    <div
-                        class="w-3 md:w-4 h-8 md:h-12 bg-primary animate-pulse mb-1 shadow-[0_0_10px_var(--color-primary)]">
-                    </div>
-                </div>
-
-                <p class="text-sm font-mono text-muted tracking-wide max-w-2xl leading-relaxed">
-                    <span class="text-primary">></span> Initialize, track, and deploy portfolio instances. System monitors
-                    {{ $summary['activeCount'] }} active nodes.
-                </p>
-
-                {{-- Mobile Actions --}}
-                <div class="flex md:hidden items-center gap-3 mt-4">
-                    <button
-                        class="open-create-modal flex-1 px-4 py-3 bg-primary/10 border border-primary text-[10px] font-mono font-bold uppercase tracking-widest text-primary text-center">
-                        [ NEW ]
-                    </button>
-                    <a href="{{ route('dashboard.trash') }}"
-                        class="flex-1 px-4 py-3 border border-border text-[10px] font-mono font-bold uppercase tracking-widest text-muted text-center hover:text-red-500">
-                        [ BIN ]
-                    </a>
-                </div>
             </header>
 
-            {{-- METRICS DASHBOARD --}}
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                {{-- Stat 1 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-primary/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-primary/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-cubes text-primary"></i> Total_Instances
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 mb-8">
+
+                <div class="bg-amber-100 p-6 rounded-sm shadow-md border border-gray-200/70 flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-layer-group text-blue-500"></i>
+                        <span data-i18n="project.stats.totalProjects">Total Proyek</span>
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-text">{{ $summary['totalProjects'] }}</h3>
+                    <h3 class="text-4xl font-bold text-neutral-900 relative z-10">{{ $summary['totalProjects'] }}</h3>
                 </div>
 
-                {{-- Stat 2 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-green-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-green-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-play text-green-400"></i> Active_Nodes
+                <div class="bg-emerald-100 p-6 rounded-sm shadow-md border border-gray-200/70 flex flex-col justify-between relative group/tooltip rotate-2 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-tags text-indigo-500"></i>
+                        <span data-i18n="project.stats.totalCategories">Total Kategori</span>
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-green-400">{{ $summary['activeCount'] }}</h3>
+                    <h3 class="text-4xl font-bold text-neutral-900 relative z-10">{{ $summary['totalCategories'] }}</h3>
                 </div>
 
-                {{-- Stat 3 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-yellow-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-yellow-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-power-off text-yellow-400"></i> Inactive_Drafts
+                <div class="bg-sky-100 p-6 rounded-sm shadow-md border border-gray-200/70 flex flex-col justify-between relative group/tooltip -rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-globe text-emerald-500"></i>
+                        <span data-i18n="project.stats.activeCount">Live / Aktif</span>
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-yellow-400">{{ $summary['inactiveCount'] }}</h3>
+                    <h3 class="text-4xl font-bold text-neutral-900 relative z-10">{{ $summary['activeCount'] }}</h3>
                 </div>
 
-                {{-- Stat 4 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-sky-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-sky-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-tags text-sky-400"></i> Categories
-                    </p>
-                    <h3 class="text-3xl font-mono font-bold text-sky-400">{{ $summary['totalCategories'] }}</h3>
+                <div class="bg-rose-100 p-6 rounded-sm shadow-md border border-gray-200/70 flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-2">
+                            <i class="fa-solid fa-box-archive text-amber-500"></i>
+                            <span data-i18n="project.stats.inactiveCount">Arsip</span>
+                        </p>
+                        @if ($summary['inactiveCount'] > 0)
+                            <i class="fa-solid fa-circle-info text-rose-400 cursor-help hover:text-rose-600 transition-colors"></i>
+                        @endif
+                    </div>
+                    <h3 class="text-4xl font-bold text-neutral-900 relative z-10">{{ $summary['inactiveCount'] }}</h3>
+
+                    @if ($summary['inactiveCount'] > 0)
+                        <div class="absolute right-0 top-full -translate-y-5 w-48 bg-yellow-50/95 border border-yellow-200/70 p-4 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-all duration-300 z-50 shadow-lg text-xs space-y-3 -rotate-2 group-hover/tooltip:rotate-0 origin-bottom-right rounded-sm backdrop-blur-sm">
+
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/60 backdrop-blur-[1px] border border-black/5 rotate-1 shadow-sm"></div>
+
+                            <p class="font-bold uppercase tracking-widest text-yellow-800/60 text-[9px] border-b border-dashed border-yellow-600/30 pb-2 mb-2 font-sans">
+                                Status Breakdown
+                            </p>
+
+                            <div class="space-y-2 font-serif">
+                                <div class="flex gap-4 justify-between items-center">
+                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.Shipped">Shipped</span>
+                                    <span class="font-bold text-emerald-600">{{ $summary['statusBreakdown']['Shipped'] ?? 0 }}</span>
+                                </div>
+                                <div class="flex gap-4 justify-between items-center">
+                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.In Progress">In Progress</span>
+                                    <span class="font-bold text-amber-600">{{ $summary['statusBreakdown']['In Progress'] ?? 0 }}</span>
+                                </div>
+                                <div class="flex gap-4 justify-between items-center">
+                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.Prototype">Prototype</span>
+                                    <span class="font-bold text-sky-600">{{ $summary['statusBreakdown']['Prototype'] ?? 0 }}</span>
+                                </div>
+                                <div class="flex gap-4 justify-between items-center">
+                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.Archived">Archived</span>
+                                    <span class="font-bold text-rose-600">{{ $summary['statusBreakdown']['Archived'] ?? 0 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-yellow-200/50 border-t border-l border-yellow-300/50" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
+                        </div>
+                    @endif
                 </div>
+
             </div>
 
-            {{-- ========================================== --}}
-            {{-- ANALYTICS MATRIX (CHART.JS)                --}}
-            {{-- ========================================== --}}
             <div x-data="{ expanded: localStorage.getItem('project_matrix_expanded') !== 'false' }"
-                class="relative border border-border/50 bg-surface/10 p-4 md:p-6 space-y-6 transition-all duration-300">
-                <div class="flex items-center justify-between border-b border-border/50 pb-4">
-                    <h3 class="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2 cursor-pointer"
+                class="bg-surface border-2 border-dashed border-border shadow-sm rounded-2xl p-5 md:p-6 space-y-6 font-sans relative">
+
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-muted opacity-20 backdrop-blur-sm -rotate-1" style="clip-path: polygon(5% 0, 100% 5%, 95% 100%, 0 95%); z-index: 10;"></div>
+
+                <div class="flex items-center justify-between border-b-2 border-dashed border-border/50 pb-4">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-text flex items-center gap-2 cursor-pointer"
                         @click="expanded = !expanded; localStorage.setItem('project_matrix_expanded', expanded)">
-                        <i class="fa-solid fa-chart-pie"></i> > DATA_VISUALIZATION_MATRIX
+                        <i class="fa-solid fa-chart-pie text-primary"></i> Data_Visualization_Matrix
                     </h3>
                     <div class="flex items-center gap-4">
                         <span x-show="expanded"
-                            class="text-[9px] font-mono text-green-400 animate-pulse hidden sm:inline-block">[ LIVE_RENDER
-                            ]</span>
+                            class="text-[10px] font-bold text-green-600 hidden sm:inline-block italic font-serif">Generating Live Report...</span>
                         <button @click="expanded = !expanded; localStorage.setItem('project_matrix_expanded', expanded)"
                             type="button"
-                            class="text-[10px] font-mono text-muted hover:text-primary transition-colors focus:outline-none">
-                            <span x-text="expanded ? '[_COLLAPSE_]' : '[_EXPAND_]'"></span>
+                            class="text-xs font-bold text-muted hover:text-primary transition-colors focus:outline-none">
+                            <span x-text="expanded ? '[_HIDE_]' : '[_SHOW_]'"></span>
                         </button>
                     </div>
                 </div>
@@ -158,166 +193,126 @@
                 <div x-show="expanded" x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0 transform -translate-y-2"
                     x-transition:enter-end="opacity-100 transform translate-y-0"
-                    class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
 
-                    {{-- 1. Projects by Type (Doughnut) --}}
-                    <div class="relative border border-border/30 bg-[#050505] p-4 group">
-                        <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> NODE_TYPES_DISTRIBUTION
-                        </p>
-                        <div class="relative h-48 w-full flex justify-center">
+                    <div class="space-y-4">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-primary pl-3">Node Types Distribution</p>
+                        <div class="relative h-48 w-full flex justify-center bg-container/30 rounded-lg p-2 border border-border/50">
                             <canvas id="typeChart"></canvas>
                         </div>
                     </div>
 
-                    {{-- 2. Project Status (Bar) --}}
-                    <div class="relative border border-border/30 bg-[#050505] p-4 group">
-                        <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-primary/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> NODE_STATUS_METRICS</p>
-                        <div class="relative h-48 w-full">
+                    <div class="space-y-4">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-green-500 pl-3">Node Status Metrics</p>
+                        <div class="relative h-48 w-full bg-container/30 rounded-lg p-2 border border-border/50">
                             <canvas id="statusChart"></canvas>
                         </div>
                     </div>
 
-                    {{-- 3. Projects per Month/Year (Line) - FULL WIDTH --}}
-                    <div class="relative border border-border/30 bg-[#050505] p-4 lg:col-span-2 group">
-                        <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-primary/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> PRODUCTIVITY_TIMELINE
-                            (LAST 6 MONTHS)</p>
-                        <div class="relative h-64 w-full">
+                    <div class="lg:col-span-2 space-y-4">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-sky-400 pl-3">Productivity Timeline (Last 6 Months)</p>
+                        <div class="relative h-64 w-full bg-container/30 rounded-lg p-4 border border-border/50">
                             <canvas id="timelineChart"></canvas>
                         </div>
                     </div>
 
-                    {{-- 4. Team Size Distribution (Doughnut) --}}
-                    <div class="relative border border-border/30 bg-[#050505] p-4 lg:col-span-2 group">
-                        <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> TEAM_ALLOCATION (SOLO VS
-                            TEAM)</p>
-                        <div class="relative h-48 w-full flex justify-center">
+                    <div class="lg:col-span-2 space-y-4">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-amber-400 pl-3">Team Allocation (Solo vs Team)</p>
+                        <div class="relative h-48 w-full flex justify-center bg-container/30 rounded-lg p-2 border border-border/50">
                             <canvas id="teamChart"></canvas>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            {{-- CONTROL PANEL --}}
             @php $currentType = request('type', 'all'); @endphp
-            <div class="relative border border-border/50 bg-surface/10 p-4 md:p-6 space-y-6">
+            <div class="bg-surface border-2 border-dashed border-border shadow-sm rounded-2xl p-5 md:p-6 space-y-6 font-sans relative">
 
-                <div
-                    class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-b border-border/50 pb-6">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-muted opacity-20 backdrop-blur-sm -rotate-2" style="clip-path: polygon(5% 0, 100% 5%, 95% 100%, 0 95%); z-index: 10;"></div>
 
-                    {{-- Terminal Search Input --}}
+                <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 border-b-2 border-dashed border-border/50 pb-6 relative z-20">
+
                     <div class="relative w-full md:w-1/2 group">
-                        <form method="GET">
-                            <div class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-primary text-sm">></div>
-                            <input type="text" name="search" value="{{ request('search') }}"
-                                placeholder="QUERY_PROJECT_"
-                                class="w-full border border-border/70 bg-surface/30 px-4 py-3 pl-8 font-mono text-xs uppercase tracking-widest text-text placeholder:text-muted/50 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" />
-                            <div
-                                class="absolute right-4 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-primary/30 group-focus-within:bg-primary group-focus-within:animate-pulse pointer-events-none">
-                            </div>
-                        </form>
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors"></i>
+                        <input type="text" id="project-search" placeholder="{{ $projectPlaceholders }}"
+                            class="w-full border-2 border-border bg-container rounded-lg px-4 py-3 pl-11 text-sm font-medium text-text placeholder:text-muted placeholder:italic placeholder:font-serif focus:outline-none focus:border-primary focus:ring-0 transition-all shadow-inner"
+                            style="background-image: repeating-linear-gradient(transparent, transparent 27px, var(--color-border) 27px, var(--color-border) 28px); line-height: 28px; background-attachment: local;" />
                     </div>
 
-                    {{-- Action Toggles --}}
                     <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
-                        <form method="GET" class="relative">
-                            @foreach (request()->except('sort', 'page') as $key => $value)
-                                <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                            @endforeach
-                            <select name="sort" onchange="this.form.submit()"
-                                class="appearance-none border border-border/70 bg-surface/30 px-8 py-3 pr-12 font-mono text-xs uppercase tracking-widest text-muted hover:text-text focus:outline-none focus:border-primary transition-colors cursor-pointer">
-                                <option value="desc" {{ request('sort', 'desc') == 'desc' ? 'selected' : '' }}>SORT:
-                                    NEWEST</option>
-                                <option value="asc" {{ request('sort') == 'asc' ? 'selected' : '' }}>SORT: OLDEST
-                                </option>
-                            </select>
-                            <i
-                                class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none"></i>
-                        </form>
+                        <div class="relative z-40">
+                            <button id="sort-toggle"
+                                class="w-full md:w-auto flex justify-between items-center gap-6 px-5 py-3 border-2 border-border bg-container rounded-lg text-xs font-bold uppercase tracking-widest text-text hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none">
+                                <span class="flex items-center gap-2">
+                                    <i class="fa-solid fa-arrow-down-short-wide"></i>
+                                    <span id="sort-label" data-i18n="project.sort.menu.latest">Terbaru</span>
+                                </span>
+                                <i class="fa-solid fa-chevron-down text-[10px]" id="sort-chevron"></i>
+                            </button>
+
+                            <div id="sort-menu"
+                                class="hidden absolute right-0 top-full mt-3 w-full min-w-[12rem] bg-surface rounded-lg border-2 border-border shadow-[4px_4px_0px_var(--color-border)] overflow-hidden">
+                                <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors border-b-2 border-dashed border-border/50" data-sort="latest"
+                                data-i18n="project.sort.menu.latest">
+                                    Terbaru
+                                </button>
+                                <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors" data-sort="oldest"
+                                data-i18n="project.sort.menu.oldest">
+                                    Terlama
+                                </button>
+                            </div>
+                        </div>
 
                         <button id="toggleSelectMode" type="button"
-                            class="px-6 py-3 border border-border/70 bg-surface/30 font-mono text-xs font-bold uppercase tracking-widest text-muted hover:border-primary hover:text-primary transition-colors focus:outline-none focus:border-primary">
-                            [SELECT_MULTI]
+                            class="px-6 py-3 border-2 border-border bg-container rounded-lg text-xs font-bold uppercase tracking-widest text-muted hover:border-primary hover:text-primary transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none">
+                            Pilih Beberapa
                         </button>
                     </div>
                 </div>
 
-                {{-- Filter Tabs (menggunakan logic JS lama) --}}
-                <div class="flex flex-wrap gap-2 border-b border-border/30 pb-4">
+                <div class="flex overflow-x-auto no-scrollbar gap-4 pb-2 pt-2 px-2 -mx-2">
                     <button
-                        class="filter-btn px-5 py-2 border font-mono text-[10px] font-bold uppercase tracking-widest transition-colors focus:outline-none {{ $currentType == 'all' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted hover:border-primary' }}"
-                        data-filter="all">ALL_NODES</button>
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentType == 'all' ? 'bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1' : 'text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:-rotate-1' }}"
+                        data-filter="all">Semua</button>
                     <button
-                        class="filter-btn px-5 py-2 border font-mono text-[10px] font-bold uppercase tracking-widest transition-colors focus:outline-none {{ $currentType == 'Website' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted hover:border-primary' }}"
-                        data-filter="Website">WEBSITE</button>
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentType == 'Website' ? 'bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1' : 'text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:rotate-1' }}"
+                        data-filter="Website">Website</button>
                     <button
-                        class="filter-btn px-5 py-2 border font-mono text-[10px] font-bold uppercase tracking-widest transition-colors focus:outline-none {{ $currentType == 'Application' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted hover:border-primary' }}"
-                        data-filter="Application">APPLICATION</button>
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentType == 'Application' ? 'bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1' : 'text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:rotate-1' }}"
+                        data-filter="Application">Aplikasi</button>
                     <button
-                        class="filter-btn px-5 py-2 border font-mono text-[10px] font-bold uppercase tracking-widest transition-colors focus:outline-none {{ $currentType == 'Design' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted hover:border-primary' }}"
-                        data-filter="Design">DESIGN</button>
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentType == 'Design' ? 'bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1' : 'text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:rotate-1' }}"
+                        data-filter="Design">Desain</button>
                 </div>
+            </div>
 
             </div>
 
-            {{-- PROJECT GRID CONTAINER (Struktur bawaanmu dipertahankan 100%) --}}
             <div id="projects-container">
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
-                    {{-- Create Node Folder --}}
-                    @if (
-                        $projects instanceof \Illuminate\Pagination\LengthAwarePaginator &&
-                            $projects->currentPage() == 1 &&
-                            $projects->count())
-                        <div class="project-folder group relative border border-dashed border-border bg-surface p-6 pt-12">
-                            <div class="absolute top-0 left-6 -translate-y-1/2 flex gap-2 z-20">
-                                <span
-                                    class="px-4 py-1 text-xs uppercase tracking-widest badge-primary font-semibold">SYSTEM</span>
-                                <span
-                                    class="px-3 py-1 text-[10px] uppercase tracking-wide border bg-muted/10 text-muted border-border">CREATE</span>
-                            </div>
-                            <div class="folder-files absolute inset-0 pointer-events-none z-0">
-                                <span class="file"></span>
-                                <span class="file"></span>
-                                <div
-                                    class="open-create-modal file file-front pointer-events-auto p-5 flex flex-col items-center justify-center gap-4 text-center">
-                                    <div
-                                        class="flex items-center justify-center w-16 h-16 text-6xl text-muted group-hover:text-primary group-hover:border-primary transition">
-                                        <i class="fas fa-plus"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-lg font-semibold">Create Project</h3>
-                                        <p class="text-sm text-muted mt-1">Add a new portfolio entry</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    @forelse ($projects as $index => $project)
+                        @php
+                            $rotation = $index % 2 === 0 ? 'rotate-1' : '-rotate-1';
+                        @endphp
+                        <div class="group relative p-4 pt-12 shadow-inner bg-container rounded-xl {{ $rotation }} hover:rotate-0 transition-transform duration-500">
 
-                    {{-- Loop Projects --}}
-                    @forelse ($projects as $project)
-                        <div class="project-folder group relative border border-border bg-surface p-6 pt-12 ">
-                            <div class="absolute top-0 left-6 -translate-y-1/2 flex gap-2 z-20">
-                                <span
-                                    class="px-4 py-1 text-xs uppercase tracking-widest badge-primary font-semibold">{{ $project->type }}</span>
-                                <span
-                                    class="px-3 py-1 text-[10px] uppercase tracking-wide border {{ $project->statusClass }}">{{ $project->status }}</span>
-                                <span
-                                    class="px-3 py-1 text-[10px] uppercase tracking-wide border border-border text-muted">{{ $project->visibility === 'published' ? 'public' : $project->visibility }}</span>
+                            <div class="absolute top-4 left-6 z-20">
+                                <span class="px-4 py-1.5 text-[10px] font-black tracking-widest bg-warning text-yellow-900 border-l-4 border-yellow-500 shadow-md -rotate-3 inline-block uppercase">
+                                    {{ $project->status }}
+                                </span>
                             </div>
 
-                            <input type="checkbox" name="projects[]" value="{{ $project->id }}"
-                                class="bulk-checkbox w-4 h-4 opacity-0 pointer-events-none transition absolute top-3 right-3 z-30">
+                            <div class="absolute top-4 right-6 z-30">
+                                <input type="checkbox" name="projects[]" value="{{ $project->id }}"
+                                    class="bulk-checkbox w-5 h-5 opacity-0 pointer-events-none transition-all cursor-pointer border-2 border-primary rounded appearance-none checked:bg-primary checked:border-primary">
+                            </div>
 
-                            <div class="folder-files absolute inset-0 z-0">
-                                <span class="file"></span>
-                                <span class="file"></span>
+                            <div class="bg-surface p-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.15)] border border-border h-full flex flex-col relative overflow-hidden">
+                                <div class="checkbox-tape absolute -top-1 -right-8 w-24 h-8 bg-primary/20 -rotate-12 opacity-0 transition-opacity pointer-events-none"></div>
+
                                 <a href="javascript:void(0)"
-                                    class="file file-front pointer-events-auto p-5 flex flex-col gap-3 project-open"
+                                    class="project-open block grow"
                                     data-id="{{ $project->id }}" data-title="{{ $project->title }}"
                                     data-desc="{{ $project->desc }}" data-type="{{ $project->type }}"
                                     data-status="{{ $project->status }}" data-visibility="{{ $project->visibility }}"
@@ -337,112 +332,126 @@
                                     data-image-mobile="{{ $project->image_mobile ? asset('storage/' . $project->image_mobile) : '' }}"
                                     data-tech='@json($project->tech)'>
 
-                                    <div>
-                                        <h3 class="text-xl font-semibold leading-tight">{{ $project->title }}</h3>
-                                        <p class="text-sm text-muted leading-snug mt-1">
-                                            {{ \Illuminate\Support\Str::limit($project->desc, 100) }}</p>
-                                        @if (strlen($project->desc) > 100)
-                                            <button
-                                                @click="$dispatch('open-desc-modal', { title: '{{ addslashes($project->title) }}', desc: `{!! addslashes($project->desc) !!}` })"
-                                                class="text-xs font-medium text-primary mt-1 hover:underline">Selengkapnya</button>
-                                        @endif
+                                    <div class="aspect-video w-full bg-bg overflow-hidden mb-5 border border-border shadow-inner relative">
+                                        <div class="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style="background-image: radial-gradient(var(--color-text) 0.5px, transparent 0.5px); background-size: 8px 8px;"></div>
+
+                                        <div class="relative w-full h-full overflow-hidden project-slider">
+                                            @if($project->screenshot && count((array)$project->screenshot) > 0)
+                                                @foreach((array)$project->screenshot as $i => $shot)
+                                                    <img src="{{ asset('storage/' . $shot) }}"
+                                                        class="slide absolute inset-0 w-full h-full object-cover transition-all duration-500 {{ $i === 0 ? 'opacity-100 grayscale-[0.3] group-hover:grayscale-0' : 'opacity-0 grayscale-0' }} group-hover:scale-105"
+                                                        alt="preview">
+                                                @endforeach
+                                            @else
+                                                <div class="flex flex-col items-center justify-center w-full h-full text-muted p-4 text-center bg-surface">
+                                                    <i class="fa-regular fa-image text-3xl opacity-30 mb-2"></i>
+                                                    <span class="text-[9px] uppercase tracking-widest font-bold">No Preview Available</span>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <div class="tech-row">
-                                        @foreach ($project->visibleTechs as $tech)
-                                            <span>{{ strtoupper($tech) }}</span>
-                                        @endforeach
-                                        @if (count($project->extraTechs) > 0)
-                                            <span class="tech-more">+{{ count($project->extraTechs) }}
-                                                <span class="tech-tooltip">
-                                                    @foreach ($project->extraTechs as $extra)
-                                                        {{ $extra }}<br>
-                                                    @endforeach
-                                                </span>
-                                            </span>
-                                        @endif
+
+                                    <div class="px-1 pb-1 flex flex-col flex-grow">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="text-[9px] font-bold text-muted uppercase tracking-widest">{{ $project->type }}</span>
+                                            <span class="text-[9px] px-2 py-0.5 border border-border text-muted uppercase">{{ $project->visibility }}</span>
+                                        </div>
+
+                                        <h3 class="text-xl font-bold text-text leading-tight mb-3 group-hover:text-primary transition-colors line-clamp-1">
+                                            {{ $project->title }}
+                                        </h3>
+
+                                        <p class="text-sm text-muted line-clamp-3 mb-4 font-serif italic opacity-90">
+                                            {{ $project->desc }}
+                                        </p>
+
+                                        <div class="pt-3 border-t border-dashed border-border/50 flex justify-between items-center mt-auto">
+                                            <div class="flex gap-1 flex-wrap">
+                                                @foreach (collect($project->tech)->take(3) as $tech)
+                                                    <span class="text-[8px] font-bold uppercase tracking-tighter text-muted border border-border px-1.5 py-0.5 bg-container/50">{{ $tech }}</span>
+                                                @endforeach
+                                                @if(count((array)$project->tech) > 3)
+                                                    <span class="text-[8px] font-bold text-muted">+{{ count((array)$project->tech) - 3 }}</span>
+                                                @endif
+                                            </div>
+
+                                            <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">
+                                                <i class="fa-solid fa-arrow-right-long text-xs shadow-none"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </a>
                             </div>
                         </div>
                     @empty
-                        <div
-                            class="col-span-full border border-border bg-surface py-20 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden group">
-                            <div
-                                class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.01)_10px,rgba(255,255,255,0.01)_20px)] pointer-events-none">
+                        <div class="col-span-full py-20 px-6 flex flex-col items-center justify-center text-center bg-[#fdfcf5] border-2 border-dashed border-[#e5e0d0] rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,0.05)] relative font-sans overflow-hidden">
+                            <div class="absolute inset-0 z-0 opacity-30" style="background-image: repeating-linear-gradient(transparent, transparent 24px, #e5e0d0 24px, #e5e0d0 25px);"></div>
+                            <div class="relative z-20 space-y-3">
+                                <i class="fa-solid fa-ghost text-5xl text-muted/30 mb-2"></i>
+                                <h3 class="text-3xl font-medium text-black font-handwriting tracking-wide">Arsip Kosong</h3>
+                                <p class="text-sm text-muted max-w-sm mx-auto italic font-serif opacity-90">System directory is empty. Initialize a new project node to begin data tracking.</p>
+                                <button class="open-create-modal mt-6 px-8 py-3 bg-warning border-2 border-yellow-600 rounded-lg text-xs font-bold uppercase tracking-widest text-yellow-900 hover:-translate-y-1 transition-all shadow-[4px_4px_0px_var(--color-border)]">
+                                    [ INIT_FIRST_NODE ]
+                                </button>
                             </div>
-                            <i class="fa-solid fa-ghost text-5xl text-muted/30 mb-6 group-hover:animate-bounce"></i>
-                            <h3 class="text-xl font-mono font-bold uppercase tracking-widest text-muted"
-                                data-i18n="project.empty.title">NO_NODES_FOUND</h3>
-                            <p class="mt-2 text-xs font-mono text-muted/70 max-w-md leading-relaxed"
-                                data-i18n="project.empty.desc">System directory is empty. Initialize a new project node to
-                                begin data tracking.</p>
-                            <button
-                                class="open-create-modal mt-8 px-6 py-3 bg-primary/10 border border-primary text-[10px] font-mono font-bold uppercase tracking-widest text-primary hover:bg-primary hover:text-background transition-colors shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)] relative z-10">
-                                [ INIT_FIRST_NODE ]
-                            </button>
                         </div>
                     @endforelse
 
-                </div>
-
-                {{-- PAGINATION --}}
                 @if ($projects instanceof \Illuminate\Pagination\LengthAwarePaginator && $projects->hasPages())
-                    <div class="flex justify-center pt-12">
-                        <nav class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest">
+                    <div class="flex justify-center pt-16">
+                        <nav class="flex items-center gap-4 font-mono">
                             @if ($projects->onFirstPage())
-                                <span
-                                    class="px-4 py-2 text-muted border border-border/50 bg-surface/30 opacity-50 cursor-not-allowed">[
-                                    PREV ]</span>
+                                <span class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif"><i class="fa-solid fa-chevron-left"></i></span>
                             @else
-                                <a href="{{ $projects->previousPageUrl() }}"
-                                    class="px-4 py-2 border border-border text-muted hover:border-primary hover:text-primary transition-colors">[
-                                    PREV ]</a>
+                                <a href="{{ $projects->previousPageUrl() }}" class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm"><i class="fa-solid fa-chevron-left"></i></a>
                             @endif
 
-                            <span class="px-4 py-2 border border-primary bg-primary/5 text-primary font-bold">
-                                PG_{{ sprintf('%02d', $projects->currentPage()) }} /
-                                {{ sprintf('%02d', $projects->lastPage()) }}
-                            </span>
+                            <div class="px-6 py-2 bg-warning border-2 border-yellow-500 rounded-full shadow-[2px_2px_0px_var(--color-border)] rotate-1">
+                                <span class="text-xs font-black text-yellow-900 uppercase tracking-widest">
+                                    PG_{{ sprintf('%02d', $projects->currentPage()) }} / {{ sprintf('%02d', $projects->lastPage()) }}
+                                </span>
+                            </div>
 
                             @if ($projects->hasMorePages())
-                                <a href="{{ $projects->nextPageUrl() }}"
-                                    class="px-4 py-2 border border-border text-muted hover:border-primary hover:text-primary transition-colors">[
-                                    NEXT ]</a>
+                                <a href="{{ $projects->nextPageUrl() }}" class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm"><i class="fa-solid fa-chevron-right"></i></a>
                             @else
-                                <span
-                                    class="px-4 py-2 text-muted border border-border/50 bg-surface/30 opacity-50 cursor-not-allowed">[
-                                    NEXT ]</span>
+                                <span class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif"><i class="fa-solid fa-chevron-right"></i></span>
                             @endif
                         </nav>
                     </div>
                 @endif
 
-            </div>{{-- end #projects-container --}}
+            </div>
 
-            {{-- BULK ACTION BAR (Sticky HUD) --}}
             <div id="bulkBar"
-                class="fixed bottom-6 left-1/2 -translate-x-1/2 z-90 bg-[#0a0a0a]/90 backdrop-blur-md border border-primary/50 p-4 md:px-6 md:py-4 flex flex-col sm:flex-row items-center gap-4 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.15)] opacity-0 pointer-events-none translate-y-4 transition-all duration-300 w-[90%] md:w-auto min-w-[320px]">
+                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-90 bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
 
-                <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary"></div>
-                <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary"></div>
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 backdrop-blur-sm border border-black/5 rotate-1"></div>
 
-                <div
-                    class="flex items-center gap-3 border-r border-border/50 pr-4 mr-2 w-full sm:w-auto justify-center sm:justify-start">
-                    <i class="fa-solid fa-crosshairs text-primary animate-[spin_4s_linear_infinite]"></i>
-                    <span id="selectedCount"
-                        class="text-[10px] font-mono font-bold uppercase tracking-widest text-primary">0 SELECTED</span>
+                <div class="flex items-center gap-4 border-r-2 border-dashed border-yellow-600/20 pr-6 mr-2 w-full sm:w-auto justify-center sm:justify-start">
+                    <div class="w-10 h-10 rounded-full bg-yellow-400/20 flex items-center justify-center border border-yellow-500 animate-pulse">
+                        <i class="fa-solid fa-check-double text-yellow-700"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="selectedCount" class="text-xs font-black uppercase tracking-widest text-yellow-900">0 SELECTED</span>
+                        <span class="text-[9px] font-bold text-yellow-900/40 uppercase tracking-tighter">Bulk Operations</span>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="flex items-center gap-4 w-full sm:w-auto">
                     <button type="button" onclick="bulkAction('publish')"
-                        class="flex-1 sm:flex-none px-4 py-2 border border-border text-[10px] font-mono font-bold uppercase tracking-widest text-muted hover:border-primary hover:text-primary transition-colors">
-                        [ PUBLISH ]
+                        class="flex-1 sm:flex-none px-6 py-2.5 bg-emerald-100 border-2 border-emerald-500 rounded text-[10px] font-black uppercase tracking-widest text-emerald-900 hover:-translate-y-1 hover:-rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)]">
+                        PUBLISH_ALL
                     </button>
                     <button type="button" onclick="bulkAction('delete')"
-                        class="flex-1 sm:flex-none px-4 py-2 border border-red-500/50 bg-red-500/10 text-[10px] font-mono font-bold uppercase tracking-widest text-red-500 hover:bg-red-500 hover:text-white transition-colors group">
-                        <i class="fa-solid fa-trash-can mr-1 opacity-50 group-hover:opacity-100"></i> [ DELETE ]
+                        class="flex-1 sm:flex-none px-6 py-2.5 bg-rose-100 border-2 border-rose-500 rounded text-[10px] font-black uppercase tracking-widest text-rose-900 hover:-translate-y-1 hover:rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] group">
+                        <i class="fa-solid fa-trash-can mr-2"></i> DELETE_ALL
+                    </button>
+                    <button type="button" id="cancelSelect" class="text-[9px] font-bold text-muted hover:text-text uppercase tracking-widest underline underline-offset-4 decoration-dashed ml-2">
+                        Cancel
                     </button>
                 </div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-yellow-200" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
             </div>
 
             <form id="bulkForm" method="POST" class="hidden">
@@ -454,19 +463,16 @@
 
 @endsection
 
-{{-- Modals dipertahankan utuh di luar wrapper utama --}}
 <x-project.detail-modal />
 <x-project.edit-modal :technologies="$technologies" />
 <x-project.create-modal :technologies="$technologies" />
 
 @push('scripts')
-    {{-- Load Chart.js CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // === KONFIGURASI GLOBAL CHART.JS UNTUK TEMA TERMINAL HUD ===
-            Chart.defaults.color = '#71717a'; // text-muted
+            Chart.defaults.color = '#71717a';
             Chart.defaults.font.family = 'monospace';
             Chart.defaults.font.size = 10;
 
@@ -486,7 +492,7 @@
                 },
                 borderColor: 'rgba(56, 189, 248, 0.5)',
                 borderWidth: 1,
-                cornerRadius: 0, // Sudut tajam terminal
+                cornerRadius: 0,
                 padding: 10
             };
 
@@ -499,19 +505,17 @@
             ) !!};
             const teamData = {!! json_encode($chartData['team'] ?? ['Solo' => 15, 'Team' => 5]) !!};
 
-            // Warna Neons HUD
             const colors = {
-                sky: '#38bdf8',
-                green: '#4ade80',
-                amber: '#fbbf24',
-                red: '#f87171',
-                primary: '#a855f7',
-                bgSky: 'rgba(56, 189, 248, 0.2)',
-                bgGreen: 'rgba(74, 222, 128, 0.2)',
-                bgAmber: 'rgba(251, 191, 36, 0.2)'
+                sky: '#0ea5e9',
+                green: '#10b981',
+                amber: '#f59e0b',
+                red: '#ef4444',
+                primary: '#8b5cf6',
+                bgSky: 'rgba(14, 165, 233, 0.1)',
+                bgGreen: 'rgba(16, 185, 129, 0.1)',
+                bgAmber: 'rgba(245, 158, 11, 0.1)'
             };
 
-            // 1. PROJECT BY TYPE (Doughnut)
             new Chart(document.getElementById('typeChart'), {
                 type: 'doughnut',
                 data: {
@@ -541,7 +545,6 @@
                 }
             });
 
-            // 2. PROJECT STATUS (Bar)
             new Chart(document.getElementById('statusChart'), {
                 type: 'bar',
                 data: {
@@ -578,7 +581,6 @@
                 }
             });
 
-            // 3. PRODUCTIVITY TIMELINE (Line)
             new Chart(document.getElementById('timelineChart'), {
                 type: 'line',
                 data: {
@@ -593,7 +595,7 @@
                         pointBorderColor: '#050505',
                         pointRadius: 4,
                         fill: true,
-                        tension: 0.3 // Efek kurva halus
+                        tension: 0.3
                     }]
                 },
                 options: {
@@ -617,7 +619,6 @@
                 }
             });
 
-            // 4. TEAM SIZE DISTRIBUTION (Doughnut / Solo vs Team)
             new Chart(document.getElementById('teamChart'), {
                 type: 'pie',
                 data: {
@@ -646,8 +647,42 @@
         });
     </script>
 
-    {{-- Kode Javascript dipertahankan 100% tanpa ubahan agar fungsi AJAX jalan sempurna --}}
     <script>
+        window.bulkAction = function(action) {
+            const selected = Array.from(document.querySelectorAll('.bulk-checkbox:checked')).map(cb => cb.value);
+            if (selected.length === 0) return;
+
+            let confirmMsg = action === 'delete'
+                ? 'Apakah Anda yakin ingin menghapus proyek terpilih?'
+                : 'Apakah Anda yakin ingin mempublikasikan proyek terpilih?';
+
+            if (confirm(confirmMsg)) {
+                submitBulkForm(action, selected);
+            }
+        };
+
+        function submitBulkForm(action, selectedIds) {
+            const form = document.getElementById('bulkForm');
+            if (!form) return;
+
+            if (action === 'delete') {
+                form.action = "{{ route('dashboard.bulkDeleteProjects') }}";
+            } else if (action === 'publish') {
+                form.action = "{{ route('dashboard.bulkPublishProjects') }}";
+            }
+
+            form.innerHTML = '@csrf';
+            selectedIds.forEach(id => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'projects[]';
+                input.value = id;
+                form.appendChild(input);
+            });
+
+            form.submit();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
 
             const toggleBtn = document.getElementById('toggleSelectMode');
@@ -655,10 +690,6 @@
             const selectedCountText = document.getElementById('selectedCount');
 
             let selectMode = new URL(window.location.href).searchParams.has('multiple_select');
-
-            // ══════════════════════════════════════════════════════════════════════════
-            // AJAX FETCH + SWAP HELPER
-            // ══════════════════════════════════════════════════════════════════════════
 
             async function ajaxNavigate(url) {
                 const container = document.querySelector('#projects-container');
@@ -708,10 +739,6 @@
                 return url;
             }
 
-            // ══════════════════════════════════════════════════════════════════════════
-            // AFTER-SWAP: re-init all listeners after #projects-container replaced
-            // ══════════════════════════════════════════════════════════════════════════
-
             function afterSwap() {
                 initDetailModalListeners();
                 initPaginationLinks();
@@ -719,10 +746,6 @@
                 updateBulkBar();
                 highlightSearch();
             }
-
-            // ══════════════════════════════════════════════════════════════════════════
-            // DETAIL MODAL RE-INIT (for cards created by AJAX swap)
-            // ══════════════════════════════════════════════════════════════════════════
 
             function initDetailModalListeners() {
                 const detailModal = document.getElementById('projectDetailModal');
@@ -810,10 +833,6 @@
                 });
             }
 
-            // ══════════════════════════════════════════════════════════════════════════
-            // PAGINATION LINK INTERCEPTION
-            // ══════════════════════════════════════════════════════════════════════════
-
             function initPaginationLinks() {
                 const container = document.querySelector('#projects-container');
                 if (!container) return;
@@ -835,30 +854,17 @@
                         e.preventDefault();
                         ajaxNavigate(target);
                     } catch {
-                        /* let native navigation handle */
                     }
                 };
 
                 container.addEventListener('click', container._paginationHandler);
             }
 
-            // ══════════════════════════════════════════════════════════════════════════
-            // SEARCH
-            // ══════════════════════════════════════════════════════════════════════════
+            const searchInput = document.getElementById('project-search');
 
-            const searchForm = document.querySelector('header form') || document.querySelector('.group form');
-            const searchInput = searchForm ? searchForm.querySelector('input[name="search"]') : null;
-
-            if (searchForm && searchInput) {
-                searchForm.addEventListener('submit', e => {
-                    e.preventDefault();
-                    const url = buildUrl({
-                        search: searchInput.value || null
-                    });
-                    ajaxNavigate(url);
-                });
-
+            if (searchInput) {
                 let searchTimer;
+
                 searchInput.addEventListener('input', () => {
                     clearTimeout(searchTimer);
                     searchTimer = setTimeout(() => {
@@ -868,11 +874,18 @@
                         ajaxNavigate(url);
                     }, 500);
                 });
-            }
 
-            // ══════════════════════════════════════════════════════════════════════════
-            // FILTER BUTTONS (AJAX)
-            // ══════════════════════════════════════════════════════════════════════════
+                searchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        clearTimeout(searchTimer);
+                        const url = buildUrl({
+                            search: searchInput.value || null
+                        });
+                        ajaxNavigate(url);
+                    }
+                });
+            }
 
             function initFilterButtons() {
                 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -880,12 +893,12 @@
 
                 filterButtons.forEach(btn => {
                     const isActive = btn.dataset.filter === currentType;
-                    // Disesuaikan dengan class desain baru
-                    btn.classList.toggle('border-primary', isActive);
-                    btn.classList.toggle('bg-primary/10', isActive);
-                    btn.classList.toggle('text-primary', isActive);
-                    btn.classList.toggle('border-border', !isActive);
-                    btn.classList.toggle('text-muted', !isActive);
+
+                    if (isActive) {
+                        btn.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1";
+                    } else {
+                        btn.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:-rotate-1 transition-all focus:outline-none";
+                    }
 
                     if (btn._ajaxBound) return;
                     btn._ajaxBound = true;
@@ -902,33 +915,54 @@
 
             initFilterButtons();
 
-            // ══════════════════════════════════════════════════════════════════════════
-            // SORT DROPDOWN
-            // ══════════════════════════════════════════════════════════════════════════
+            const sortToggle = document.getElementById('sort-toggle');
+            const sortMenu = document.getElementById('sort-menu');
+            const sortOptions = document.querySelectorAll('.sort-option');
+            const sortLabel = document.getElementById('sort-label');
+            const sortChevron = document.getElementById('sort-chevron');
 
-            const sortSelect = document.querySelector('select[name="sort"]');
-            if (sortSelect) {
-                const sortForm = sortSelect.closest('form');
-
-                sortSelect.onchange = null;
-                sortSelect.removeAttribute('onchange');
-
-                sortSelect.addEventListener('change', (e) => {
+            if (sortToggle && sortMenu) {
+                sortToggle.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const url = buildUrl({
-                        sort: sortSelect.value
-                    });
-                    ajaxNavigate(url);
+                    e.stopPropagation();
+                    const isHidden = sortMenu.classList.contains('hidden');
+                    if (isHidden) {
+                        sortMenu.classList.remove('hidden');
+                        if (sortChevron) sortChevron.classList.add('rotate-180');
+                    } else {
+                        sortMenu.classList.add('hidden');
+                        if (sortChevron) sortChevron.classList.remove('rotate-180');
+                    }
                 });
 
-                if (sortForm) {
-                    sortForm.addEventListener('submit', e => e.preventDefault());
+                document.addEventListener('click', (e) => {
+                    if (!sortToggle.contains(e.target) && !sortMenu.contains(e.target)) {
+                        sortMenu.classList.add('hidden');
+                        if (sortChevron) sortChevron.classList.remove('rotate-180');
+                    }
+                });
+
+                sortOptions.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const sortValue = option.dataset.sort;
+                        const labelText = option.dataset.i18n ? (option.innerText || option.textContent) : option.textContent;
+
+                        if (sortLabel) sortLabel.textContent = labelText.trim();
+                        sortMenu.classList.add('hidden');
+                        if (sortChevron) sortChevron.classList.remove('rotate-180');
+
+                        const url = buildUrl({ sort: sortValue });
+                        ajaxNavigate(url);
+                    });
+                });
+
+                const currentSort = new URLSearchParams(window.location.search).get('sort') || 'desc';
+                const activeOption = document.querySelector(`.sort-option[data-sort="${currentSort}"]`);
+                if (activeOption && sortLabel) {
+                    sortLabel.textContent = activeOption.textContent.trim();
                 }
             }
-
-            // ══════════════════════════════════════════════════════════════════════════
-            // HIGHLIGHT SEARCH RESULTS
-            // ══════════════════════════════════════════════════════════════════════════
 
             function highlightSearch() {
                 const keyword = new URLSearchParams(window.location.search).get('search');
@@ -937,7 +971,7 @@
                 const safe = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const regex = new RegExp(`(${safe})`, 'gi');
 
-                document.querySelectorAll('.project-folder h3, .project-folder p, .tech-row span').forEach(el => {
+                document.querySelectorAll('.group h3, .group p, [class*="bg-container/"]').forEach(el => {
                     if (el.children.length > 0) return;
                     const text = el.textContent;
                     if (regex.test(text)) {
@@ -960,10 +994,6 @@
 
             highlightSearch();
 
-            // ══════════════════════════════════════════════════════════════════════════
-            // BULK BAR + CARD SELECT
-            // ══════════════════════════════════════════════════════════════════════════
-
             function updateBulkBar() {
                 if (!selectMode || !bulkBar) return;
                 const selected = document.querySelectorAll('.bulk-checkbox:checked').length;
@@ -976,7 +1006,7 @@
             }
 
             function attachCardEvents() {
-                const cards = document.querySelectorAll('.project-folder');
+                const cards = document.querySelectorAll('.group.relative.p-4.pt-12');
                 const checkboxes = document.querySelectorAll('.bulk-checkbox');
 
                 if (selectMode) {
@@ -986,10 +1016,16 @@
                         cb.checked = false;
                         cb.classList.add('opacity-0', 'pointer-events-none');
                     });
-                    cards.forEach(card => card.classList.remove('border-primary', 'bg-primary/5'));
+                    cards.forEach(card => {
+                        const tape = card.querySelector('.checkbox-tape');
+                        if(tape) tape.classList.add('opacity-0');
+                    });
                 }
 
                 cards.forEach(card => {
+                    const checkbox = card.querySelector('.bulk-checkbox');
+                    if(!checkbox) return;
+
                     card.addEventListener('click', function(e) {
                         if (!selectMode) return;
 
@@ -999,33 +1035,35 @@
                             e.stopImmediatePropagation();
                         }
 
-                        if (e.target.closest('.open-create-modal') || e.target.tagName === 'BUTTON')
+                        if (e.target.closest('.open-create-modal') || e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT')
                             return;
 
-                        const checkbox = card.querySelector('.bulk-checkbox');
-                        if (!checkbox) return;
-
                         checkbox.checked = !checkbox.checked;
-                        card.classList.toggle('border-primary', checkbox.checked);
-                        card.classList.toggle('bg-primary/5', checkbox.checked);
+                        const tape = card.querySelector('.checkbox-tape');
+                        if(tape) tape.classList.toggle('opacity-100', checkbox.checked);
                         updateBulkBar();
                     }, true);
-                });
-            }
 
-            // ── initial attach ───────────────────────────────────────────────────────
+                    checkbox.addEventListener('change', () => {
+                        const tape = card.querySelector('.checkbox-tape');
+                        if(tape) tape.classList.toggle('opacity-100', checkbox.checked);
+                        updateBulkBar();
+                    });
+                });
+
+                const cancelBtn = document.getElementById('cancelSelect');
+                if(cancelBtn) {
+                   cancelBtn.onclick = () => toggleBtn.click();
+                }
+            }
 
             attachCardEvents();
             initPaginationLinks();
 
             if (selectMode) {
-                toggleBtn.innerText = '[ CANCEL_MULTI ]';
+                toggleBtn.innerText = 'BATAL PILIH';
                 toggleBtn.classList.add('border-red-500', 'text-red-500');
             }
-
-            // ══════════════════════════════════════════════════════════════════════════
-            // TOGGLE SELECT MODE (AJAX)
-            // ══════════════════════════════════════════════════════════════════════════
 
             toggleBtn.addEventListener('click', async () => {
                 const wasSelectMode = selectMode;
@@ -1033,7 +1071,7 @@
 
                 const url = new URL(window.location.href);
                 const originalText = toggleBtn.innerText;
-                toggleBtn.innerText = '[ PROCESSING... ]';
+                toggleBtn.innerText = 'Memproses...';
                 toggleBtn.disabled = true;
 
                 if (selectMode) {
@@ -1066,7 +1104,7 @@
                     }
 
                     window.history.pushState({}, '', url.toString());
-                    toggleBtn.innerText = selectMode ? '[ CANCEL_MULTI ]' : '[ SELECT_MULTI ]';
+                    toggleBtn.innerText = selectMode ? 'BATAL PILIH' : 'Pilih Beberapa';
 
                     afterSwap();
 

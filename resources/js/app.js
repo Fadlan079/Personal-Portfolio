@@ -3,25 +3,21 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 import htmx from 'htmx.org';
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 window.htmx = htmx;
-window.gsap = gsap;
-window.ScrollTrigger = ScrollTrigger;
-gsap.registerPlugin(ScrollTrigger);
 
 import { heroAnimation } from './animations/hero';
 import { heroRibbonAnimation } from './animations/hero';
 import { heroFloatingCards } from './animations/hero';
 import { heroIconParallax } from './animations/hero';
-
+import { navbarFloatAnimation } from "./animations/navbar";
+import { navbarScrollEffect } from "./animations/navbar";
 import { aboutAnimation } from "./animations/about";
-
+import { projectAnimation } from "./animations/project";
 import { projectModalAnimation } from "./animations/project-modal";
 import { initmodal } from "./animations/modal";
 import { initContactAnimations } from "./animations/contact";
 
-const THEME_KEY = 'ui_theme';
+const THEME_KEY = 'theme';
 const html = document.documentElement;
 
 window.showConfirm = function (message) {
@@ -173,33 +169,35 @@ function applyTheme(theme) {
 }
 
 function updateIcon(theme) {
-    const savedTheme = theme || localStorage.getItem(THEME_KEY) || 'system';
-    ['themeIcon', 'colorIcon', 'colorIconMobile'].forEach(id => {
-        const icon = document.getElementById(id);
-        if (!icon) return;
-        icon.classList.remove('fa-moon', 'fa-sun', 'fa-desktop');
-        if (savedTheme === 'system') icon.classList.add('fa-desktop');
-        else if (savedTheme === 'dark') icon.classList.add('fa-moon');
-        else icon.classList.add('fa-sun');
-        icon.classList.add('fa-solid');
+    const icon = document.getElementById('themeIcon');
+    if (!icon) return;
 
-        if (icon.animate) {
-           icon.animate([{ transform: 'rotate(-90deg)' }, { transform: 'rotate(0)' }], { duration: 300 });
-        }
-    });
+    icon.classList.remove(
+        'fa-moon',
+        'fa-sun',
+        'fa-desktop'
+    );
+
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (!savedTheme || savedTheme === 'system') {
+        icon.classList.add('fa-desktop');
+    } else if (savedTheme === 'dark') {
+        icon.classList.add('fa-moon');
+    } else {
+        icon.classList.add('fa-sun');
+    }
+
+    icon.classList.add('fa-solid', 'text-text');
 }
 
 function initTheme() {
-    let savedTheme = localStorage.getItem(THEME_KEY) || '';
-    // Normalize legacy 'theme-light' / 'theme-dark' format
-    if (savedTheme.startsWith('theme-')) {
-        savedTheme = savedTheme.replace('theme-', '');
-        localStorage.setItem(THEME_KEY, savedTheme);
-    }
-    if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'system') {
-        applyTheme(savedTheme === 'system' ? getSystemTheme() : savedTheme);
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+        applyTheme(savedTheme);
     } else {
-        applyTheme('light');
+        applyTheme(getSystemTheme());
     }
 }
 
@@ -241,7 +239,7 @@ function createWipeGrid(theme, textStr) {
         }
 
         box.style.cssText = `
-            width: ${100 / colCount}vw; height: ${100 / rowCount}vh;
+            width: ${100 / colCount}vw; height: ${100 / rowCount}vh; 
             background: ${colors.bg}; border: 1px solid ${colors.border};
             color: ${fontColor}; font-family: monospace; font-size: 10px;
             display: flex; align-items: center; justify-content: center;
@@ -267,78 +265,120 @@ function createWipeGrid(theme, textStr) {
     return { overlay, colCount, rowCount };
 }
 
-window.gsapSystemEntry = function() {
-    let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
-    const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
-    const grid = createWipeGrid(actualTheme, '');
-    if (grid) {
-        gsap.set('.theme-glitch-box', { scale:1, opacity:1, color:'transparent', borderColor:'transparent' });
-        gsap.set('#theme-sys-text', { opacity:0 });
-        gsap.to('.theme-glitch-box', { scale:0.2, opacity:0, duration:0.15, stagger:{ amount:0.3, grid:[grid.rowCount,grid.colCount], from:'center' }, ease:'expo.out', onComplete: () => grid.overlay.remove() });
-    }
-}
-
-window.gsapSystemExit = function(url, message) {
-    let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
-    const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
-    let path = new URL(url).pathname || '/';
-    const grid = createWipeGrid(actualTheme, message || `SYS.NAVIGATE('${path}')`);
-    if (!grid) { window.location.href = url; return; }
-
-    gsap.timeline()
-        .to('.theme-glitch-box', { scale:1, opacity:1, duration:0.05, stagger:{ amount:0.3, grid:[grid.rowCount,grid.colCount], from:'random' }, ease:'power0.none' })
-        .to('#theme-sys-text', { opacity:1, duration:0.1 }, '-=0.15')
-        .call(() => { sessionStorage.setItem('sysTransition', 'system'); window.location.href = url; });
-}
-
 window.toggleTheme = function () {
-    const saved = localStorage.getItem(THEME_KEY) || 'system';
-    let next;
-    if (saved === 'system') next = 'light';
-    else if (saved === 'light') next = 'dark';
-    else next = 'system';
+    const savedTheme = localStorage.getItem(THEME_KEY) || 'system';
+    
+    let nextTheme;
+    if (savedTheme === 'system') {
+        nextTheme = 'light';
+    } else if (savedTheme === 'light') {
+        nextTheme = 'dark';
+    } else {
+        nextTheme = 'system';
+    }
+    
+    // Evaluate actual theme colors to use for the screen wipe
+    const actualNextTheme = nextTheme === 'system' ? getSystemTheme() : nextTheme;
 
-    const mappedColorName = next === 'system' ? 'System Theme' : next === 'light' ? 'Light Theme' : 'Dark Theme';
+    const grid = createWipeGrid(actualNextTheme, `SYS.THEME_SWAP('${nextTheme.toUpperCase()}')`);
+    if (!grid) return;
 
-    const performTransition = () => {
-        localStorage.setItem(THEME_KEY, next);
-        updateIcon();
+    const tl = gsap.timeline();
 
-        if (window.triggerPageWipe) {
-            window.triggerPageWipe(window.location.href, `Mengganti warna tema UI ke ${mappedColorName}...`);
-        } else {
-            window.location.reload();
-        }
-    };
-
-    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-    if (csrfMeta) {
-        fetch('/dashboard/settings/theme', {
+    // Fire AJAX request to sync with backend (if user is authenticated)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (csrfToken) {
+        fetch('/api/theme', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfMeta.content,
-                'Accept': 'application/json'
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json' // to prevent redirects if not authed
             },
-            body: JSON.stringify({ theme: next })
-        })
-        .then(performTransition)
-        .catch(err => {
-            console.warn('Sync failed:', err);
-            performTransition();
-        });
-    } else {
-        performTransition();
+            body: JSON.stringify({ theme: nextTheme })
+        }).catch(err => console.error('Theme sync failed:', err));
     }
+
+    tl.to('.theme-glitch-box', {
+        scale: 1, opacity: 1, duration: 0.05,
+        stagger: { amount: 0.4, grid: [grid.rowCount, grid.colCount], from: "random" },
+        ease: "power0.none"
+    })
+        .to('#theme-sys-text', { opacity: 1, duration: 0.1 }, "-=0.2")
+        .call(() => {
+            localStorage.setItem(THEME_KEY, nextTheme);
+            if (nextTheme === 'system') {
+                applyTheme(getSystemTheme());
+                // We must update the icon separately here because the actual theme applied is dark/light
+                updateIcon('system');
+            } else {
+                applyTheme(nextTheme);
+            }
+        })
+        .to('#theme-sys-text', { opacity: 0, duration: 0.1 }, "+=0.3")
+        .to('.theme-glitch-box', { color: 'transparent', borderColor: 'transparent', duration: 0.1 })
+        .to('.theme-glitch-box', {
+            scale: 0.2, opacity: 0, duration: 0.15,
+            stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "center" },
+            ease: "expo.out"
+        }, "+=0.1")
+        .call(() => grid.overlay.remove());
 };
 
-// Disabling automatic system theme listener to honor user request for consistent default light theme.
-// window.matchMedia('(prefers-color-scheme: dark)')
-//     .addEventListener('change', e => {
-//         if (!localStorage.getItem(THEME_KEY)) {
-//             applyTheme(e.matches ? 'dark' : 'light');
-//         }
-//     });
+function triggerPageWipe(url) {
+    let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
+    const path = new URL(url).pathname || '/';
+    const grid = createWipeGrid(actualTheme, `SYS.NAVIGATE('${path}')`);
+
+    if (!grid) {
+        window.location.href = url;
+        return;
+    }
+
+    const tl = gsap.timeline();
+    tl.to('.theme-glitch-box', {
+        scale: 1, opacity: 1, duration: 0.05,
+        stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "random" },
+        ease: "power0.none"
+    })
+        .to('#theme-sys-text', { opacity: 1, duration: 0.1 }, "-=0.15")
+        .call(() => {
+            sessionStorage.setItem('sysTransition', 'true');
+            window.location.href = url;
+        });
+}
+
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link || !link.href) return; // Ignore non-links or links without href
+
+    // Must be same origin
+    const url = new URL(link.href, window.location.origin);
+    if (url.origin !== window.location.origin) return;
+
+    // Ignore anchors targeting the same page
+    if (url.pathname === window.location.pathname && url.hash) return;
+
+    // Ignore target blank
+    if (link.target === '_blank') return;
+
+    // Ignore javascript: links or specific protocols
+    if (link.href.startsWith('javascript:') || link.href.includes('mailto:') || link.href.includes('tel:')) return;
+
+    // Ignore download links, HTMX, or explicit no-transition elements
+    if (link.hasAttribute('download') || link.hasAttribute('hx-get') || link.hasAttribute('hx-post') || link.closest('[hx-boost="true"]') || link.classList.contains('no-transition')) return;
+
+    e.preventDefault();
+    triggerPageWipe(link.href);
+});
+
+window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', e => {
+        if (!localStorage.getItem(THEME_KEY)) {
+            applyTheme(e.matches ? 'dark' : 'light');
+        }
+    });
 
 async function loadLanguage(locale) {
     const res = await fetch(`/api/lang/${locale}`);
@@ -378,25 +418,81 @@ window.applyI18n = function (root) {
     });
 };
 
+const langToggle = document.getElementById('langToggle');
+
 let currentLocale = document.documentElement.lang || 'id';
 
+langToggle?.addEventListener('click', async () => {
+    const next = currentLocale === 'id' ? 'en' : 'id';
+
+    let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+    const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
+    const grid = createWipeGrid(actualTheme, `SYS.LANG_SWAP('${next.toUpperCase()}')`);
+
+    if (!grid) return; // Prevent spamming
+
+    const tl = gsap.timeline();
+
+    // Wipe IN
+    tl.to('.theme-glitch-box', {
+        scale: 1, opacity: 1, duration: 0.05,
+        stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "random" },
+        ease: "power0.none"
+    })
+        .to('#theme-sys-text', { opacity: 1, duration: 0.1 }, "-=0.15")
+
+        // Execute logic while screen is covered
+        .call(async () => {
+            tl.pause(); // Pause exactly when screen is covered
+            await loadLanguage(next);
+            localStorage.setItem('locale', next);
+            document.cookie = `locale=${next};path=/;max-age=31536000`;
+            
+            // Fire AJAX request to sync with backend
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            if (csrfToken) {
+                fetch('/api/locale', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ locale: next })
+                }).catch(err => console.error('Locale sync failed:', err));
+            }
+
+            currentLocale = next;
+            updateLangIcon(next);
+
+            // Resume timeline AFTER language is loaded
+            tl.play();
+        })
+
+         // Wipe OUT (after resume)
+        tl.to('#theme-sys-text', { opacity: 0, duration: 0.1 }, "+=0.3")
+            .to('.theme-glitch-box', { color: 'transparent', borderColor: 'transparent', duration: 0.1 })
+            .to('.theme-glitch-box', {
+                scale: 0.2, opacity: 0, duration: 0.15,
+                stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "center" },
+                ease: "expo.out"
+            }, "+=0.1")
+
+            // Cleanup
+                .call(() => grid.overlay.remove());
+        });
+
 function updateLangIcon(currentLocale) {
-    ['langFlag', 'langFlagMobile'].forEach(id => {
-        const flag = document.getElementById(id);
-        if (!flag) return;
+    const flag = document.getElementById('langFlag');
+    if (!flag) return;
 
-        flag.classList.remove('fi-id', 'fi-us');
+    flag.classList.remove('fi-id', 'fi-us');
 
-        if (currentLocale === 'id') {
-            flag.classList.add('fi-id');
-        } else {
-            flag.classList.add('fi-us');
-        }
-        
-        if (flag.animate) {
-           flag.animate([{ transform: 'scale(0.8)' }, { transform: 'scale(1)' }], { duration: 200 });
-        }
-    });
+    if (currentLocale === 'id') {
+        flag.classList.add('fi-id');
+    } else {
+        flag.classList.add('fi-us');
+    }
 }
 
 window.tagInput = function (suggestions) {
@@ -560,6 +656,36 @@ window.imageUpload = function (config = {}) {
 Alpine.start()
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // ---------------------------------
+    // TRANSITION OUT ON PAGE LOAD
+    // ---------------------------------
+    if (sessionStorage.getItem('sysTransition')) {
+        sessionStorage.removeItem('sysTransition');
+
+        const styleRemover = document.getElementById('sys-trans-style');
+        if (styleRemover) styleRemover.remove();
+        document.documentElement.classList.remove('hide-for-transition');
+        document.body.style.visibility = 'visible';
+
+        let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
+        const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
+        const grid = createWipeGrid(actualTheme, '');
+
+        if (grid) {
+            // Pre-fill the screen
+            gsap.set('.theme-glitch-box', { scale: 1, opacity: 1 });
+            gsap.set('.theme-glitch-box', { color: 'transparent', borderColor: 'transparent' });
+            gsap.set('#theme-sys-text', { opacity: 0 });
+
+            // Stagger out 
+            gsap.to('.theme-glitch-box', {
+                scale: 0.2, opacity: 0, duration: 0.15,
+                stagger: { amount: 0.3, grid: [grid.rowCount, grid.colCount], from: "center" },
+                ease: "expo.out",
+                onComplete: () => grid.overlay.remove()
+            });
+        }
+    }
 
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('nav a[href^="#"]');
@@ -589,14 +715,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     currentLocale = saved;
     await loadLanguage(saved);
     updateLangIcon(saved);
-    updateIcon();
     try { heroAnimation(); } catch (e) { console.warn(e) }
     try { heroRibbonAnimation(); } catch (e) { console.warn(e) }
     try { heroFloatingCards(); } catch (e) { console.warn(e) }
     try { heroIconParallax(); } catch (e) { console.warn(e) }
-
+    try { navbarFloatAnimation(); } catch (e) { console.warn(e) }
+    try { navbarScrollEffect(); } catch (e) { console.warn(e) }
     try { aboutAnimation(); } catch (e) { console.warn(e) }
-
+    try { projectAnimation(); } catch (e) { console.warn(e) }
     try { projectModalAnimation(); } catch (e) { console.warn(e) }
     try { initmodal(); } catch (e) { console.warn(e) }
     try { initContactAnimations(); } catch (e) { console.warn(e) }
