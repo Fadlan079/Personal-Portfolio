@@ -21,7 +21,7 @@
 <div class="md:hidden h-20 w-full"></div>
 
 <div id="sidebarOverlay" onclick="closeSidebar()"
-    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[70] opacity-0 pointer-events-none transition-opacity duration-300 md:hidden">
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 opacity-0 pointer-events-none transition-opacity duration-300 md:hidden">
 </div>
 
 <aside id="dashboardSidebar"
@@ -82,8 +82,6 @@
             </div>
         </div>
     </nav>
-
-
 </aside>
 
 <script>

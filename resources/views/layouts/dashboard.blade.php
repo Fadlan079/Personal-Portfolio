@@ -89,7 +89,7 @@
             opacity: 0;
         }
         body.trans-diary.page-loaded #page-content-wrapper {
-            transform: rotateY(0deg);
+            transform: none;
             opacity: 1;
             transition: transform 0.6s ease-out, opacity 0.6s ease-out;
         }
@@ -108,7 +108,7 @@
             transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease-out;
         }
         body.trans-clean.page-loaded #page-content-wrapper {
-            opacity: 1; transform: scale(1); filter: blur(0); pointer-events: auto;
+            opacity: 1; transform: none; filter: none; pointer-events: auto;
         }
         body.trans-clean.page-exiting #page-content-wrapper {
             opacity: 0; transform: scale(0.98); filter: blur(4px);
@@ -119,7 +119,7 @@
             transition: opacity 0.2s steps(3, end), transform 0.2s steps(2, end), filter 0.2s;
         }
         body.trans-system.page-loaded #page-content-wrapper {
-            opacity: 1; transform: skewX(0); filter: contrast(1) brightness(1); pointer-events: auto;
+            opacity: 1; transform: none; filter: none; pointer-events: auto;
         }
         body.trans-system.page-exiting #page-content-wrapper {
             opacity: 0; transform: skewX(5deg); filter: contrast(1.5) brightness(0.8);
@@ -241,7 +241,7 @@
 
     <div id="page-content-wrapper" class="w-full">
         <main class="relative z-10 flex-1 md:ml-55">
-            <div class="hidden md:block absolute -top-6 right-1 lg:right-8 z-50 group w-24">
+            <div class="hidden md:block absolute -top-6 right-1 lg:right-8 z-50 group w-20">
 
                 <form method="POST" action="/logout"
                     class="relative z-20 flex flex-col items-center w-full pt-12 pb-4

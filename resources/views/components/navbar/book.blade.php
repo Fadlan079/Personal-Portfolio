@@ -153,7 +153,7 @@
 
         <div class="mt-8 pt-8 border-t border-gray-300/70">
             <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 px-2" data-i18n="nav.authenticated">Autentikasi</p>
-            @if (!session('is_login'))
+            @if (!auth()->check())
                 <a href="/login" class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300/70 bg-white text-neutral-900 rounded-xl font-bold text-sm hover:bg-neutral-50 transition-colors shadow-sm"
                 data-i18n="nav.login">
                     Masuk

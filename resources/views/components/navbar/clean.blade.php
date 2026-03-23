@@ -139,7 +139,7 @@
         <div class="mt-8 pt-6 border-t border-border/50 space-y-4">
             <p class="text-[10px] font-mono uppercase tracking-widest text-muted px-2">Authentication</p>
 
-            @if (!session('is_login'))
+            @if (!auth()->check())
                 <a href="/login" class="w-full flex items-center justify-center gap-2 px-4 py-3 border border-primary text-primary font-mono text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-bg transition-colors">
                     <i class="fa-solid fa-terminal"></i> SYS.LOGIN
                 </a>

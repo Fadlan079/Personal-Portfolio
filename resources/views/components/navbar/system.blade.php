@@ -131,7 +131,7 @@
             <p class="text-[10px] font-mono uppercase tracking-widest text-muted px-2"
             data-i18n="nav.authenticated">Autentikasi</p>
 
-            @if (!session('is_login'))
+            @if (!auth()->check())
                 <a href="/login" class="w-full flex items-center justify-center gap-2 px-4 py-3 border border-primary text-primary font-mono text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-bg transition-colors">
                     <i class="fa-solid fa-terminal"></i>
                     <span data-i18n="nav.login">LOGIN</span>

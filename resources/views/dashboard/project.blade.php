@@ -6,7 +6,7 @@
 
     @if ($errors->any())
         <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.500ms
-            class="fixed top-24 left-1/2 -translate-x-1/2 z-100 w-[90%] max-w-lg border-l-2 border-red-500 bg-red-500/10 p-4 shadow-[0_0_20px_rgba(239,68,68,0.2)] backdrop-blur-md">
+            class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-lg border-l-2 border-red-500 bg-red-500/10 p-4 shadow-[0_0_20px_rgba(239,68,68,0.2)] backdrop-blur-md">
             <div class="flex justify-between items-start">
                 <div class="flex gap-3 text-red-500">
                     <i class="fa-solid fa-triangle-exclamation mt-1 animate-pulse"></i>
@@ -82,7 +82,7 @@
                         <button
                             class="open-create-modal px-3 py-1.5 bg-warning border-2 border-yellow-600 rounded-lg text-xs font-bold uppercase tracking-widest text-yellow-900 hover:-translate-y-1 hover:rotate-2 transition-all shadow-[4px_4px_0px_var(--color-border)] group flex items-center gap-2">
                             <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform text-yellow-700"></i>
-                            New Project
+                            Tambah Proyek
                         </button>
                     </div>
                 </div>
@@ -177,15 +177,15 @@
                 <div class="flex items-center justify-between border-b-2 border-dashed border-border/50 pb-4">
                     <h3 class="text-xs font-bold uppercase tracking-widest text-text flex items-center gap-2 cursor-pointer"
                         @click="expanded = !expanded; localStorage.setItem('project_matrix_expanded', expanded)">
-                        <i class="fa-solid fa-chart-pie text-primary"></i> Data_Visualization_Matrix
+                        <i class="fa-solid fa-chart-pie text-primary"></i> Statistik Proyek
                     </h3>
                     <div class="flex items-center gap-4">
                         <span x-show="expanded"
-                            class="text-[10px] font-bold text-green-600 hidden sm:inline-block italic font-serif">Generating Live Report...</span>
+                            class="text-[10px] font-bold text-green-600 hidden sm:inline-block italic font-serif">Memuat data terbaru...</span>
                         <button @click="expanded = !expanded; localStorage.setItem('project_matrix_expanded', expanded)"
                             type="button"
                             class="text-xs font-bold text-muted hover:text-primary transition-colors focus:outline-none">
-                            <span x-text="expanded ? '[_HIDE_]' : '[_SHOW_]'"></span>
+                            <span x-text="expanded ? 'Sembunyikan' : 'Tampilkan'"></span>
                         </button>
                     </div>
                 </div>
@@ -196,28 +196,28 @@
                     class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
 
                     <div class="space-y-4">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-primary pl-3">Node Types Distribution</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-primary pl-3">Jenis Proyek</p>
                         <div class="relative h-48 w-full flex justify-center bg-container/30 rounded-lg p-2 border border-border/50">
                             <canvas id="typeChart"></canvas>
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-green-500 pl-3">Node Status Metrics</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-green-500 pl-3">Status Proyek</p>
                         <div class="relative h-48 w-full bg-container/30 rounded-lg p-2 border border-border/50">
                             <canvas id="statusChart"></canvas>
                         </div>
                     </div>
 
                     <div class="lg:col-span-2 space-y-4">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-sky-400 pl-3">Productivity Timeline (Last 6 Months)</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-sky-400 pl-3">Aktivitas Proyek (6 Bulan Terakhir)</p>
                         <div class="relative h-64 w-full bg-container/30 rounded-lg p-4 border border-border/50">
                             <canvas id="timelineChart"></canvas>
                         </div>
                     </div>
 
                     <div class="lg:col-span-2 space-y-4">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-amber-400 pl-3">Team Allocation (Solo vs Team)</p>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-amber-400 pl-3">Pembagian Proyek (Individu vs Tim)</p>
                         <div class="relative h-48 w-full flex justify-center bg-container/30 rounded-lg p-2 border border-border/50">
                             <canvas id="teamChart"></canvas>
                         </div>
@@ -286,10 +286,8 @@
                 </div>
             </div>
 
-            </div>
-
             <div id="projects-container">
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 xl:gap-8">
 
                     @forelse ($projects as $index => $project)
                         @php
@@ -354,7 +352,6 @@
                                     <div class="px-1 pb-1 flex flex-col flex-grow">
                                         <div class="flex justify-between items-start mb-1">
                                             <span class="text-[9px] font-bold text-muted uppercase tracking-widest">{{ $project->type }}</span>
-                                            <span class="text-[9px] px-2 py-0.5 border border-border text-muted uppercase">{{ $project->visibility }}</span>
                                         </div>
 
                                         <h3 class="text-xl font-bold text-text leading-tight mb-3 group-hover:text-primary transition-colors line-clamp-1">
@@ -365,18 +362,13 @@
                                             {{ $project->desc }}
                                         </p>
 
-                                        <div class="pt-3 border-t border-dashed border-border/50 flex justify-between items-center mt-auto">
-                                            <div class="flex gap-1 flex-wrap">
-                                                @foreach (collect($project->tech)->take(3) as $tech)
-                                                    <span class="text-[8px] font-bold uppercase tracking-tighter text-muted border border-border px-1.5 py-0.5 bg-container/50">{{ $tech }}</span>
-                                                @endforeach
-                                                @if(count((array)$project->tech) > 3)
-                                                    <span class="text-[8px] font-bold text-muted">+{{ count((array)$project->tech) - 3 }}</span>
-                                                @endif
-                                            </div>
+                                        <div class="pt-3 border-t border-border/50 flex justify-between items-center mt-auto">
+                                            <span class="text-[10px] font-medium text-muted italic">
+                                                Diarsipkan: {{ $project->created_at->format('d F Y') }}
+                                            </span>
 
                                             <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">
-                                                <i class="fa-solid fa-arrow-right-long text-xs shadow-none"></i>
+                                                <i class="fa-solid fa-arrow-right-long text-xs transform group-hover:translate-x-0.5 transition-transform"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -389,33 +381,34 @@
                             <div class="relative z-20 space-y-3">
                                 <i class="fa-solid fa-ghost text-5xl text-muted/30 mb-2"></i>
                                 <h3 class="text-3xl font-medium text-black font-handwriting tracking-wide">Arsip Kosong</h3>
-                                <p class="text-sm text-muted max-w-sm mx-auto italic font-serif opacity-90">System directory is empty. Initialize a new project node to begin data tracking.</p>
+                                <p class="text-sm text-muted max-w-sm mx-auto italic font-serif opacity-90">Belum ada proyek yang ditambahkan. Mulai dengan membuat proyek baru.</p>
                                 <button class="open-create-modal mt-6 px-8 py-3 bg-warning border-2 border-yellow-600 rounded-lg text-xs font-bold uppercase tracking-widest text-yellow-900 hover:-translate-y-1 transition-all shadow-[4px_4px_0px_var(--color-border)]">
-                                    [ INIT_FIRST_NODE ]
+                                    Tambah Proyek
                                 </button>
                             </div>
                         </div>
                     @endforelse
+                </div>
 
                 @if ($projects instanceof \Illuminate\Pagination\LengthAwarePaginator && $projects->hasPages())
-                    <div class="flex justify-center pt-16">
-                        <nav class="flex items-center gap-4 font-mono">
+                    <div class="flex justify-center pt-12 md:pt-16 pb-8">
+                        <nav class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-4 font-mono w-full sm:w-auto px-4">
                             @if ($projects->onFirstPage())
-                                <span class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif"><i class="fa-solid fa-chevron-left"></i></span>
+                                <span class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif bg-container"><i class="fa-solid fa-chevron-left text-[10px] sm:text-xs"></i></span>
                             @else
-                                <a href="{{ $projects->previousPageUrl() }}" class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm"><i class="fa-solid fa-chevron-left"></i></a>
+                                <a href="{{ $projects->previousPageUrl() }}" class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm bg-container"><i class="fa-solid fa-chevron-left text-[10px] sm:text-xs pointer-events-none"></i></a>
                             @endif
 
-                            <div class="px-6 py-2 bg-warning border-2 border-yellow-500 rounded-full shadow-[2px_2px_0px_var(--color-border)] rotate-1">
-                                <span class="text-xs font-black text-yellow-900 uppercase tracking-widest">
-                                    PG_{{ sprintf('%02d', $projects->currentPage()) }} / {{ sprintf('%02d', $projects->lastPage()) }}
+                            <div class="px-4 py-1.5 sm:px-6 sm:py-2 bg-warning border-2 border-yellow-500 rounded-full shadow-[2px_2px_0px_var(--color-border)] rotate-1 shrink-0">
+                                <span class="text-[10px] sm:text-xs font-black text-yellow-900 uppercase tracking-widest whitespace-nowrap">
+                                    {{ sprintf('%02d', $projects->currentPage()) }} <span class="opacity-50 mx-1">/</span> {{ sprintf('%02d', $projects->lastPage()) }}
                                 </span>
                             </div>
 
                             @if ($projects->hasMorePages())
-                                <a href="{{ $projects->nextPageUrl() }}" class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm"><i class="fa-solid fa-chevron-right"></i></a>
+                                <a href="{{ $projects->nextPageUrl() }}" class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm bg-container"><i class="fa-solid fa-chevron-right text-[10px] sm:text-xs pointer-events-none"></i></a>
                             @else
-                                <span class="w-10 h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif"><i class="fa-solid fa-chevron-right"></i></span>
+                                <span class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif bg-container"><i class="fa-solid fa-chevron-right text-[10px] sm:text-xs"></i></span>
                             @endif
                         </nav>
                     </div>
@@ -424,7 +417,7 @@
             </div>
 
             <div id="bulkBar"
-                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-90 bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
+                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
 
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 backdrop-blur-sm border border-black/5 rotate-1"></div>
 
@@ -433,22 +426,22 @@
                         <i class="fa-solid fa-check-double text-yellow-700"></i>
                     </div>
                     <div class="flex flex-col">
-                        <span id="selectedCount" class="text-xs font-black uppercase tracking-widest text-yellow-900">0 SELECTED</span>
-                        <span class="text-[9px] font-bold text-yellow-900/40 uppercase tracking-tighter">Bulk Operations</span>
+                        <span id="selectedCount" class="text-xs font-black uppercase tracking-widest text-yellow-900">0 TERPILIH</span>
+                        <span class="text-[9px] font-bold text-yellow-900/40 uppercase tracking-tighter">Operasi Massal</span>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-4 w-full sm:w-auto">
                     <button type="button" onclick="bulkAction('publish')"
                         class="flex-1 sm:flex-none px-6 py-2.5 bg-emerald-100 border-2 border-emerald-500 rounded text-[10px] font-black uppercase tracking-widest text-emerald-900 hover:-translate-y-1 hover:-rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)]">
-                        PUBLISH_ALL
+                        PUBLISH SEMUA
                     </button>
                     <button type="button" onclick="bulkAction('delete')"
                         class="flex-1 sm:flex-none px-6 py-2.5 bg-rose-100 border-2 border-rose-500 rounded text-[10px] font-black uppercase tracking-widest text-rose-900 hover:-translate-y-1 hover:rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] group">
-                        <i class="fa-solid fa-trash-can mr-2"></i> DELETE_ALL
+                        <i class="fa-solid fa-trash-can mr-2"></i> HAPUS SEMUA
                     </button>
                     <button type="button" id="cancelSelect" class="text-[9px] font-bold text-muted hover:text-text uppercase tracking-widest underline underline-offset-4 decoration-dashed ml-2">
-                        Cancel
+                        Batal
                     </button>
                 </div>
                 <div class="absolute bottom-0 right-0 w-4 h-4 bg-yellow-200" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
@@ -852,8 +845,18 @@
                         const target = new URL(href, window.location.origin);
                         if (target.origin !== window.location.origin) return;
                         e.preventDefault();
+
+                        // Add visual loading feedback to the button
+                        const icon = anchor.querySelector('i');
+                        if(icon && !icon.classList.contains('fa-spinner')) {
+                            anchor.dataset.originalIcon = icon.className;
+                            icon.className = 'fa-solid fa-spinner fa-spin text-primary text-[10px] sm:text-xs';
+                            anchor.classList.add('pointer-events-none', 'opacity-70');
+                        }
+
                         ajaxNavigate(target);
-                    } catch {
+                    } catch (err) {
+                        console.error('[Pagination Error]', err);
                     }
                 };
 
@@ -999,7 +1002,7 @@
                 const selected = document.querySelectorAll('.bulk-checkbox:checked').length;
                 if (selected > 0) {
                     bulkBar.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
-                    selectedCountText.innerText = selected + ' SELECTED';
+                    selectedCountText.innerText = selected + ' TERPILIH';
                 } else {
                     bulkBar.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
                 }

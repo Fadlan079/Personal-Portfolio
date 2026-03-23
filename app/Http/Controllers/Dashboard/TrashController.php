@@ -18,7 +18,8 @@ class TrashController extends Controller
     public function index(Request $request)
     {
         $tab = $request->get('tab', 'all'); // 'all', 'projects', 'skills'
-        $sort = $request->get('sort', 'desc');
+        $sort = $request->get('sort', 'latest');
+        $direction = $sort === 'oldest' ? 'asc' : 'desc';
         $search = $request->get('search');
         $multipleSelect = $request->get('multiple_select', 0);
 
@@ -34,13 +35,13 @@ class TrashController extends Controller
             $months = $projectsQuery->clone()
                 ->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")
                 ->distinct()
-                ->orderBy('month', $sort)
+                ->orderBy('month', $direction)
                 ->pluck('month');
 
             foreach ($months as $month) {
                 $query = Project::onlyTrashed()
                     ->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])
-                    ->orderBy('deleted_at', $sort);
+                    ->orderBy('deleted_at', $direction);
 
                 if ($search) {
                     $query->where('title', 'like', "%{$search}%");
@@ -69,13 +70,13 @@ class TrashController extends Controller
             $months = $skillsQuery->clone()
                 ->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")
                 ->distinct()
-                ->orderBy('month', $sort)
+                ->orderBy('month', $direction)
                 ->pluck('month');
 
             foreach ($months as $month) {
                 $query = Skill::onlyTrashed()
                     ->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])
-                    ->orderBy('deleted_at', $sort);
+                    ->orderBy('deleted_at', $direction);
 
                 if ($search) {
                     $query->where('name', 'like', "%{$search}%");

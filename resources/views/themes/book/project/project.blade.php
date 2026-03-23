@@ -189,7 +189,9 @@
                 </div>
             </div>
 
-            @include('themes.book.project.partials.project-list')
+            <div id="projects-grid">
+                @include('themes.book.project.partials.project-list')
+            </div>
 
             <div id="projects-pagination">
                 @include('themes.book.project.partials.project-pagination')

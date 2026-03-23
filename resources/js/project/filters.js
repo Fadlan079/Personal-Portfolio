@@ -105,11 +105,14 @@
     // ── Sort dropdown ──────────────────────────────────────────
     if (sortToggle && sortMenu) {
         // Set initial label
+        const activeOption = document.querySelector(`.sort-option[data-sort="${currentSort}"]`);
+        if (activeOption && sortLabel) {
+            sortLabel.textContent = activeOption.textContent.trim();
+        }
+        
         if (currentSort === 'oldest') {
-            if (sortLabel) sortLabel.textContent = 'SORT: OLDEST';
             sortToggle.classList.add('border-primary', 'text-primary');
         } else {
-            if (sortLabel) sortLabel.textContent = 'SORT: NEWEST';
             sortToggle.classList.remove('border-primary', 'text-primary');
         }
 
@@ -132,11 +135,11 @@
                 e.stopPropagation();
                 currentSort = opt.dataset.sort;
                 
+                if (sortLabel) sortLabel.textContent = opt.textContent.trim();
+                
                 if (currentSort === 'oldest') {
-                    if (sortLabel) sortLabel.textContent = 'SORT: OLDEST';
                     sortToggle.classList.add('border-primary', 'text-primary');
                 } else {
-                    if (sortLabel) sortLabel.textContent = 'SORT: NEWEST';
                     sortToggle.classList.remove('border-primary', 'text-primary');
                 }
 
@@ -187,7 +190,7 @@
 
         // 4. Reset UI: Sort Dropdown
         if (sortLabel && sortToggle) {
-            sortLabel.textContent = 'Newest'; // Sesuaikan teks default sort
+            sortLabel.textContent = 'Terbaru'; // Sesuaikan teks default sort
             sortToggle.classList.remove('border-primary', 'text-primary');
         }
 

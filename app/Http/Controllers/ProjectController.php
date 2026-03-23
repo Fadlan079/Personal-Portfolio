@@ -21,8 +21,9 @@ class ProjectController extends Controller
             $query->filterType($request->type);
         }
 
-        $sort = $request->get('sort', 'desc');
-        $query->orderBy('created_at', $sort);
+        $sort = $request->get('sort', 'latest');
+        $direction = $sort === 'oldest' ? 'asc' : 'desc';
+        $query->orderBy('created_at', $direction);
 
         $multipleSelect = $request->get('multiple_select', 0);
 
@@ -298,7 +299,8 @@ class ProjectController extends Controller
 
     public function trash(Request $request)
     {
-        $sort = $request->get('sort', 'desc');
+        $sort = $request->get('sort', 'latest');
+        $direction = $sort === 'oldest' ? 'asc' : 'desc';
         $search = $request->get('search');
 
         $monthsQuery = Project::onlyTrashed();
@@ -311,7 +313,7 @@ class ProjectController extends Controller
         $months = $monthsQuery
             ->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")
             ->distinct()
-            ->orderBy('month', $sort)
+            ->orderBy('month', $direction)
             ->pluck('month');
 
         $groupedProjects = [];
@@ -319,7 +321,7 @@ class ProjectController extends Controller
         foreach ($months as $month) {
             $query = Project::onlyTrashed()
                 ->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])
-                ->orderBy('deleted_at', $sort);
+                ->orderBy('deleted_at', $direction);
 
             if ($search) {
                 $query->where('title', 'like', "%{$search}%");

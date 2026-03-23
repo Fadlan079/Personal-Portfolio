@@ -86,7 +86,7 @@
 
     <div class="hidden md:block fixed top-7.5 right-4 z-50">
         <div class="flex justify-center">
-            @if (!session('is_login'))
+            @if (!auth()->check())
                 <a href="/login"
                     class="cta-btn relative overflow-hidden px-4 py-2 border-2 border-border text-text font-mono text-xs font-bold uppercase tracking-widest"
                     style="--cta-bubble-color: var(--color-primary);">
