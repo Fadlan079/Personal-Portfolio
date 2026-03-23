@@ -40,7 +40,7 @@
 
     <div class="p-6 mt-auto">
         <div class="p-4 rounded-3xl bg-white/5 border border-white/5 flex items-center gap-3 mb-4">
-             <img src="{{ auth()->user()?->profile_photo_url ?? asset('profile.jpg') }}" class="w-10 h-10 rounded-xl object-cover">
+             <img src="{{ auth()->user()?->profile_photo_url ?? '' }}" onerror="this.style.display='none'" class="w-10 h-10 rounded-xl object-cover">
              <div class="overflow-hidden">
                  <p class="text-sm font-bold text-white truncate">{{ auth()->user()->name }}</p>
                  <p class="text-[10px] text-white/40 font-medium">Administrator</p>

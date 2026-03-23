@@ -243,16 +243,17 @@
         <main class="relative z-10 flex-1 md:ml-55">
             <div class="hidden md:block absolute -top-6 right-1 lg:right-8 z-50 group w-24">
 
-                <a href="{{ route('logout') }}"
+                <form method="POST" action="/logout"
                     class="relative z-20 flex flex-col items-center w-full pt-12 pb-4
                     bg-[#E7F2FF] border border-t-0 border-[#BDE0FE] text-blue-900
                     shadow-[0_4px_8px_rgba(0,0,0,0.08)] rounded-b-md
                     origin-top rotate-[3deg] group-hover:rotate-0
                     transition-all duration-300 ease-out">
+                    @csrf
 
-                    <span class="text-[10px] font-bold uppercase tracking-widest">Keluar</span>
+                    <button class="text-[10px] font-bold uppercase tracking-widest">Keluar</button>
                     <div class="w-2 h-2 rounded-full bg-blue-200 mt-2 border border-blue-300/50"></div>
-                </a>
+                </form>
 
                 <a href="/" target="_blank" rel="noopener noreferrer"
                     class="absolute top-0 left-0 z-10 flex flex-col items-center w-full pt-12 pb-4

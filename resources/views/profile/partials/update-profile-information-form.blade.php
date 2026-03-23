@@ -60,7 +60,7 @@
                     {{-- Image Box --}}
                     <div class="relative z-10 aspect-[4/5] bg-background border border-border/70 overflow-hidden flex items-center justify-center filter grayscale group-hover:grayscale-0 transition-all duration-500">
                         <img id="profile_preview"
-                            src="{{ $user->profile_photo ? Storage::disk('public')->url($user->profile_photo) : asset('profile.jpg') }}"
+                            src="{{ $user->profile_photo ? Storage::disk('public')->url($user->profile_photo) : '' }}"
                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                             alt="Profile Photo"
                             class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">

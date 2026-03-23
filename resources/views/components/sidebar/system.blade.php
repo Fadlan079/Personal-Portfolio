@@ -160,7 +160,7 @@
         {{-- Admin Identity Display --}}
         <div class="flex items-center gap-3 px-2 cursor-default">
             <div class="relative w-9 h-9 flex-shrink-0 flex items-center justify-center">
-                <img src="{{ auth()->user()?->profile_photo_url ?? asset('profile.jpg') }}" 
+                <img src="{{ auth()->user()?->profile_photo_url ?? '' }}" 
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                     alt="Photo Profile"
                     class="w-full h-full rounded bg-surface border border-border/50 object-cover">

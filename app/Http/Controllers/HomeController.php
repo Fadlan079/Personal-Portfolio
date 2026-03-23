@@ -14,7 +14,7 @@ class HomeController extends Controller
         if ($user && $user->profile_photo) {
             return asset('storage/' . $user->profile_photo);
         }
-        return asset('profile.jpg');
+        return '';
     }
 
     public function index()

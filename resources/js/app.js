@@ -3,7 +3,11 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 import htmx from 'htmx.org';
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 window.htmx = htmx;
+window.gsap = gsap;
+window.ScrollTrigger = ScrollTrigger;
+gsap.registerPlugin(ScrollTrigger);
 
 import { heroAnimation } from './animations/hero';
 import { heroRibbonAnimation } from './animations/hero';
@@ -17,7 +21,7 @@ import { projectModalAnimation } from "./animations/project-modal";
 import { initmodal } from "./animations/modal";
 import { initContactAnimations } from "./animations/contact";
 
-const THEME_KEY = 'theme';
+const THEME_KEY = 'ui_theme';
 const html = document.documentElement;
 
 window.showConfirm = function (message) {
@@ -169,26 +173,27 @@ function applyTheme(theme) {
 }
 
 function updateIcon(theme) {
-    const icon = document.getElementById('themeIcon');
-    if (!icon) return;
-
-    icon.classList.remove(
-        'fa-moon',
-        'fa-sun',
-        'fa-desktop'
-    );
+    const icons = [
+        document.getElementById('themeIcon'),
+        document.getElementById('colorIcon'),
+        document.getElementById('colorIconMobile')
+    ];
 
     const savedTheme = localStorage.getItem(THEME_KEY);
 
-    if (!savedTheme || savedTheme === 'system') {
-        icon.classList.add('fa-desktop');
-    } else if (savedTheme === 'dark') {
-        icon.classList.add('fa-moon');
-    } else {
-        icon.classList.add('fa-sun');
-    }
+    icons.forEach(icon => {
+        if (!icon) return;
 
-    icon.classList.add('fa-solid', 'text-text');
+        icon.classList.remove('fa-moon', 'fa-sun', 'fa-desktop');
+
+        if (!savedTheme || savedTheme === 'system') {
+            icon.classList.add('fa-desktop');
+        } else if (savedTheme === 'dark') {
+            icon.classList.add('fa-moon');
+        } else {
+            icon.classList.add('fa-sun');
+        }
+    });
 }
 
 function initTheme() {
@@ -277,13 +282,7 @@ window.toggleTheme = function () {
         nextTheme = 'system';
     }
     
-    // Evaluate actual theme colors to use for the screen wipe
-    const actualNextTheme = nextTheme === 'system' ? getSystemTheme() : nextTheme;
-
-    const grid = createWipeGrid(actualNextTheme, `SYS.THEME_SWAP('${nextTheme.toUpperCase()}')`);
-    if (!grid) return;
-
-    const tl = gsap.timeline();
+    const activeLayout = localStorage.getItem('ui_layout') || 'diary';
 
     // Fire AJAX request to sync with backend (if user is authenticated)
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -298,6 +297,31 @@ window.toggleTheme = function () {
             body: JSON.stringify({ theme: nextTheme })
         }).catch(err => console.error('Theme sync failed:', err));
     }
+
+    if (activeLayout !== 'system') {
+        localStorage.setItem(THEME_KEY, nextTheme);
+        
+        // Use native loader layout transitions
+        if (window.triggerPageWipe) {
+            window.triggerPageWipe(window.location.href, "Mengganti Mode Tampilan...");
+        } else {
+            if (nextTheme === 'system') {
+                applyTheme(getSystemTheme());
+                updateIcon('system');
+            } else {
+                applyTheme(nextTheme);
+            }
+        }
+        return;
+    }
+
+    // Evaluate actual theme colors to use for the screen wipe
+    const actualNextTheme = nextTheme === 'system' ? getSystemTheme() : nextTheme;
+
+    const grid = createWipeGrid(actualNextTheme, `SYS.THEME_SWAP('${nextTheme.toUpperCase()}')`);
+    if (!grid) return;
+
+    const tl = gsap.timeline();
 
     tl.to('.theme-glitch-box', {
         scale: 1, opacity: 1, duration: 0.05,
@@ -325,11 +349,12 @@ window.toggleTheme = function () {
         .call(() => grid.overlay.remove());
 };
 
-function triggerPageWipe(url) {
+window.gsapSystemExit = function (url, forceMessage = null) {
     let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
     const actualTheme = savedTheme === 'system' ? getSystemTheme() : savedTheme;
     const path = new URL(url).pathname || '/';
-    const grid = createWipeGrid(actualTheme, `SYS.NAVIGATE('${path}')`);
+    const msg = forceMessage || `SYS.NAVIGATE('${path}')`;
+    const grid = createWipeGrid(actualTheme, msg);
 
     if (!grid) {
         window.location.href = url;
@@ -348,30 +373,6 @@ function triggerPageWipe(url) {
             window.location.href = url;
         });
 }
-
-document.addEventListener('click', (e) => {
-    const link = e.target.closest('a');
-    if (!link || !link.href) return; // Ignore non-links or links without href
-
-    // Must be same origin
-    const url = new URL(link.href, window.location.origin);
-    if (url.origin !== window.location.origin) return;
-
-    // Ignore anchors targeting the same page
-    if (url.pathname === window.location.pathname && url.hash) return;
-
-    // Ignore target blank
-    if (link.target === '_blank') return;
-
-    // Ignore javascript: links or specific protocols
-    if (link.href.startsWith('javascript:') || link.href.includes('mailto:') || link.href.includes('tel:')) return;
-
-    // Ignore download links, HTMX, or explicit no-transition elements
-    if (link.hasAttribute('download') || link.hasAttribute('hx-get') || link.hasAttribute('hx-post') || link.closest('[hx-boost="true"]') || link.classList.contains('no-transition')) return;
-
-    e.preventDefault();
-    triggerPageWipe(link.href);
-});
 
 window.matchMedia('(prefers-color-scheme: dark)')
     .addEventListener('change', e => {
@@ -423,6 +424,9 @@ const langToggle = document.getElementById('langToggle');
 let currentLocale = document.documentElement.lang || 'id';
 
 langToggle?.addEventListener('click', async () => {
+    const activeLayout = localStorage.getItem('ui_layout') || 'diary';
+    if (activeLayout !== 'system') return;
+
     const next = currentLocale === 'id' ? 'en' : 'id';
 
     let savedTheme = localStorage.getItem(THEME_KEY) || getSystemTheme();
