@@ -102,13 +102,12 @@
         "stats": {
             "totalProjects": "Total Proyek",
             "totalCategories": "Total Kategori",
-            "activeCount": "Live / Aktif",
-            "inactiveCount": "Arsip",
+            "finished": "Selesai",
+            "inProgress": "Dalam Proses",
             "statusBreakdown": {
-                "Shipped": "Dikirim",
+                "Finished": "Selesai",
                 "In Progress": "Dalam Proses",
-                "Prototype": "Prototipe",
-                "Archived": "Diarsipkan"
+                "Prototype": "Prototipe"
             }
         },
         "search": {

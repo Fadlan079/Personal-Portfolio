@@ -68,8 +68,7 @@
                         <select name="status" class="w-full px-4 py-2 diary-input">
                             <option>Prototype</option>
                             <option>In Progress</option>
-                            <option>Shipped</option>
-                            <option>Archived</option>
+                            <option>Finished</option>
                         </select>
                     </div>
                 </div>

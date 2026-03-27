@@ -102,13 +102,12 @@
         "stats": {
             "totalProjects": "Total Projects",
             "totalCategories": "Total Categories",
-            "activeCount": "Live / Active",
-            "inactiveCount": "Archived",
+            "finished": "Finished",
+            "inProgress": "In Progress",
             "statusBreakdown": {
-                "Shipped": "Shipped",
+                "Finished": "Finished",
                 "In Progress": "In Progress",
-                "Prototype": "Prototype",
-                "Archived": "Archived"
+                "Prototype": "Prototype"
             }
         },
         "search": {

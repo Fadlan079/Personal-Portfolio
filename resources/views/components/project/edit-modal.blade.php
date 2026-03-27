@@ -69,10 +69,9 @@
                     <div>
                         <p class="font-diary-accent text-xl text-stone-500 mb-1">Status</p>
                         <select id="editStatus" name="status" class="w-full px-4 py-2 diary-input">
-                            <option value="Shipped">Shipped</option>
+                            <option value="Finished">Finished</option>
                             <option value="In Progress">In Progress</option>
                             <option value="Prototype">Prototype</option>
-                            <option value="Archived">Archived</option>
                         </select>
                     </div>
 

@@ -185,7 +185,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'type' => 'required|in:Website,Web App,Application,Design',
-            'status' => 'required|in:Shipped,In Progress,Prototype,Archived',
+            'status' => 'required|in:Finished,In Progress,Prototype',
             'desc' => 'required|string',
             'role' => 'nullable|string|max:255',
             'team_size' => 'nullable|integer',

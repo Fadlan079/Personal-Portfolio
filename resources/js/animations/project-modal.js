@@ -356,7 +356,7 @@ if (editModal) {
         // FILL DATA
         document.getElementById('editId').value = project.id;
         document.getElementById('editType').value = project.type || 'Website';
-        document.getElementById('editStatus').value = project.status || 'Shipped';
+        document.getElementById('editStatus').value = project.status || 'Finished';
 
         const visibilityEl = document.getElementById('editVisibility');
         visibilityEl.value = project.visibility || 'draft';

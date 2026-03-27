@@ -49,17 +49,17 @@
         <section class="relative z-20 max-w-7xl mx-auto px-6 py-10 space-y-12">
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
-                <div class="bg-amber-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-60 transition-all">
+                <div class="bg-sky-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
                     <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
 
                     <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
-                        <i class="fa-solid fa-layer-group text-blue-500"></i>
+                        <i class="fa-solid fa-layer-group text-sky-700"></i>
                         <span data-i18n="project.stats.totalProjects">Total Proyek</span>
                     </p>
                     <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['totalProjects'] }}</h3>
                 </div>
 
-                <div class="bg-emerald-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-2 font-serif hover:z-60 transition-all">
+                <div class="bg-indigo-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-2 font-serif hover:z-50 hover:scale-[1.02] transition-all">
                     <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
 
                     <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
@@ -69,61 +69,23 @@
                     <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['totalCategories'] }}</h3>
                 </div>
 
-                <div class="bg-sky-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate--1 font-serif hover:z-60 transition-all">
+                <div class="bg-green-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate--1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
                     <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
 
                     <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
-                        <i class="fa-solid fa-globe text-emerald-500"></i>
-                        <span data-i18n="project.stats.activeCount">Live / Aktif</span>
+                        <i class="fa-solid fa-circle-check text-green-700"></i>
+                        <span data-i18n="project.stats.finished">Selesai</span>
                     </p>
-                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['activeCount'] }}</h3>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['statusBreakdown']['Finished'] ?? 0 }}</h3>
                 </div>
-
-                <div class="bg-rose-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-60 transition-all">
+                <div class="bg-amber-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate--1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
                     <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
 
-                    <div class="flex justify-between items-start mb-4 relative z-10">
-                        <p class="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-2">
-                            <i class="fa-solid fa-box-archive text-amber-500"></i>
-                            <span data-i18n="project.stats.inactiveCount">Arsip</span>
-                        </p>
-                        @if ($summary['inactiveCount'] > 0)
-                            <i class="fa-solid fa-circle-info text-muted cursor-help"></i>
-                        @endif
-                    </div>
-                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['inactiveCount'] }}</h3>
-
-                    @if ($summary['inactiveCount'] > 0)
-                        <div class="absolute right-0 top-full -translate-y-5 w-48 bg-[#FEFCE8] border border-yellow-500/30 p-4 opacity-0 pointer-events-none group-hover/tooltip:opacity-100 transition-all duration-300 z-50 shadow-[4px_4px_10px_rgba(0,0,0,0.1)] text-xs space-y-3 -rotate-2 group-hover/tooltip:rotate-0 origin-bottom-right">
-
-                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-white/60 backdrop-blur-[1px] border border-black/5 rotate-1"></div>
-
-                            <p class="font-black uppercase tracking-tighter text-yellow-900/40 text-[9px] border-b border-dashed border-yellow-600/30 pb-1 mb-2">
-                                Status Breakdown
-                            </p>
-
-                            <div class="space-y-2 font-serif">
-                                <div class="flex gap-4 justify-between items-center">
-                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.Shipped">Shipped</span>
-                                    <span class="font-bold text-yellow-900">{{ $summary['statusBreakdown']['Shipped'] ?? 0 }}</span>
-                                </div>
-                                <div class="flex gap-4 justify-between items-center">
-                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.In Progress">In Progress</span>
-                                    <span class="font-bold text-amber-600">{{ $summary['statusBreakdown']['In Progress'] ?? 0 }}</span>
-                                </div>
-                                <div class="flex gap-4 justify-between items-center">
-                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.Prototype">Prototype</span>
-                                    <span class="font-bold text-blue-600">{{ $summary['statusBreakdown']['Prototype'] ?? 0 }}</span>
-                                </div>
-                                <div class="flex gap-4 justify-between items-center">
-                                    <span class="text-yellow-900/70 font-medium" data-i18n="project.stats.statusBreakdown.Archived">Archived</span>
-                                    <span class="font-bold text-red-600">{{ $summary['statusBreakdown']['Archived'] ?? 0 }}</span>
-                                </div>
-                            </div>
-
-                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-yellow-200" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
-                        </div>
-                    @endif
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-spinner text-amber-700"></i>
+                        <span data-i18n="project.stats.inProgress">Dalam Proses</span>
+                    </p>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['statusBreakdown']['In Progress'] ?? 0 }}</h3>
                 </div>
             </div>
 
