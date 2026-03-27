@@ -1,137 +1,110 @@
 @extends('layouts.dashboard')
 @section('title', 'Skills')
 
-@section('content')
-    <div class="min-h-screen bg-background pt-12 pb-32 px-4 md:px-6 relative overflow-hidden">
+@vite(['resources/css/dashboard_project.css', 'resources/js/app.js'])
 
-        {{-- Global Faint Grid --}}
-        <div class="absolute inset-0 pointer-events-none opacity-[0.02]"
-            style="background-image: linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px); background-size: 64px 64px;">
+@section('content')
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap');
+
+        .font-diary-body { font-family: 'Merriweather', serif; }
+        .font-diary-accent { font-family: 'Caveat', cursive; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+    <div class="min-h-screen bg-bg pt-6 sm:pt-12 pb-24 px-4 md:px-6 relative overflow-hidden text-text">
+
+        <div class="absolute inset-0 pointer-events-none opacity-[0.04] z-0"
+            style="background-image: radial-gradient(#292524 1px, transparent 1px); background-size: 24px 24px;">
         </div>
 
-        <section class="max-w-7xl mx-auto relative z-10 space-y-12">
+        <section class="max-w-7xl mx-auto relative z-10 space-y-12 mt-4 md:mt-8">
 
-            {{-- HEADER MODULE --}}
-            <header class="relative space-y-6 border-b border-border/50 pb-8 mt-4 md:mt-8">
-                <div
-                    class="absolute top-0 right-0 w-1/3 h-px bg-linear-to-r from-transparent to-primary/50 pointer-events-none">
-                </div>
+            <header class="relative space-y-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="space-y-6">
 
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-primary">
-                        <i class="fa-solid fa-layer-group"></i>
-                        >> SYS_DIR / DASHBOARD / SKILL_NODES
+                        <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter leading-[1.05] text-text">
+                            <span class="block font-diary-body">Tech Stack</span>
+                            <span class="block text-muted mt-2 text-[clamp(1.5rem,4vw,2.5rem)] font-diary-accent">Keahlian & Teknologi</span>
+                        </h1>
+
+                        <p class="text-base text-muted max-w-2xl leading-relaxed font-diary-body">
+                            Mengelola dan mengelompokkan <span class="font-bold border-b border-stone-400">{{ $summary['totalSkills'] }}</span> Tech Stack yang tercatat.
+                        </p>
                     </div>
 
-                    {{-- Quick Actions --}}
-                    <div class="hidden md:flex items-center gap-3">
+                    <div class="flex items-center gap-4">
                         <button type="button" onclick="window.openCreateSkillModal()"
-                            class="px-4 py-2 bg-primary/10 border border-primary text-[10px] font-mono font-bold uppercase tracking-widest text-primary hover:bg-primary hover:text-background transition-colors group flex items-center gap-2 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)]">
-                            <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform"></i> [ REGISTER_SKILL ]
+                            class="px-4 py-2.5 bg-yellow-100 border-2 border-yellow-600 rounded-lg text-xs font-bold uppercase tracking-widest text-yellow-900 hover:-translate-y-1 hover:rotate-2 transition-all shadow-[4px_4px_0px_rgba(202,138,4,0.4)] group flex items-center gap-2">
+                            <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform text-yellow-700"></i>
+                            Tambah Keahlian
                         </button>
                     </div>
                 </div>
-
-                <div class="flex items-end gap-3 pt-2">
-                    <h1
-                        class="text-4xl md:text-5xl lg:text-6xl font-bold font-mono tracking-tighter uppercase text-text leading-none">
-                        Skill_Registry
-                    </h1>
-                    <div
-                        class="w-3 md:w-4 h-8 md:h-12 bg-primary animate-pulse mb-1 shadow-[0_0_10px_var(--color-primary)]">
-                    </div>
-                </div>
-
-                <p class="text-sm font-mono text-muted tracking-wide max-w-2xl leading-relaxed">
-                    <span class="text-primary">></span> Initialize tech stack configurations. System currently monitoring
-                    {{ $summary['totalSkills'] }} active competencies across the mainframe.
-                </p>
-
-                {{-- Mobile Actions --}}
-                <div class="flex md:hidden items-center gap-3 mt-4">
-                    <button type="button" onclick="window.openCreateSkillModal()"
-                        class="flex-1 px-4 py-3 bg-primary/10 border border-primary text-[10px] font-mono font-bold uppercase tracking-widest text-primary text-center">
-                        [ NEW_SKILL ]
-                    </button>
-                </div>
             </header>
 
-            {{-- METRICS DASHBOARD --}}
             <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
-                {{-- Stat 1: Total --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-primary/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-primary/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-globe text-primary"></i> Total_Registered
+
+                <div class="bg-amber-100 p-5 rounded-sm shadow-md border border-stone-200/70 flex flex-col justify-between relative group hover:z-50 hover:scale-[1.02] transition-all rotate-1 font-diary-body">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-3 before:bg-white/50 before:shadow-inner before:border-b before:border-stone-200/50"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-3 flex items-center gap-2 mt-2">
+                        <i class="fa-solid fa-globe text-amber-500"></i> Total
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-text">
-                        {{ str_pad($summary['totalSkills'], 2, '0', STR_PAD_LEFT) }}</h3>
+                    <h3 class="text-3xl font-bold text-stone-900">{{ str_pad($summary['totalSkills'], 2, '0', STR_PAD_LEFT) }}</h3>
                 </div>
 
-                {{-- Stat 2: Frontend --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-sky-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-sky-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-desktop text-sky-400"></i> Client_Side
+                <div class="bg-sky-100 p-5 rounded-sm shadow-md border border-stone-200/70 flex flex-col justify-between relative group hover:z-50 hover:scale-[1.02] transition-all -rotate-1 font-diary-body">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-3 before:bg-white/50 before:shadow-inner before:border-b before:border-stone-200/50"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-3 flex items-center gap-2 mt-2">
+                        <i class="fa-solid fa-desktop text-sky-500"></i> Frontend
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-sky-400">
-                        {{ str_pad($summary['frontendCount'], 2, '0', STR_PAD_LEFT) }}</h3>
+                    <h3 class="text-3xl font-bold text-stone-900">{{ str_pad($summary['frontendCount'], 2, '0', STR_PAD_LEFT) }}</h3>
                 </div>
 
-                {{-- Stat 3: Backend --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-red-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-red-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-server text-red-400"></i> Server_Side
+                <div class="bg-rose-100 p-5 rounded-sm shadow-md border border-stone-200/70 flex flex-col justify-between relative group hover:z-50 hover:scale-[1.02] transition-all rotate-2 font-diary-body">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-3 before:bg-white/50 before:shadow-inner before:border-b before:border-stone-200/50"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-3 flex items-center gap-2 mt-2">
+                        <i class="fa-solid fa-server text-rose-500"></i> Backend
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-red-400">
-                        {{ str_pad($summary['backendCount'], 2, '0', STR_PAD_LEFT) }}</h3>
+                    <h3 class="text-3xl font-bold text-stone-900">{{ str_pad($summary['backendCount'], 2, '0', STR_PAD_LEFT) }}</h3>
                 </div>
 
-                {{-- Stat 4: Tools --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-amber-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-amber-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-toolbox text-amber-400"></i> Tools
+                <div class="bg-orange-100 p-5 rounded-sm shadow-md border border-stone-200/70 flex flex-col justify-between relative group hover:z-50 hover:scale-[1.02] transition-all -rotate-2 font-diary-body">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-3 before:bg-white/50 before:shadow-inner before:border-b before:border-stone-200/50"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-3 flex items-center gap-2 mt-2">
+                        <i class="fa-solid fa-toolbox text-orange-500"></i> Tools
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-amber-400">
-                        {{ str_pad($summary['toolsCount'] + $summary['otherCount'], 2, '0', STR_PAD_LEFT) }}</h3>
+                    <h3 class="text-3xl font-bold text-stone-900">{{ str_pad($summary['toolsCount'] + $summary['otherCount'], 2, '0', STR_PAD_LEFT) }}</h3>
                 </div>
 
-                {{-- Stat 5: Core Tools --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-emerald-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-emerald-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-microchip text-emerald-400"></i> Core_Tools
+                <div class="bg-emerald-100 p-5 rounded-sm shadow-md border border-stone-200/70 flex flex-col justify-between relative group hover:z-50 hover:scale-[1.02] transition-all rotate-1 font-diary-body">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-3 before:bg-white/50 before:shadow-inner before:border-b before:border-stone-200/50"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-3 flex items-center gap-2 mt-2">
+                        <i class="fa-solid fa-star text-emerald-500"></i> Stack Utama
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-emerald-400">
-                        {{ str_pad($summary['coreCount'], 2, '0', STR_PAD_LEFT) }}</h3>
+                    <h3 class="text-3xl font-bold text-stone-900">{{ str_pad($summary['coreCount'], 2, '0', STR_PAD_LEFT) }}</h3>
                 </div>
-                
+
             </div>
-            {{-- ========================================== --}}
-            {{-- SKILLS VISUALIZATION MATRIX (CHART.JS)     --}}
-            {{-- ========================================== --}}
+
             <div x-data="{ expanded: localStorage.getItem('skill_matrix_expanded') !== 'false' }"
-                class="relative border border-border/50 bg-surface/10 p-4 md:p-6 space-y-6 transition-all duration-300">
-                <div class="flex items-center justify-between border-b border-border/50 pb-4">
-                    <h3 class="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2 cursor-pointer"
+                class="bg-surface border-2 border-dashed border-border shadow-sm rounded-xl p-5 md:p-6 space-y-6 font-sans relative mt-8">
+
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-muted opacity-20 backdrop-blur-sm -rotate-1 shadow-sm" style="clip-path: polygon(5% 0, 100% 5%, 95% 100%, 0 95%); z-index: 10;"></div>
+
+                <div class="flex items-center justify-between border-b-2 border-dashed border-border/50 pb-4">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-text flex items-center gap-2 cursor-pointer"
                         @click="expanded = !expanded; localStorage.setItem('skill_matrix_expanded', expanded)">
-                        <i class="fa-solid fa-chart-radar"></i> > SKILL_METRICS_RADAR
+                        <i class="fa-solid fa-chart-pie text-primary"></i> Statistik Keahlian
                     </h3>
                     <div class="flex items-center gap-4">
-                        <span x-show="expanded"
-                            class="text-[9px] font-mono text-green-400 animate-pulse hidden sm:inline-block">[ LIVE_RENDER
-                            ]</span>
                         <button @click="expanded = !expanded; localStorage.setItem('skill_matrix_expanded', expanded)"
                             type="button"
-                            class="text-[10px] font-mono text-muted hover:text-primary transition-colors focus:outline-none">
-                            <span x-text="expanded ? '[_COLLAPSE_]' : '[_EXPAND_]'"></span>
+                            class="text-xs font-bold text-stone-400 hover:text-stone-800 transition-colors focus:outline-none font-diary-body">
+                            <span x-text="expanded ? 'Sembunyikan' : 'Tampilkan'"></span>
                         </button>
                     </div>
                 </div>
@@ -141,107 +114,115 @@
                     x-transition:enter-end="opacity-100 transform translate-y-0"
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                    {{-- 1. Skills by Category --}}
-                    <div
-                        class="relative border border-border/30 bg-[#050505] p-4 lg:col-span-2 group hover:border-primary/30 transition-colors">
-                        <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> CATEGORY_DISTRIBUTION
-                        </p>
-                        <div class="relative h-56 w-full flex justify-center">
+                    <div class="space-y-3 lg:col-span-2">
+                        <p class="text-[12px] font-bold tracking-wide text-muted font-diary-accent">Distribusi Kategori</p>
+                        <div class="relative h-56 w-full flex justify-center bg-container/30 rounded border border-border/50 p-2 shadow-inner">
                             <canvas id="categoryChart"></canvas>
                         </div>
                     </div>
 
-                    {{-- 2. Skills Growth per Year --}}
-                    <div
-                        class="relative border border-border/30 bg-[#050505] p-4 lg:col-span-2 group hover:border-sky-400/30 transition-colors">
-                        <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-sky-400/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> ANNUAL_GROWTH_RATE</p>
-                        <div class="relative h-56 w-full">
+                    <div class="space-y-3 lg:col-span-2">
+                        <p class="text-[12px] font-bold tracking-wide text-muted font-diary-accent">Pertumbuhan Tahunan</p>
+                        <div class="relative h-56 w-full bg-container/30 rounded border border-border/50 p-2 shadow-inner">
                             <canvas id="growthChart"></canvas>
                         </div>
                     </div>
 
-                    {{-- 3. Icon Integrity --}}
-                    <div
-                        class="relative border border-border/30 bg-[#050505] p-4 group hover:border-amber-400/30 transition-colors">
-                        <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-amber-400/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> ICON_PAYLOAD_STATUS</p>
-                        <div class="relative h-40 w-full flex justify-center">
+                    <div class="space-y-3 lg:col-span-2">
+                        <p class="text-[12px] font-bold tracking-wide text-muted font-diary-accent">Kelengkapan Ikon</p>
+                        <div class="relative h-40 w-full flex justify-center bg-container/30 rounded border border-border/50 p-2 shadow-inner">
                             <canvas id="iconChart"></canvas>
                         </div>
                     </div>
 
-                    {{-- 4. Description Integrity --}}
-                    <div
-                        class="relative border border-border/30 bg-[#050505] p-4 group hover:border-green-400/30 transition-colors">
-                        <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-green-400/50"></div>
-                        <p class="text-[9px] font-mono uppercase tracking-widest text-muted mb-4">> DESC_PAYLOAD_STATUS</p>
-                        <div class="relative h-40 w-full flex justify-center">
+                    <div class="space-y-3 lg:col-span-2">
+                        <p class="text-[12px] font-bold tracking-wide text-muted font-diary-accent">Kelengkapan Deskripsi</p>
+                        <div class="relative h-40 w-full flex justify-center bg-container/30 rounded border border-border/50 p-2 shadow-inner">
                             <canvas id="descChart"></canvas>
                         </div>
                     </div>
 
                 </div>
             </div>
-            {{-- CONTROL PANEL & TAG CLOUD --}}
-            <div class="relative border border-border/50 bg-surface/10 p-4 md:p-6 space-y-6">
 
-                {{-- Command Bar (Search & Sort) --}}
-                <div
-                    class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-b border-border/50 pb-6">
+            <div class="bg-surface border-2 border-dashed border-border shadow-sm rounded-xl p-5 md:p-6 space-y-6 font-sans relative mt-8">
 
-                    {{-- Terminal Search Input --}}
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-stone-300 opacity-40 backdrop-blur-sm rotate-2 shadow-sm" style="clip-path: polygon(5% 0, 100% 5%, 95% 100%, 0 95%); z-index: 10;"></div>
+                <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 border-b-2 border-dashed border-border pb-6 relative z-20">
                     <div class="relative w-full md:w-1/2 group">
-                        <div class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-primary text-sm">></div>
-                        <input type="text" id="search-input" placeholder="QUERY_SKILL_"
-                            class="w-full border border-border/70 bg-surface/30 px-4 py-3 pl-8 font-mono text-xs uppercase tracking-widest text-text placeholder:text-muted/50 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" />
-                        <div
-                            class="absolute right-4 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-primary/30 group-focus-within:bg-primary group-focus-within:animate-pulse pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-stone-800 transition-colors"></i>
+                        <input type="text" id="search-input" placeholder="Cari Teknologi atau alat..."
+                            class="w-full border-2 border-stone-300 bg-[#FCFAEF] rounded-lg px-4 py-3 pl-11 text-sm font-diary-body text-stone-800 placeholder:text-stone-400 placeholder:italic focus:outline-none focus:border-stone-800 focus:ring-0 transition-all shadow-inner"
+                            style="background-image: repeating-linear-gradient(transparent, transparent 27px, #e5e5e5 27px, #e5e5e5 28px); line-height: 28px; background-attachment: local;" />
+                    </div>
+
+                    <div class="relative z-40 w-full md:w-auto">
+                        <button id="sort-toggle"
+                            class="w-full md:w-auto flex justify-between items-center gap-6 px-5 py-3 border-2 border-border bg-container rounded-lg text-xs font-bold uppercase tracking-widest text-text hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-arrow-down-short-wide"></i>
+                                <span id="sort-label" data-i18n="project.sort.menu.latest">Terbaru</span>
+                            </span>
+                            <i class="fa-solid fa-chevron-down text-[10px]" id="sort-chevron"></i>
+                        </button>
+
+                        <div id="sort-menu"
+                            class="hidden absolute right-0 top-full mt-3 w-full min-w-[12rem] bg-surface rounded-lg border-2 border-border shadow-[4px_4px_0px_var(--color-border)] overflow-hidden">
+
+                            <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors border-b-2 border-dashed border-border/50"
+                                data-sort="latest" data-i18n="project.sort.menu.latest">
+                                Terbaru
+                            </button>
+
+                            <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors border-b-2 border-dashed border-border/50"
+                                data-sort="most_projects">
+                                Sering Digunakan
+                            </button>
+
+                            <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors border-b-2 border-dashed border-border/50"
+                                data-sort="least_projects">
+                                Jarang Digunakan
+                            </button>
+
+                            <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors border-b-2 border-dashed border-border/50"
+                                data-sort="az">
+                                A-Z
+                            </button>
+
+                            <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors"
+                                data-sort="za">
+                                Z-A
+                            </button>
+
                         </div>
                     </div>
-
-                    {{-- Sort Dropdown --}}
-                    <div class="relative w-full md:w-auto">
-                        <select id="sort-select"
-                            class="appearance-none w-full border border-border/70 bg-surface/30 px-8 py-3 pr-12 font-mono text-xs uppercase tracking-widest text-muted hover:text-text focus:outline-none focus:border-primary transition-colors cursor-pointer">
-                            <option value="latest">SORT: LATEST_LOG</option>
-                            <option value="most_projects">SORT: HIGH_REF_COUNT</option>
-                            <option value="least_projects">SORT: LOW_REF_COUNT</option>
-                            <option value="az">SORT: ALPHABETICAL_ASC</option>
-                            <option value="za">SORT: ALPHABETICAL_DESC</option>
-                        </select>
-                        <i
-                            class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none"></i>
-                    </div>
                 </div>
 
-                {{-- Filter Tabs (dipertahankan class JS nya agar tidak error) --}}
-                <div class="flex flex-wrap gap-2 border-b border-border/30 pb-4">
+                @php $currentCat = request('category', 'all'); @endphp
+                <div class="flex overflow-x-auto no-scrollbar gap-4 pb-2 pt-2 px-2 -mx-2 border-b border-border">
                     <button type="button"
-                        class="filter-btn px-5 py-2 border border-primary bg-primary/10 text-primary font-mono text-[10px] font-bold uppercase tracking-widest transition-colors focus:outline-none"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentCat == 'all' ? 'bg-yellow-100 text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_rgba(234,179,8,0.4)] -translate-y-1 rotate-1' : 'text-stone-500 bg-white border-2 border-stone-200 shadow-[1px_2px_0px_rgba(214,211,209,0.5)] hover:shadow-[3px_4px_0px_rgba(214,211,209,0.5)] hover:-translate-y-1 hover:-rotate-1' }}"
                         data-category="all">
-                        ALL_NODES
+                        Semua
                     </button>
                     <button type="button"
-                        class="filter-btn px-5 py-2 border border-border text-muted font-mono text-[10px] font-bold uppercase tracking-widest hover:border-sky-400 hover:text-sky-400 transition-colors focus:outline-none"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentCat == 'frontend' ? 'bg-sky-100 text-sky-900 border-2 border-sky-400 shadow-[2px_3px_0px_rgba(56,189,248,0.4)] -translate-y-1 rotate-1' : 'text-stone-500 bg-white border-2 border-stone-200 shadow-[1px_2px_0px_rgba(214,211,209,0.5)] hover:shadow-[3px_4px_0px_rgba(214,211,209,0.5)] hover:-translate-y-1 hover:rotate-1' }}"
                         data-category="frontend">
-                        CLIENT_SIDE
+                        Frontend
                     </button>
                     <button type="button"
-                        class="filter-btn px-5 py-2 border border-border text-muted font-mono text-[10px] font-bold uppercase tracking-widest hover:border-red-400 hover:text-red-400 transition-colors focus:outline-none"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentCat == 'backend' ? 'bg-rose-100 text-rose-900 border-2 border-rose-400 shadow-[2px_3px_0px_rgba(251,113,133,0.4)] -translate-y-1 rotate-1' : 'text-stone-500 bg-white border-2 border-stone-200 shadow-[1px_2px_0px_rgba(214,211,209,0.5)] hover:shadow-[3px_4px_0px_rgba(214,211,209,0.5)] hover:-translate-y-1 hover:-rotate-1' }}"
                         data-category="backend">
-                        SERVER_SIDE
+                        Backend
                     </button>
                     <button type="button"
-                        class="filter-btn px-5 py-2 border border-border text-muted font-mono text-[10px] font-bold uppercase tracking-widest hover:border-amber-400 hover:text-amber-400 transition-colors focus:outline-none"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none {{ $currentCat == 'tools' ? 'bg-amber-100 text-amber-900 border-2 border-amber-400 shadow-[2px_3px_0px_rgba(251,191,36,0.4)] -translate-y-1 rotate-1' : 'text-stone-500 bg-white border-2 border-stone-200 shadow-[1px_2px_0px_rgba(214,211,209,0.5)] hover:shadow-[3px_4px_0px_rgba(214,211,209,0.5)] hover:-translate-y-1 hover:rotate-1' }}"
                         data-category="tools">
-                        CORE_TOOLS
+                        Tools
                     </button>
                 </div>
 
-                {{-- Container --}}
-                <div id="skills-container" class="transition-opacity duration-300">
+                <div id="skills-container" class="transition-opacity duration-300 pt-4">
                     @include('dashboard.skills.partials.tags')
                 </div>
 
@@ -261,70 +242,53 @@
 @endsection
 
 @push('scripts')
-    {{-- Load Chart.js --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // === KONFIGURASI GLOBAL HUD TEMA TERMINAL ===
-            Chart.defaults.color = '#71717a'; // text-muted
-            Chart.defaults.font.family = 'monospace';
-            Chart.defaults.font.size = 10;
+            Chart.defaults.color = '#78716c';
+            Chart.defaults.font.family = "'Merriweather', serif";
+            Chart.defaults.font.size = 11;
 
             const gridConfig = {
-                color: 'rgba(255, 255, 255, 0.05)',
+                color: 'rgba(214, 211, 209, 0.4)',
                 tickColor: 'transparent'
             };
             const tooltipConfig = {
-                backgroundColor: 'rgba(5, 5, 5, 0.95)',
+                backgroundColor: 'rgba(252, 250, 239, 0.95)',
+                titleColor: '#292524',
+                bodyColor: '#57534e',
+                borderColor: '#d6d3d1',
                 titleFont: {
-                    family: 'monospace',
-                    size: 11
+                    family: "'Merriweather', serif",
+                    size: 12,
+                    weight: 'bold'
                 },
                 bodyFont: {
-                    family: 'monospace',
-                    size: 10
+                    family: "'Merriweather', serif",
+                    size: 11
                 },
-                borderColor: 'rgba(168, 85, 247, 0.5)',
                 borderWidth: 1,
-                cornerRadius: 0,
+                cornerRadius: 4,
                 padding: 10
             };
 
-            // Parse Data dari Controller
             const rawData = {!! json_encode($chartData ?? []) !!};
+            const catData = rawData.category || { 'Frontend': 10, 'Backend': 8, 'Tools': 5 };
+            const growData = rawData.growth || { '2022': 5, '2023': 12, '2024': 8 };
+            const iconData = rawData.icon || { 'Valid Icon': 20, 'No Icon': 3 };
+            const descData = rawData.desc || { 'Valid Desc': 15, 'No Desc': 8 };
 
-            const catData = rawData.category || {
-                'Frontend': 10,
-                'Backend': 8,
-                'Tools': 5
-            };
-            const growData = rawData.growth || {
-                '2022': 5,
-                '2023': 12,
-                '2024': 8
-            };
-            const iconData = rawData.icon || {
-                'Valid Icon': 20,
-                'No Icon': 3
-            };
-            const descData = rawData.desc || {
-                'Valid Desc': 15,
-                'No Desc': 8
-            };
-
-            // Palette Cyberpunk
             const colors = {
-                primary: '#a855f7',
                 sky: '#38bdf8',
-                green: '#4ade80',
+                green: '#34d399',
                 amber: '#fbbf24',
-                red: '#f87171',
-                bgPrimary: 'rgba(168, 85, 247, 0.2)',
-                bgSky: 'rgba(56, 189, 248, 0.2)'
+                red: '#fb7185',
+                primary: '#818cf8',
+                bgSky: 'rgba(56, 189, 248, 0.2)',
+                borderLight: '#e7e5e4'
             };
 
-            // 1. CATEGORY DISTRIBUTION (Polar Area / Doughnut)
             new Chart(document.getElementById('categoryChart'), {
                 type: 'doughnut',
                 data: {
@@ -332,7 +296,7 @@
                     datasets: [{
                         data: Object.values(catData),
                         backgroundColor: [colors.sky, colors.red, colors.amber, colors.primary],
-                        borderColor: '#050505',
+                        borderColor: '#FCFAEF',
                         borderWidth: 2,
                         hoverOffset: 4
                     }]
@@ -340,27 +304,20 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '65%',
+                    cutout: '60%',
                     plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                boxWidth: 10,
-                                borderRadius: 0
-                            }
-                        },
+                        legend: { position: 'right', labels: { boxWidth: 10, borderRadius: 2 } },
                         tooltip: tooltipConfig
                     }
                 }
             });
 
-            // 2. ANNUAL GROWTH RATE (Bar)
             new Chart(document.getElementById('growthChart'), {
                 type: 'bar',
                 data: {
                     labels: Object.keys(growData),
                     datasets: [{
-                        label: 'Nodes Added',
+                        label: 'Keahlian Baru',
                         data: Object.values(growData),
                         backgroundColor: colors.bgSky,
                         borderColor: colors.sky,
@@ -372,34 +329,24 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: {
-                            grid: gridConfig,
-                            beginAtZero: true
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
+                        y: { grid: gridConfig, beginAtZero: true },
+                        x: { grid: { display: false } }
                     },
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: tooltipConfig
                     }
                 }
             });
 
-            // 3. ICON PAYLOAD (Pie)
             new Chart(document.getElementById('iconChart'), {
                 type: 'pie',
                 data: {
                     labels: Object.keys(iconData),
                     datasets: [{
                         data: Object.values(iconData),
-                        backgroundColor: [colors.amber, '#1f2937'],
-                        borderColor: '#050505',
+                        backgroundColor: [colors.amber, colors.borderLight],
+                        borderColor: '#FCFAEF',
                         borderWidth: 2
                     }]
                 },
@@ -407,26 +354,20 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 8
-                            }
-                        },
+                        legend: { position: 'bottom', labels: { boxWidth: 8 } },
                         tooltip: tooltipConfig
                     }
                 }
             });
 
-            // 4. DESC PAYLOAD (Pie)
             new Chart(document.getElementById('descChart'), {
                 type: 'pie',
                 data: {
                     labels: Object.keys(descData),
                     datasets: [{
                         data: Object.values(descData),
-                        backgroundColor: [colors.green, '#1f2937'],
-                        borderColor: '#050505',
+                        backgroundColor: [colors.green, colors.borderLight],
+                        borderColor: '#FCFAEF',
                         borderWidth: 2
                     }]
                 },
@@ -434,12 +375,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 8
-                            }
-                        },
+                        legend: { position: 'bottom', labels: { boxWidth: 8 } },
                         tooltip: tooltipConfig
                     }
                 }
@@ -451,16 +387,18 @@
         document.addEventListener('DOMContentLoaded', () => {
             const tabs = document.querySelectorAll('.filter-btn');
             const searchInput = document.getElementById('search-input');
-            const sortSelect = document.getElementById('sort-select');
+            const sortToggle = document.getElementById('sort-toggle');
+            const sortMenu = document.getElementById('sort-menu');
+            const sortLabel = document.getElementById('sort-label');
+            const sortOptions = document.querySelectorAll('.sort-option');
             const container = document.getElementById('skills-container');
 
-            let currentCategory = 'all';
-            let currentSearch = '';
-            let currentSort = 'latest';
+            let currentCategory = new URLSearchParams(window.location.search).get('category') || 'all';
+            let currentSearch = new URLSearchParams(window.location.search).get('search') || '';
+            let currentSort = new URLSearchParams(window.location.search).get('sort') || 'latest';
             let debounceTimer;
 
             function fetchSkills(url = null) {
-                // Add loading state
                 container.style.opacity = '0.5';
                 container.style.pointerEvents = 'none';
 
@@ -472,17 +410,13 @@
 
                 const fetchUrl = url || `{{ route('dashboard.skills.index') }}?${params.toString()}`;
 
-                fetch(fetchUrl, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
+                fetch(fetchUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                     .then(response => response.text())
                     .then(html => {
                         container.innerHTML = html;
-                        // Restore normal state
                         container.style.opacity = '1';
                         container.style.pointerEvents = 'auto';
+                        window.history.replaceState({}, '', fetchUrl);
                     })
                     .catch(error => {
                         console.error('Error fetching skills:', error);
@@ -491,138 +425,97 @@
                     });
             }
 
-            // Tab Clicks (Disesuaikan dengan styling baru)
             tabs.forEach(tab => {
                 tab.addEventListener('click', (e) => {
-                    tabs.forEach(t => {
-                        t.classList.remove('border-primary', 'bg-primary/10',
-                            'text-primary');
-                        // Khusus untuk tab aktif, kita reset warnanya sesuai datanya
-                        if (t.dataset.category === 'frontend') t.classList.remove(
-                            'border-sky-400', 'bg-sky-400/10', 'text-sky-400');
-                        if (t.dataset.category === 'backend') t.classList.remove(
-                            'border-red-400', 'bg-red-400/10', 'text-red-400');
-                        if (t.dataset.category === 'tools') t.classList.remove(
-                            'border-amber-400', 'bg-amber-400/10', 'text-amber-400');
+                    const target = e.currentTarget;
 
-                        t.classList.add('border-border', 'text-muted');
+                    tabs.forEach(t => {
+                        t.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-stone-500 bg-white border-2 border-stone-200 shadow-[1px_2px_0px_rgba(214,211,209,0.5)] hover:shadow-[3px_4px_0px_rgba(214,211,209,0.5)] hover:-translate-y-1 hover:-rotate-1 transition-all focus:outline-none";
                     });
 
-                    e.target.classList.remove('border-border', 'text-muted');
+                    let activeClass = "";
+                    if (target.dataset.category === 'all') activeClass = "bg-yellow-100 text-yellow-900 border-yellow-500 shadow-[2px_3px_0px_rgba(234,179,8,0.4)]";
+                    if (target.dataset.category === 'frontend') activeClass = "bg-sky-100 text-sky-900 border-sky-400 shadow-[2px_3px_0px_rgba(56,189,248,0.4)]";
+                    if (target.dataset.category === 'backend') activeClass = "bg-rose-100 text-rose-900 border-rose-400 shadow-[2px_3px_0px_rgba(251,113,133,0.4)]";
+                    if (target.dataset.category === 'tools') activeClass = "bg-amber-100 text-amber-900 border-amber-400 shadow-[2px_3px_0px_rgba(251,191,36,0.4)]";
 
-                    // Set active color based on category
-                    if (e.target.dataset.category === 'all') e.target.classList.add(
-                        'border-primary', 'bg-primary/10', 'text-primary');
-                    if (e.target.dataset.category === 'frontend') e.target.classList.add(
-                        'border-sky-400', 'bg-sky-400/10', 'text-sky-400');
-                    if (e.target.dataset.category === 'backend') e.target.classList.add(
-                        'border-red-400', 'bg-red-400/10', 'text-red-400');
-                    if (e.target.dataset.category === 'tools') e.target.classList.add(
-                        'border-amber-400', 'bg-amber-400/10', 'text-amber-400');
+                    target.className = `filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none border-2 -translate-y-1 rotate-1 ${activeClass}`;
 
-                    currentCategory = e.target.dataset.category;
+                    currentCategory = target.dataset.category;
                     fetchSkills();
                 });
             });
 
-            // Search Input (Debounced)
-            searchInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    currentSearch = e.target.value;
-                    fetchSkills();
-                }, 300); // 300ms delay
-            });
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        currentSearch = e.target.value;
+                        fetchSkills();
+                    }, 300);
+                });
+            }
 
-            // Sort Dropdown
-            sortSelect.addEventListener('change', (e) => {
-                currentSort = e.target.value;
-                fetchSkills();
-            });
+            if (sortToggle && sortMenu) {
+                sortToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sortMenu.classList.toggle('hidden');
+                });
 
-            // Event Delegation for Edit, Delete buttons inside the Container and Pagination Links
+                document.addEventListener('click', (e) => {
+                    if (!sortToggle.contains(e.target) && !sortMenu.contains(e.target)) {
+                        sortMenu.classList.add('hidden');
+                    }
+                });
+
+                sortOptions.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        currentSort = e.currentTarget.dataset.sort;
+                        sortLabel.textContent = e.currentTarget.textContent.trim();
+                        sortMenu.classList.add('hidden');
+                        fetchSkills();
+                    });
+                });
+            }
+
             container.addEventListener('click', (e) => {
-                // Pagination Intercept
-                const pBtn = e.target.closest('button.pagination-link');
-                if (pBtn && pBtn.dataset.url) {
+                const pBtn = e.target.closest('nav a');
+                if (pBtn && pBtn.href) {
                     e.preventDefault();
-                    const url = new URL(pBtn.dataset.url, window.location.origin);
+                    const url = new URL(pBtn.href, window.location.origin);
                     url.searchParams.set('category', currentCategory);
-                    url.searchParams.set('search', currentSearch);
+                    if (currentSearch) url.searchParams.set('search', currentSearch);
                     url.searchParams.set('sort', currentSort);
                     fetchSkills(url.toString());
+
+                    const section = document.getElementById('skills-container');
+                    if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     return;
                 }
 
-                // Edit Button Click
                 const editBtn = e.target.closest('.edit-skill-btn');
                 if (editBtn) {
                     e.preventDefault();
-                    const id = editBtn.dataset.id;
-                    const name = editBtn.dataset.name;
-                    const category = editBtn.dataset.category;
-                    const icon = editBtn.dataset.icon;
-                    const description = editBtn.dataset.description;
-                    const is_core = editBtn.dataset.is_core;
                     if (window.openEditSkillModal) {
-                        window.openEditSkillModal(id, name, category, icon, description, is_core);
+                        window.openEditSkillModal(
+                            editBtn.dataset.id, editBtn.dataset.name, editBtn.dataset.category,
+                            editBtn.dataset.icon, editBtn.dataset.description, editBtn.dataset.is_core
+                        );
                     }
                     return;
                 }
 
-                // Delete Button Click
                 const deleteBtn = e.target.closest('.delete-skill-btn');
                 if (deleteBtn) {
                     e.preventDefault();
                     const id = deleteBtn.dataset.id;
-                    // Gunakan fungsi confirmAction jika kamu sudah memasangnya di layout global
-                    if (typeof window.confirmAction === 'function') {
-                        window.confirmAction(
-                            'CRITICAL: Are you sure you want to purge this skill node? Data cannot be recovered.',
-                            () => {
-                                const form = document.getElementById('deleteSkillForm');
-                                form.action = `/dashboard/skills/${id}`;
-                                form.submit();
-                            });
-                    } else {
-                        // Fallback ke modal bawaan jika fungsi global belum tersedia
-                        const confirmModal = document.getElementById('confirm-modal');
-                        const confirmYes = document.getElementById('confirm-yes');
-                        const confirmCancel = document.getElementById('confirm-cancel');
-                        const confirmMessage = document.getElementById('confirm-message');
-
-                        if (confirmModal && confirmYes && confirmCancel) {
-                            confirmMessage.textContent =
-                                'CRITICAL: Are you sure you want to purge this skill node? Data cannot be recovered.';
-
-                            confirmModal.classList.remove('opacity-0', 'pointer-events-none');
-                            confirmModal.style.opacity = '1';
-
-                            const handleYes = () => {
-                                const form = document.getElementById('deleteSkillForm');
-                                form.action = `/dashboard/skills/${id}`;
-                                form.submit();
-                                cleanup();
-                            };
-
-                            const handleCancel = () => {
-                                cleanup();
-                            };
-
-                            const cleanup = () => {
-                                confirmModal.classList.add('opacity-0', 'pointer-events-none');
-                                confirmModal.style.opacity = '0';
-                                confirmYes.removeEventListener('click', handleYes);
-                                confirmCancel.removeEventListener('click', handleCancel);
-                            };
-
-                            confirmYes.addEventListener('click', handleYes);
-                            confirmCancel.addEventListener('click', handleCancel);
-                        }
+                    if (confirm('Apakah Anda yakin ingin mencabut catatan keahlian ini secara permanen?')) {
+                        const form = document.getElementById('deleteSkillForm');
+                        form.action = `/dashboard/skills/${id}`;
+                        form.submit();
                     }
                 }
             });
-
         });
     </script>
 @endpush

@@ -114,10 +114,10 @@ class ProjectController extends Controller
             'repo' => 'nullable|url',
             'live_url' => 'nullable|url',
             'screenshot' => 'array|max:8',
-            'screenshot.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
-            'image_desktop' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'image_tablet' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
-            'image_mobile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'screenshot.*' => 'image|mimes:jpg,jpeg,png,webp|max:20120',
+            'image_desktop' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20120',
+            'image_tablet' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20120',
+            'image_mobile' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:20120',
         ]);
 
         if ($validated['visibility'] === 'published') {

@@ -1,158 +1,146 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap');
+
+.font-diary-body { font-family: 'Merriweather', serif; }
+.font-diary-accent { font-family: 'Caveat', cursive; }
+
+.diary-card-shadow {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.05);
+}
+</style>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
     @forelse ($skills as $skill)
         @php
             $catStyle = match (strtolower($skill->category)) {
                 'frontend' => [
-                    'box' => 'border-sky-400/50 bg-sky-400/10 text-sky-400',
-                    'icon' => 'group-hover:text-sky-400',
-                    'line' => 'group-hover:bg-sky-400/50',
+                    'box'  => 'border-blue-300 bg-blue-50 text-blue-800',
+                    'icon' => 'group-hover:text-blue-700',
+                    'line' => 'bg-blue-300/60',
                 ],
                 'backend' => [
-                    'box' => 'border-red-400/50 bg-red-400/10 text-red-400',
-                    'icon' => 'group-hover:text-red-400',
-                    'line' => 'group-hover:bg-red-400/50',
+                    'box'  => 'border-red-300 bg-red-50 text-red-800',
+                    'icon' => 'group-hover:text-red-700',
+                    'line' => 'bg-red-300/60',
                 ],
                 'tools' => [
-                    'box' => 'border-amber-400/50 bg-amber-400/10 text-amber-400',
-                    'icon' => 'group-hover:text-amber-400',
-                    'line' => 'group-hover:bg-amber-400/50',
+                    'box'  => 'border-amber-300 bg-amber-50 text-amber-800',
+                    'icon' => 'group-hover:text-amber-700',
+                    'line' => 'bg-amber-300/60',
                 ],
                 default => [
-                    'box' => 'border-primary/50 bg-primary/10 text-primary',
-                    'icon' => 'group-hover:text-primary',
-                    'line' => 'group-hover:bg-primary/50',
+                    'box'  => 'border-stone-300 bg-stone-100 text-stone-800',
+                    'icon' => 'group-hover:text-stone-700',
+                    'line' => 'bg-stone-300/60',
                 ],
             };
         @endphp
 
-        <div class="group relative flex flex-col justify-between p-5 border border-border/50 bg-surface/10 hover:bg-surface/20 transition-all duration-300 hover:border-primary/40 overflow-hidden min-h-[220px]">
-            
-            {{-- HUD Corner Brackets --}}
-            <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-border/50 group-hover:border-primary transition-colors"></div>
-            <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-border/50 group-hover:border-primary transition-colors"></div>
+        <div class="group relative flex flex-col justify-between p-6 bg-[#FCFAEF] border border-stone-200 diary-card-shadow hover:-translate-y-1 hover:shadow-[4px_8px_15px_rgba(0,0,0,0.08)] transition-all duration-300 overflow-hidden min-h-[220px] rounded-sm transform {{ $loop->index % 2 == 0 ? 'rotate-[-1deg]' : 'rotate-[1deg]' }} hover:rotate-0">
 
-            {{-- Top Bar: Category & Core Status --}}
-            <div class="flex justify-between items-center mb-6 relative z-10">
-                <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-widest border {{ $catStyle['box'] }}">
+            <div class="absolute -top-2 left-1/2 w-12 h-5 bg-white/40 backdrop-blur-sm -translate-x-1/2 shadow-sm transform rotate-[-3deg] border border-stone-200/50 z-20"></div>
+
+            <div class="flex justify-between items-start mb-6 relative z-10">
+                <div class="flex flex-col gap-1">
+                    <span class="inline-block px-2 py-0.5 text-[10px] font-diary-accent uppercase tracking-wider border rounded-sm shadow-sm {{ $catStyle['box'] }} transform -rotate-1">
                         {{ $skill->category }}
                     </span>
-                    
-                    {{-- CORE SKILL INDICATOR --}}
+
                     @if($skill->is_core)
-                        <span class="flex items-center gap-1 text-[8px] font-mono text-primary animate-pulse">
-                            <span class="w-1 h-1 bg-primary rounded-full"></span>
-                            CORE_SYS
+                        <span class="flex items-center gap-1.5 text-[11px] font-diary-accent text-red-600 font-bold ml-1 transform rotate-1">
+                            <i class="fa-solid fa-star text-[8px]"></i>
+                            Utama
                         </span>
                     @endif
                 </div>
 
-                {{-- Action Buttons --}}
-                <div class="flex gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity bg-background/80 border border-border/50 p-1">
-                    <button type="button" class="edit-skill-btn w-6 h-6 flex items-center justify-center text-muted hover:text-primary transition-colors" 
-                        data-id="{{ $skill->id }}" 
+                <div class="flex gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity bg-[#FCFAEF]/90 backdrop-blur-sm p-1.5 rounded-sm border border-stone-200 shadow-sm">
+                    <button type="button" class="edit-skill-btn w-6 h-6 flex items-center justify-center text-stone-400 hover:text-stone-800 transition-colors"
+                        data-id="{{ $skill->id }}"
                         data-name="{{ $skill->name }}"
                         data-category="{{ $skill->category }}"
                         data-icon="{{ $skill->icon }}"
                         data-description="{{ $skill->description }}"
-                        data-is_core="{{ $skill->is_core ? 1 : 0 }}">
-                        <i class="fa-solid fa-pen text-[10px]"></i>
+                        data-is_core="{{ $skill->is_core ? 1 : 0 }}"
+                        title="Revisi">
+                        <i class="fa-solid fa-pen text-xs"></i>
                     </button>
-                    <button type="button" class="delete-skill-btn w-6 h-6 flex items-center justify-center text-muted hover:text-red-500 transition-colors" data-id="{{ $skill->id }}">
-                        <i class="fa-solid fa-xmark text-[12px]"></i>
+                    <button type="button" class="delete-skill-btn w-6 h-6 flex items-center justify-center text-stone-400 hover:text-red-500 transition-colors" data-id="{{ $skill->id }}" title="Hapus">
+                        <i class="fa-solid fa-eraser text-xs"></i>
                     </button>
                 </div>
             </div>
 
-            {{-- MIDDLE AREA: DESCRIPTION --}}
-            <div class="mb-6 relative z-10">
-                <p class="text-[11px] font-sans text-muted leading-relaxed line-clamp-3 group-hover:text-text/80 transition-colors italic">
-                    {{ $skill->description ?? '// No documentation provided for this node.' }}
+            <div class="mb-6 relative z-10 flex-grow">
+                <p class="text-[13px] font-diary-body text-stone-600 leading-relaxed line-clamp-3 group-hover:text-stone-900 transition-colors font-light text-justify">
+                    {{ $skill->description ?? 'Catatan kosong. Belum ada deskripsi yang ditulis...' }}
                 </p>
             </div>
 
-            {{-- Bottom Area: Icon, Name & Reference Count --}}
-            <div class="flex items-center gap-4 relative z-10 mt-auto">
-                {{-- Icon Box --}}
-                <div class="shrink-0 w-12 h-12 flex items-center justify-center border border-border/50 bg-background/50 text-2xl text-muted grayscale group-hover:grayscale-0 {{ $catStyle['icon'] }} transition-all duration-300 shadow-inner relative">
+            <div class="flex items-center gap-4 relative z-10 mt-auto pt-4 border-t border-dashed border-stone-300">
+
+                <div class="shrink-0 w-12 h-12 flex items-center justify-center border-2 border-stone-300 bg-white text-2xl text-stone-400 opacity-80 group-hover:opacity-100 {{ $catStyle['icon'] }} transition-all duration-300 rounded-sm transform -rotate-3 group-hover:rotate-0 group-hover:border-current group-hover:shadow-sm">
                     {!! $skill->icon !!}
-                    @if($skill->is_core)
-                        <div class="absolute -top-1 -right-1 w-2 h-2 bg-primary/20 border border-primary/40 rotate-45"></div>
-                    @endif
                 </div>
 
-                {{-- Text Data --}}
                 <div class="flex-1 flex flex-col min-w-0">
-                    <h3 class="text-sm font-bold font-mono uppercase tracking-widest text-text group-hover:text-primary transition-colors truncate">
+                    <h3 class="text-base font-bold font-diary-body text-stone-800 group-hover:text-black transition-colors truncate">
                         {{ $skill->name }}
                     </h3>
 
-                    {{-- Data Line & Count --}}
-                    <div class="flex items-center gap-3 mt-2">
-                        <div class="h-px flex-1 bg-border/50 {{ $catStyle['line'] }} transition-colors"></div>
-                        <span class="text-[9px] font-mono text-muted uppercase tracking-widest">
-                            REF: <span class="text-text group-hover:text-primary">{{ str_pad($skill->projects_count, 2, '0', STR_PAD_LEFT) }}</span>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="text-xs font-diary-accent text-stone-500 tracking-wide">
+                            Digunakan di <span class="text-stone-800 font-bold border-b border-stone-400 group-hover:border-black">{{ $skill->projects_count }}</span> proyek
                         </span>
+                        <div class="h-px flex-1 {{ $catStyle['line'] }} mt-1"></div>
                     </div>
                 </div>
             </div>
 
-            {{-- Background Subtle Text (is_core background deco) --}}
             @if($skill->is_core)
-                <div class="absolute -right-2 -bottom-2 text-[40px] font-mono font-bold text-primary/[0.03] pointer-events-none select-none uppercase italic">
-                    Core
+                <div class="absolute -right-4 -bottom-4 text-7xl font-diary-accent text-stone-200/50 pointer-events-none select-none transform rotate-[-15deg]">
+                    ★
                 </div>
             @endif
         </div>
 
-        @empty
-            {{-- Empty State HUD --}}
-            <div
-                class="col-span-full border border-border/50 bg-surface/10 py-16 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden group">
-                {{-- Background Hazard Lines --}}
-                <div
-                    class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)] pointer-events-none">
-                </div>
+    @empty
+        <div class="col-span-full bg-[#FCFAEF] border border-stone-300 py-20 px-6 flex flex-col items-center justify-center text-center relative overflow-hidden group shadow-sm min-h-[300px] rounded-sm">
 
-                <i
-                    class="fa-solid fa-server text-4xl text-muted/30 mb-5 group-hover:text-primary/50 transition-colors duration-500"></i>
+            <div class="absolute inset-0 bg-[linear-gradient(transparent_95%,#cbd5e1_95%)] bg-[length:100%_28px] pointer-events-none opacity-40"></div>
 
-                <p class="text-xs font-mono uppercase tracking-widest text-muted mb-6">
-                    > SYS_ALERT: NO_SKILL_NODES_FOUND
-                </p>
+            <i class="fa-solid fa-book-open text-5xl text-stone-300 mb-6 group-hover:text-stone-400 transition-colors duration-500 relative z-10 transform -rotate-3"></i>
 
-                <button onclick="window.openCreateSkillModal()"
-                    class="relative z-10 px-6 py-3 bg-primary/10 border border-primary text-[10px] font-mono font-bold uppercase tracking-widest text-primary hover:bg-primary hover:text-background transition-colors shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)]">
-                    [ INIT_SKILL_NODE ]
-                </button>
-            </div>
+            <p class="text-xl font-diary-accent text-stone-500 mb-8 relative z-10">
+                Halaman ini masih kosong. Belum ada catatan keahlian.
+            </p>
+
+            <button onclick="window.openCreateSkillModal()" class="relative z-10 px-6 py-2 border-2 border-stone-800 bg-transparent text-stone-800 font-diary-body font-bold text-sm hover:bg-stone-800 hover:text-[#FCFAEF] transition-colors shadow-sm transform rotate-1 hover:rotate-0 rounded-sm">
+                + Tulis Keahlian Baru
+            </button>
+        </div>
     @endforelse
 </div>
 
-{{-- PAGINATION --}}
 @if ($skills instanceof \Illuminate\Pagination\LengthAwarePaginator && $skills->hasPages())
-    <div class="flex justify-center pt-8">
-        <nav class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest">
+    <div class="flex justify-center pt-12 md:pt-16 pb-8">
+        <nav class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-4 font-mono w-full sm:w-auto px-4">
             @if ($skills->onFirstPage())
-                <span class="px-3 py-2 text-muted border border-border/50 bg-surface/30 opacity-50 cursor-not-allowed">[
-                    PREV ]</span>
+                <span class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif bg-container"><i class="fa-solid fa-chevron-left text-[10px] sm:text-xs"></i></span>
             @else
-                <button type="button" data-url="{{ $skills->previousPageUrl() }}"
-                    class="pagination-link px-3 py-2 border border-border text-muted hover:border-primary hover:text-primary transition-colors">[
-                    PREV ]</button>
+                <a href="{{ $skills->previousPageUrl() }}" class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm bg-container"><i class="fa-solid fa-chevron-left text-[10px] sm:text-xs pointer-events-none"></i></a>
             @endif
 
-            <span class="px-4 py-2 border border-primary bg-primary/5 text-primary font-bold">
-                PG_{{ sprintf('%02d', $skills->currentPage()) }} / {{ sprintf('%02d', $skills->lastPage()) }}
-            </span>
+            <div class="px-4 py-1.5 sm:px-6 sm:py-2 bg-warning border-2 border-yellow-500 rounded-full shadow-[2px_2px_0px_var(--color-border)] rotate-1 shrink-0">
+                <span class="text-[10px] sm:text-xs font-black text-yellow-900 uppercase tracking-widest whitespace-nowrap">
+                    {{ sprintf('%02d', $skills->currentPage()) }} <span class="opacity-50 mx-1">/</span> {{ sprintf('%02d', $skills->lastPage()) }}
+                </span>
+            </div>
 
             @if ($skills->hasMorePages())
-                <button type="button" data-url="{{ $skills->nextPageUrl() }}"
-                    class="pagination-link px-3 py-2 border border-border text-muted hover:border-primary hover:text-primary transition-colors">[
-                    NEXT ]</button>
+                <a href="{{ $skills->nextPageUrl() }}" class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-sm bg-container"><i class="fa-solid fa-chevron-right text-[10px] sm:text-xs pointer-events-none"></i></a>
             @else
-                <span class="px-3 py-2 text-muted border border-border/50 bg-surface/30 opacity-50 cursor-not-allowed">[
-                    NEXT ]</span>
+                <span class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-border flex items-center justify-center text-muted opacity-30 cursor-not-allowed italic font-serif bg-container"><i class="fa-solid fa-chevron-right text-[10px] sm:text-xs"></i></span>
             @endif
         </nav>
     </div>
