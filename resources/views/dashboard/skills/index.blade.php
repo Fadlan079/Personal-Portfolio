@@ -231,15 +231,15 @@
         </section>
     </div>
 
-    <x-skill.create-modal />
-    <x-skill.edit-modal />
-
     <form id="deleteSkillForm" method="POST" class="hidden">
         @csrf
         @method('DELETE')
     </form>
 
 @endsection
+
+<x-skill.create-modal />
+<x-skill.edit-modal />
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -509,10 +509,44 @@
                 if (deleteBtn) {
                     e.preventDefault();
                     const id = deleteBtn.dataset.id;
-                    if (confirm('Apakah Anda yakin ingin mencabut catatan keahlian ini secara permanen?')) {
-                        const form = document.getElementById('deleteSkillForm');
-                        form.action = `/dashboard/skills/${id}`;
-                        form.submit();
+
+                    const confirmModal = document.getElementById('confirm-modal');
+                    const confirmYes = document.getElementById('confirm-yes');
+                    const confirmCancel = document.getElementById('confirm-cancel');
+                    const confirmMessage = document.getElementById('confirm-message');
+
+                    if (confirmModal && confirmYes && confirmCancel) {
+                        if (confirmMessage) confirmMessage.textContent = 'Apakah Anda yakin ingin mencabut catatan keahlian ini secara permanen?';
+
+                        confirmModal.classList.remove('opacity-0', 'pointer-events-none');
+                        confirmModal.style.opacity = '1';
+
+                        const handleYes = () => {
+                            const form = document.getElementById('deleteSkillForm');
+                            form.action = `/dashboard/skills/${id}`;
+                            form.submit();
+                            cleanup();
+                        };
+
+                        const handleCancel = () => {
+                            cleanup();
+                        };
+
+                        const cleanup = () => {
+                            confirmModal.classList.add('opacity-0', 'pointer-events-none');
+                            confirmModal.style.opacity = '0';
+                            confirmYes.removeEventListener('click', handleYes);
+                            confirmCancel.removeEventListener('click', handleCancel);
+                        };
+
+                        confirmYes.addEventListener('click', handleYes);
+                        confirmCancel.addEventListener('click', handleCancel);
+                    } else {
+                        if (confirm('Apakah Anda yakin ingin mencabut catatan keahlian ini secara permanen?')) {
+                            const form = document.getElementById('deleteSkillForm');
+                            form.action = `/dashboard/skills/${id}`;
+                            form.submit();
+                        }
                     }
                 }
             });

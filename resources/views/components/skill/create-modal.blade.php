@@ -1,85 +1,103 @@
-<div id="createSkillModal" class="fixed inset-0 z-70 hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+<style>
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
 
-    <div
-        class="relative bg-surface border border-border
-                w-full max-w-lg
-                max-h-[85vh]
-                overflow-y-auto hide-scrollbar
-                p-6
-                space-y-6">
+.diary-input {
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid #d6d3d1;
+    color: #292524;
+    font-size: 0.875rem;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+.diary-input:focus {
+    outline: none;
+    border-color: #292524;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+</style>
 
-        <button id="closeCreateSkillModal" class="absolute top-4 right-4 text-muted hover:text-text transition">
+<div id="createSkillModal" class="fixed inset-0 z-70 hidden items-center justify-center bg-stone-900/60 backdrop-blur-sm p-4 md:p-6 font-sans">
+
+    <div class="relative w-full max-w-xl max-h-[85vh] overflow-y-auto hide-scrollbar bg-[#FCFAEF] text-stone-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-stone-200/60 rounded-sm">
+
+        <div class="absolute top-0 left-6 w-8 h-12 bg-red-800/80 rounded-b-sm shadow-sm z-0 pointer-events-none"></div>
+
+        <button id="closeCreateSkillModal" class="absolute top-6 right-6 text-stone-400 hover:text-stone-800 transition-colors z-10 text-xl font-light">
             ✕
         </button>
 
-        <div class="flex items-center gap-3">
-            <span class="px-3 py-1 text-xs uppercase tracking-widest badge-primary font-semibold">
-                System
-            </span>
-
-            <span class="px-3 py-1 text-[10px] uppercase tracking-wide border border-border text-muted">
-                create skill
-            </span>
+        <div class="px-8 pt-12 pb-4 md:px-12 relative z-10">
+            <div class="flex items-center gap-3 mb-1">
+                <h2 class="font-serif font-bold text-2xl text-stone-700">Tambah Keahlian</h2>
+            </div>
         </div>
 
-        <form action="{{ route('dashboard.skills.store') }}" method="POST" class="space-y-6">
+        <div class="w-full h-px bg-stone-300/60 border-t border-dashed border-stone-400 mx-8 md:mx-12 mb-6" style="width: calc(100% - 6rem);"></div>
+
+        <form action="{{ route('dashboard.skills.store') }}" method="POST" class="px-8 pb-8 md:px-12 space-y-8">
             @csrf
 
-            <div class="space-y-4">
-                <div>
-                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Skill Name</p>
-                    <input type="text" name="name"
-                        class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary"
-                        required>
+            <div class="space-y-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block font-serif font-semibold text-lg text-stone-600 mb-2">Nama Keahlian</label>
+                        <input type="text" name="name" required placeholder="Misal: Laravel, Vue..." class="w-full px-4 py-2 diary-input font-medium font-sans">
+                    </div>
+
+                    <div>
+                        <label class="block font-serif font-semibold text-lg text-stone-600 mb-2">Kategori</label>
+                        <select name="category" required class="w-full px-4 py-2 diary-input font-sans">
+                            <option value="frontend">Frontend</option>
+                            <option value="backend">Backend & Database</option>
+                            <option value="tools">Tools</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div>
-                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Category</p>
-                    <select name="category"
-                        class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary"
-                        required>
-                        <option value="frontend">Frontend</option>
-                        <option value="backend">Backend</option>
-                        <option value="tools">Tools</option>
-                    </select>
-                </div>
-
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-3 py-2">
                     <input type="checkbox" name="is_core" value="1"
-                        class="w-4 h-4 border-border bg-surface text-primary focus:ring-primary">
-                    <span class="text-xs text-muted uppercase tracking-wide">
-                        Core Skill (show even without projects)
-                    </span>
+                        class="w-4 h-4 bg-transparent border-stone-400 text-stone-800 focus:ring-stone-800 rounded-sm cursor-pointer">
+                    <label class="text-sm text-stone-600 cursor-pointer">
+                        Tandai sebagai Core Skill (Tampil meskipun belum ada proyek)
+                    </label>
+                </div>
+
+                <div class="w-full h-px bg-stone-300 border-t border-dashed border-stone-400/50"></div>
+
+                <div>
+                    <label class="block font-serif font-semibold text-lg text-stone-600 mb-2">Deskripsi</label>
+                    <textarea name="description" rows="3" placeholder="Tulis deskripsi mengenai skill ini..." class="w-full px-4 py-2 diary-input resize-y font-sans"></textarea>
                 </div>
 
                 <div>
-                    <p class="text-muted uppercase tracking-wide text-xs mb-2">Description</p>
-                    <textarea name="description" rows="3"
-                        class="w-full px-4 py-2 bg-surface border border-border text-sm focus:outline-none focus:border-primary font-mono"
-                        placeholder="Optional short description..."></textarea>
-                </div>
-
-                <div>
-                    <p class="text-muted uppercase tracking-wide text-xs mb-2 flex items-center justify-between">
-                        SVG Icon
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block font-serif font-semibold text-lg text-stone-600">Ikon / Simbol</label>
                         <a href="https://fontawesome.com/search?o=r&m=free" target="_blank"
-                            class="text-primary hover:underline text-[10px]">Find Icons On FontAwesome <i
-                                class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                    </p>
-                    <textarea name="icon" rows="4" placeholder='e.g. <i class="fa-brands fa-laravel"></i> or <svg>...</svg>'
-                        class="w-full font-mono text-xs px-4 py-2 bg-surface border border-border focus:outline-none focus:border-primary"></textarea>
-                    <p class="text-xs text-muted mt-1">Accepts FontAwesome `<i>` tags or raw SVG code.</p>
+                            class="text-xs text-stone-500 hover:text-blue-600 underline transition-colors">
+                            Cari Ikon FontAwesome ↗
+                        </a>
+                    </div>
+                    <textarea name="icon" rows="2" placeholder='contoh: <i class="fa-brands fa-laravel"></i>'
+                        class="w-full px-4 py-2 diary-input font-mono text-sm leading-relaxed resize-y"></textarea>
                 </div>
+
             </div>
 
-            <div class="pt-4 border-t border-border flex justify-end gap-3">
-                <button type="button" id="cancelCreateSkillBtn"
-                    class="px-4 py-2 text-sm border border-transparent text-muted hover:text-text">
-                    Cancel
+            <div class="flex justify-end gap-3 pt-6 mt-4 border-t border-dashed border-stone-400/50">
+                <button type="button" id="cancelCreateSkillBtn" class="px-6 py-2 bg-transparent border border-stone-300 text-stone-600 font-semibold text-sm hover:border-stone-500 hover:text-stone-800 transition-colors rounded-sm">
+                    Batal
                 </button>
-                <button type="submit"
-                    class="px-6 py-2 bg-primary text-text font-medium text-sm hover:bg-primary/90 transition shadow-sm">
-                    Create Skill
+
+                <button type="submit" class="px-6 py-2 bg-stone-800 border border-stone-800 text-[#FCFAEF] font-semibold text-sm hover:bg-stone-900 transition-colors shadow-sm rounded-sm">
+                    Buat Keahlian
                 </button>
             </div>
         </form>
@@ -108,6 +126,7 @@
         if (closeBtn) closeBtn.addEventListener('click', closeModal);
         if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
+        // Tutup modal ketika overlay latar belakang diklik
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });

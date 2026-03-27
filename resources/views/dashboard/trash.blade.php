@@ -1,204 +1,181 @@
 @extends('layouts.dashboard')
-@section('title', 'Trash')
+@section('title', 'Trash Bin')
 
 @section('content')
-    <div class="min-h-screen bg-background pt-12 pb-32 px-4 md:px-6 relative overflow-hidden">
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 
-        {{-- Global Faint Grid --}}
-        <div class="absolute inset-0 pointer-events-none opacity-[0.02]"
-            style="background-image: linear-gradient(var(--color-text) 1px, transparent 1px), linear-gradient(90deg, var(--color-text) 1px, transparent 1px); background-size: 64px 64px;">
+    <div class="min-h-screen bg-background pt-6 sm:pt-12 pb-32 px-4 md:px-6 relative overflow-hidden font-sans">
+
+        <div class="absolute inset-0 pointer-events-none opacity-[0.03] z-0"
+            style="background-image: radial-gradient(var(--color-text) 1px, transparent 1px); background-size: 24px 24px;">
         </div>
 
-        <section class="max-w-7xl mx-auto relative z-10 space-y-12">
+        <section class="max-w-7xl mx-auto relative z-10 space-y-12 mt-4 md:mt-8">
 
-            {{-- HEADER MODULE --}}
-            <header class="relative space-y-6 border-b border-border/50 pb-8 mt-4 md:mt-8">
-                <div
-                    class="absolute top-0 right-0 w-1/3 h-[1px] bg-gradient-to-r from-transparent to-primary/50 pointer-events-none">
-                </div>
+            <header class="relative space-y-6">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="space-y-6">
+                        <div class="relative inline-flex items-center gap-2 py-1.5 pl-8 pr-6 transition-all duration-300 w-max group hover:-translate-y-0.5 hover:-rotate-1"
+                            style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.06));">
 
-                <div class="flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-primary">
-                    <i class="fa-solid fa-recycle"></i>
-                    >> SYS_DIR / DASHBOARD / ARCHIVE_STORAGE
-                </div>
+                            <div class="absolute inset-0 bg-red-100 border border-red-300 rounded-l-md z-0 transition-colors"
+                                style="clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);">
+                            </div>
 
-                <div class="flex items-end gap-3 pt-2">
-                    <h1
-                        class="text-4xl md:text-5xl lg:text-6xl font-bold font-mono tracking-tighter uppercase text-text leading-none">
-                        Data_Recycle_Bin
-                    </h1>
-                    <div
-                        class="w-3 md:w-4 h-8 md:h-12 bg-primary animate-pulse mb-1 shadow-[0_0_10px_var(--color-primary)]">
+                            <div class="absolute top-1/2 -left-4 w-6 h-[1.5px] bg-[#8B0000]/80 -translate-y-[calc(50%+1px)] origin-right -rotate-12 group-hover:-rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+                            <div class="absolute top-1/2 -left-3 w-5 h-[1.5px] bg-[#B22222]/80 -translate-y-[calc(50%-1px)] origin-right rotate-12 group-hover:rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+
+                            <div class="absolute left-2.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-surface shadow-[inset_1px_1px_3px_rgba(0,0,0,0.3)] border border-red-700/30 z-10"></div>
+
+                            <i class="fa-solid fa-trash-can relative z-10 text-red-800 text-[11px] mt-px"></i>
+
+                            <span class="relative z-10 text-[10px] sm:text-xs font-black tracking-[0.15em] uppercase text-red-900 mt-px">
+                                Arsip Terhapus
+                            </span>
+                        </div>
+
+                        <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter leading-[1.05] text-text font-serif">
+                            <span class="block">Tempat Sampah</span>
+                        </h1>
+
+                        <p class="text-base text-muted max-w-2xl leading-relaxed font-medium italic">
+                            Data di sini akan dihapus secara permanen setelah melewati batas waktu retensi. Silakan tinjau kembali jika ada yang perlu dipulihkan.
+                        </p>
                     </div>
                 </div>
-
-                <p class="text-sm font-mono text-muted tracking-wide max-w-2xl leading-relaxed">
-                    <span class="text-primary">></span> Storage array for archived and soft-deleted node entities. Data
-                    pending permanent eradication or restoration.
-                </p>
             </header>
 
-            {{-- SUCCESS LOG --}}
-            @if (session('success'))
-                <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.500ms x-init="setTimeout(() => show = false, 4000)"
-                    class="border-l-2 border-green-500 bg-green-500/10 p-4 flex items-center gap-3">
-                    <i class="fa-solid fa-check text-green-500"></i>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-green-500">> {{ session('success') }}</p>
-                </div>
-            @endif
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
 
-            {{-- METRICS DASHBOARD --}}
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                {{-- Stat 1 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-primary/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-primary/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-database text-primary"></i> Total_Archived
+                <div class="bg-stone-100 p-5 md:p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-trash text-stone-600"></i> Total Sampah
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-text">{{ $totalTrashed }}</h3>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $totalTrashed }}</h3>
                 </div>
 
-                {{-- Stat 2 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-sky-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-sky-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-folder-open text-sky-400"></i> Projects_Node
+                <div class="bg-sky-100 p-5 md:p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip -rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-folder-tree text-sky-600"></i> Proyek
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-sky-400">{{ $totalTrashedProjects }}</h3>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $totalTrashedProjects }}</h3>
                 </div>
 
-                {{-- Stat 3 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-red-400/50 transition-colors">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-red-400/50"></div>
-                    <p class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-code text-red-400"></i> Skills_Node
+                <div class="bg-amber-100 p-5 md:p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-layer-group text-amber-600"></i> Skill
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-red-400">{{ $totalTrashedSkills }}</h3>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $totalTrashedSkills }}</h3>
                 </div>
 
-                {{-- Stat 4 --}}
-                <div
-                    class="relative border border-border/50 bg-surface/20 p-5 group hover:border-yellow-400/50 transition-colors overflow-hidden">
-                    <div class="absolute top-0 right-0 w-3 h-3 border-t border-r border-yellow-400/50 z-10"></div>
-                    <div
-                        class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(250,204,21,0.03)_4px,rgba(250,204,21,0.03)_8px)] pointer-events-none">
-                    </div>
-                    <p
-                        class="text-[10px] font-mono uppercase tracking-widest text-muted mb-2 flex items-center gap-2 relative z-10">
-                        <i class="fa-solid fa-hourglass-half text-yellow-400 animate-pulse"></i> Expiring_5D
+                <div class="bg-red-50 p-5 md:p-6 rounded-sm shadow-md border border-red-200 flex flex-col justify-between relative group/tooltip -rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-red-600 mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-hourglass-half animate-pulse text-red-600"></i> Segera Dihapus
                     </p>
-                    <h3 class="text-3xl font-mono font-bold text-yellow-400 relative z-10">{{ $expiringSoon ?? 0 }}</h3>
+                    <h3 class="text-4xl font-bold text-red-700 relative z-10">{{ $expiringSoon ?? 0 }}</h3>
                 </div>
             </div>
 
-            {{-- CONTROL PANEL & GRID --}}
-            <div class="relative border border-border/50 bg-surface/10 p-4 md:p-6 mt-8 space-y-6">
+            <div class="bg-surface border-2 border-dashed border-border shadow-sm rounded-2xl p-5 md:p-6 space-y-6 relative">
 
-                {{-- Command Bar (Search & Sort) --}}
-                <div
-                    class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 border-b border-border/50 pb-6">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-muted opacity-20 backdrop-blur-sm -rotate-2" style="clip-path: polygon(5% 0, 100% 5%, 95% 100%, 0 95%); z-index: 10;"></div>
 
-                    {{-- Terminal Search Input --}}
+                <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 border-b-2 border-dashed border-border/50 pb-6 relative z-20">
+
                     <div class="relative w-full md:w-1/2 group">
-                        <div class="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-primary text-sm">></div>
-                        <input type="text" id="search-input" placeholder="SEARCH_QUERY_" value="{{ request('search') }}"
-                            class="w-full border border-border/70 bg-surface/30 px-4 py-3 pl-8 font-mono text-xs uppercase tracking-widest text-text placeholder:text-muted/50 focus:outline-none focus:border-primary focus:bg-primary/5 transition-colors" />
-                        <div
-                            class="absolute right-4 top-1/2 -translate-y-1/2 w-1.5 h-3 bg-primary/30 group-focus-within:bg-primary group-focus-within:animate-pulse pointer-events-none">
-                        </div>
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors"></i>
+                        <input type="text" id="search-input" placeholder="Cari arsip yang terhapus..." value="{{ request('search') }}"
+                            class="w-full border-2 border-border bg-container rounded-lg px-4 py-3 pl-11 text-sm font-medium text-text placeholder:text-muted placeholder:italic focus:outline-none focus:border-primary focus:ring-0 transition-all shadow-inner"
+                            style="background-image: repeating-linear-gradient(transparent, transparent 27px, var(--color-border) 27px, var(--color-border) 28px); line-height: 28px; background-attachment: local;" />
                     </div>
 
-                    {{-- Action Toggles --}}
                     <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
-                        <div class="relative">
+                        <div class="relative z-40">
                             <select id="sort-select"
-                                class="appearance-none border border-border/70 bg-surface/30 px-8 py-3 pr-12 font-mono text-xs uppercase tracking-widest text-muted hover:text-text focus:outline-none focus:border-primary transition-colors cursor-pointer">
-                                <option value="desc" {{ $sort == 'desc' ? 'selected' : '' }}>SORT: NEWEST</option>
-                                <option value="asc" {{ $sort == 'asc' ? 'selected' : '' }}>SORT: OLDEST</option>
+                                class="w-full md:w-auto appearance-none flex justify-between items-center gap-6 px-5 py-3 border-2 border-border bg-container rounded-lg text-xs font-bold uppercase tracking-widest text-text hover:border-primary hover:-translate-y-0.5 transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none pr-10 cursor-pointer">
+                                <option value="desc" {{ $sort == 'desc' ? 'selected' : '' }}>Terbaru Dihapus</option>
+                                <option value="asc" {{ $sort == 'asc' ? 'selected' : '' }}>Terlama Dihapus</option>
                             </select>
-                            <i
-                                class="fa-solid fa-sort absolute right-4 top-1/2 -translate-y-1/2 text-muted pointer-events-none"></i>
+                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-muted pointer-events-none"></i>
                         </div>
 
                         <button id="toggleSelectMode" type="button"
-                            class="px-6 py-3 border border-border/70 bg-surface/30 font-mono text-xs font-bold uppercase tracking-widest text-muted hover:border-primary hover:text-primary transition-colors focus:outline-none focus:border-primary">
-                            [ SELECT_MULTI ]
+                            class="px-6 py-3 border-2 border-border bg-container rounded-lg text-xs font-bold uppercase tracking-widest text-muted hover:border-primary hover:text-primary transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none">
+                            Pilih Beberapa
                         </button>
                     </div>
                 </div>
 
-                {{-- Filter Tabs (Sangat bergantung pada class JS kamu, jadi base classnya dipertahankan) --}}
-                <div class="flex flex-wrap gap-2 border-b border-border/30 pb-4">
+                <div class="flex overflow-x-auto no-scrollbar gap-4 pb-2 pt-2 px-2 -mx-2">
                     <button type="button"
-                        class="filter-btn px-5 py-2 border border-primary bg-primary/10 text-primary font-mono text-[10px] font-bold uppercase tracking-widest transition-colors focus:outline-none"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none border-2 border-border shadow-[1px_2px_0px_var(--color-border)]"
                         data-tab="all">
-                        ALL_TRASH
+                        Semua
                     </button>
                     <button type="button"
-                        class="filter-btn px-5 py-2 border border-border font-mono text-[10px] font-bold uppercase tracking-widest text-muted hover:border-primary transition-colors focus:outline-none"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none border-2 border-border shadow-[1px_2px_0px_var(--color-border)]"
                         data-tab="projects">
-                        PROJECTS
+                        Proyek
                     </button>
                     <button type="button"
-                        class="filter-btn px-5 py-2 border border-border font-mono text-[10px] font-bold uppercase tracking-widest text-muted hover:border-primary transition-colors focus:outline-none"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none border-2 border-border shadow-[1px_2px_0px_var(--color-border)]"
                         data-tab="skills">
-                        SKILLS
+                        Skill
                     </button>
                 </div>
 
-                {{-- Dynamic Content Container --}}
-                <div id="trash-grid" class="space-y-16 min-h-[400px] transition-opacity duration-300">
+                <div id="trash-grid" class="space-y-10 min-h-[400px] transition-opacity duration-300">
                     @include('dashboard.trash.partials.content')
                 </div>
 
             </div>
 
-            {{-- BULK ACTION BAR (Sticky HUD) --}}
             <div id="bulkBar"
-                class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90]
-                   bg-[#0a0a0a]/90 backdrop-blur-md border border-primary/50 p-4 md:px-6 md:py-4
-                   flex flex-col sm:flex-row items-center gap-4 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.15)]
-                   opacity-0 pointer-events-none translate-y-4
-                   transition-all duration-300 w-[90%] md:w-auto min-w-[320px]">
+                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
 
-                {{-- Decorative HUD lines --}}
-                <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-primary"></div>
-                <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-primary"></div>
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 backdrop-blur-sm border border-black/5 rotate-1"></div>
 
-                <div
-                    class="flex items-center gap-3 border-r border-border/50 pr-4 mr-2 w-full sm:w-auto justify-center sm:justify-start">
-                    <i class="fa-solid fa-crosshairs text-primary animate-spin-slow"></i>
-                    <span id="selectedCount" class="text-[10px] font-mono font-bold uppercase tracking-widest text-primary">
-                        0 SELECTED
-                    </span>
+                <div class="flex items-center gap-4 border-r-2 border-dashed border-yellow-600/20 pr-6 mr-2 w-full sm:w-auto justify-center sm:justify-start">
+                    <div class="w-10 h-10 rounded-full bg-yellow-400/20 flex items-center justify-center border border-yellow-500 animate-pulse">
+                        <i class="fa-solid fa-check-double text-yellow-700"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="selectedCount" class="text-xs font-black uppercase tracking-widest text-yellow-900">0 TERPILIH</span>
+                        <span class="text-[9px] font-bold text-yellow-900/40 uppercase tracking-tighter">Operasi Massal</span>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="flex items-center gap-4 w-full sm:w-auto">
                     <button type="button" onclick="bulkAction('restore')"
-                        class="flex-1 sm:flex-none px-4 py-2 border border-border text-[10px] font-mono font-bold uppercase tracking-widest text-muted hover:border-primary hover:text-primary transition-colors">
-                        [ RESTORE ]
+                        class="flex-1 sm:flex-none px-6 py-2.5 bg-emerald-100 border-2 border-emerald-500 rounded text-[10px] font-black uppercase tracking-widest text-emerald-900 hover:-translate-y-1 hover:-rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)]">
+                        RESTORE SEMUA
                     </button>
-
                     <button type="button" onclick="bulkAction('delete')"
-                        class="flex-1 sm:flex-none px-4 py-2 border border-red-500/50 bg-red-500/10 text-[10px] font-mono font-bold uppercase tracking-widest text-red-500 hover:bg-red-500 hover:text-white transition-colors group">
-                        <i class="fa-solid fa-skull mr-1 opacity-50 group-hover:opacity-100 group-hover:animate-ping"></i> [
-                        PURGE ]
+                        class="flex-1 sm:flex-none px-6 py-2.5 bg-rose-100 border-2 border-rose-500 rounded text-[10px] font-black uppercase tracking-widest text-rose-900 hover:-translate-y-1 hover:rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] group">
+                        <i class="fa-solid fa-skull mr-2"></i> HAPUS PERMANEN
+                    </button>
+                    <button type="button" id="cancelSelect" class="text-[9px] font-bold text-muted hover:text-text uppercase tracking-widest underline underline-offset-4 decoration-dashed ml-2">
+                        Batal
                     </button>
                 </div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-yellow-200" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
             </div>
 
-            {{-- Hidden Forms --}}
             <form id="bulkForm" method="POST" class="hidden">
                 @csrf
                 <input type="hidden" name="action_type" id="bulkActionType">
             </form>
 
-            <form id="singleDeleteForm" method="POST" class="hidden">
+            <form id="singleActionForm" method="POST" class="hidden">
                 @csrf
-                @method('DELETE')
+                <input type="hidden" name="_method" id="singleActionMethod" value="DELETE">
             </form>
 
         </section>
@@ -208,7 +185,6 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // JS Murni milikmu tetap dipertahankan, karena logikanya sudah sangat baik!
             const tabs = document.querySelectorAll('.filter-btn');
             const searchInput = document.getElementById('search-input');
             const sortSelect = document.getElementById('sort-select');
@@ -217,12 +193,26 @@
             const toggleBtn = document.getElementById('toggleSelectMode');
             const bulkBar = document.getElementById('bulkBar');
             const selectedCountText = document.getElementById('selectedCount');
+            const cancelBtn = document.getElementById('cancelSelect');
 
             let currentTab = 'all';
             let currentSearch = '{{ request('search', '') }}';
             let currentSort = '{{ $sort }}';
             let selectMode = false;
             let debounceTimer;
+
+            function updateActiveTabStyles() {
+                tabs.forEach(t => {
+                    const isActive = t.dataset.tab === currentTab;
+                    if (isActive) {
+                        t.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none bg-warning text-yellow-900 border-2 border-yellow-500 shadow-[2px_3px_0px_var(--color-border)] -translate-y-1 rotate-1";
+                    } else {
+                        t.className = "filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest text-muted bg-container border-2 border-border shadow-[1px_2px_0px_var(--color-border)] hover:shadow-[3px_4px_0px_var(--color-border)] hover:-translate-y-1 hover:-rotate-1 transition-all focus:outline-none";
+                    }
+                });
+            }
+
+            updateActiveTabStyles();
 
             function fetchTrash(urlOverride = null) {
                 grid.style.opacity = '0.5';
@@ -260,23 +250,14 @@
                     });
             }
 
-            // Tab Clicks
             tabs.forEach(tab => {
                 tab.addEventListener('click', (e) => {
-                    tabs.forEach(t => {
-                        t.classList.remove('border-primary', 'bg-primary/10',
-                            'text-primary');
-                        t.classList.add('border-border', 'text-muted');
-                    });
-                    e.target.classList.remove('border-border', 'text-muted');
-                    e.target.classList.add('border-primary', 'bg-primary/10', 'text-primary');
-
                     currentTab = e.target.dataset.tab;
+                    updateActiveTabStyles();
                     fetchTrash();
                 });
             });
 
-            // Search Input (Debounced)
             searchInput.addEventListener('input', (e) => {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
@@ -285,27 +266,29 @@
                 }, 300);
             });
 
-            // Sort Dropdown
             sortSelect.addEventListener('change', (e) => {
                 currentSort = e.target.value;
                 fetchTrash();
             });
 
-            // --- Select Multiple Logic ---
             toggleBtn.addEventListener('click', () => {
                 selectMode = !selectMode;
 
                 if (selectMode) {
-                    toggleBtn.innerText = '[ CANCEL_MULTI ]';
+                    toggleBtn.innerText = 'BATAL PILIH';
                     toggleBtn.classList.add('border-red-500', 'text-red-500');
                 } else {
-                    toggleBtn.innerText = '[ SELECT_MULTI ]';
+                    toggleBtn.innerText = 'Pilih Beberapa';
                     toggleBtn.classList.remove('border-red-500', 'text-red-500');
                     if (bulkBar) bulkBar.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
                 }
 
                 fetchTrash();
             });
+
+            if (cancelBtn) {
+                cancelBtn.onclick = () => toggleBtn.click();
+            }
 
             function updateBulkBar() {
                 if (!selectMode || !bulkBar) return;
@@ -316,77 +299,142 @@
 
                 if (totalSelected > 0) {
                     bulkBar.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
-                    selectedCountText.innerText = totalSelected + ' SELECTED';
+                    selectedCountText.innerText = totalSelected + ' TERPILIH';
                 } else {
                     bulkBar.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
                 }
             }
 
             window.bulkAction = function(action) {
-                const form = document.getElementById('bulkForm');
-                form.innerHTML = '@csrf'; // reset
-
                 const selectedProjects = document.querySelectorAll('.bulk-checkbox:checked');
                 const selectedSkills = document.querySelectorAll('.bulk-skill-checkbox:checked');
 
                 if (selectedProjects.length === 0 && selectedSkills.length === 0) return;
 
-                if (action === 'delete') {
-                    if (!confirm(
-                            'CRITICAL: Are you absolutely sure you want to permanently delete the selected items? This cannot be undone.'
-                        )) return;
-                }
+                const confirmModal = document.getElementById('confirm-modal');
+                const confirmYes = document.getElementById('confirm-yes');
+                const confirmCancel = document.getElementById('confirm-cancel');
+                const confirmMessage = document.getElementById('confirm-message');
 
-                let promises = [];
-
-                if (selectedProjects.length > 0) {
-                    let formData = new FormData();
-                    formData.append('_token', '{{ csrf_token() }}');
-                    if (action === 'delete') {
-                        formData.append('_method', 'POST');
+                if (confirmModal && confirmYes && confirmCancel) {
+                    if (confirmMessage) {
+                        confirmMessage.textContent = action === 'restore' 
+                            ? 'Apakah Anda yakin ingin memulihkan item terpilih ke publik?' 
+                            : 'PENTING: Apakah Anda yakin ingin menghapus item terpilih secara permanen? Data ini tidak bisa dikembalikan.';
                     }
-                    selectedProjects.forEach(cb => formData.append('projects[]', cb.value));
 
-                    let url = action === 'restore' ? '{{ route('dashboard.bulkRestore') }}' :
-                        '{{ route('dashboard.bulkForceDelete') }}';
+                    confirmModal.classList.remove('opacity-0', 'pointer-events-none');
+                    confirmModal.style.opacity = '1';
 
-                    promises.push(fetch(url, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
+                    const executeBulk = () => {
+                        let promises = [];
+
+                        if (selectedProjects.length > 0) {
+                            let formData = new FormData();
+                            formData.append('_token', '{{ csrf_token() }}');
+                            if (action === 'delete') {
+                                formData.append('_method', 'POST'); 
+                            }
+                            selectedProjects.forEach(cb => formData.append('projects[]', cb.value));
+
+                            let url = action === 'restore' ? '{{ route('dashboard.bulkRestore') }}' :
+                                '{{ route('dashboard.bulkForceDelete') }}';
+
+                            promises.push(fetch(url, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }));
                         }
-                    }));
-                }
 
-                if (selectedSkills.length > 0) {
-                    let formData = new FormData();
-                    formData.append('_token', '{{ csrf_token() }}');
-                    selectedSkills.forEach(cb => formData.append('skills[]', cb.value));
+                        if (selectedSkills.length > 0) {
+                            let formData = new FormData();
+                            formData.append('_token', '{{ csrf_token() }}');
+                            selectedSkills.forEach(cb => formData.append('skills[]', cb.value));
 
-                    let url = action === 'restore' ? '{{ route('dashboard.skills.bulkRestore') }}' :
-                        '{{ route('dashboard.skills.bulkForceDelete') }}';
+                            let url = action === 'restore' ? '{{ route('dashboard.skills.bulkRestore') }}' :
+                                '{{ route('dashboard.skills.bulkForceDelete') }}';
 
-                    promises.push(fetch(url, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
+                            promises.push(fetch(url, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }));
                         }
-                    }));
+
+                        Promise.all(promises).then(responses => {
+                            return responses[0].text();
+                        }).then(html => {
+                            selectMode = false;
+                            toggleBtn.innerText = 'Pilih Beberapa';
+                            toggleBtn.classList.remove('border-red-500', 'text-red-500');
+                            bulkBar.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+                            fetchTrash();
+
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newModal = doc.getElementById('global-modal');
+
+                            if (newModal) {
+                                const oldModal = document.getElementById('global-modal');
+                                if (oldModal) oldModal.remove();
+
+                                document.body.appendChild(newModal);
+
+                                const backdrop = document.getElementById('modal-backdrop');
+                                const modalBox = document.getElementById('modal-box');
+                                const closeBtn = document.getElementById('modal-close-btn');
+
+                                if (backdrop && modalBox) {
+                                    setTimeout(() => {
+                                        backdrop.style.opacity = '1';
+                                        modalBox.style.opacity = '1';
+                                        modalBox.style.transform = 'scale(1) translateY(0)';
+                                    }, 50);
+
+                                    const hideModal = () => {
+                                        backdrop.style.opacity = '0';
+                                        modalBox.style.opacity = '0';
+                                        modalBox.style.transform = 'scale(0.9) translateY(30px)';
+                                        setTimeout(() => newModal.remove(), 300);
+                                    };
+
+                                    if (closeBtn) closeBtn.addEventListener('click', hideModal);
+                                    backdrop.addEventListener('click', hideModal);
+                                    setTimeout(hideModal, 4000);
+                                }
+                            }
+                        }).catch(err => alert("Kesalahan Sistem: Gagal memproses eksekusi massal."));
+
+                        cleanup();
+                    };
+
+                    const cleanup = () => {
+                        confirmModal.classList.add('opacity-0', 'pointer-events-none');
+                        confirmModal.style.opacity = '0';
+                        confirmYes.removeEventListener('click', executeBulk);
+                        confirmCancel.removeEventListener('click', cleanup);
+                    };
+
+                    confirmYes.addEventListener('click', executeBulk);
+                    confirmCancel.addEventListener('click', cleanup);
+                } else {
+                    if (action === 'delete') {
+                        if (!confirm('PENTING: Apakah Anda yakin ingin menghapus item terpilih secara permanen? Data ini tidak bisa dikembalikan.')) return;
+                    } else {
+                        if (!confirm('Apakah Anda yakin ingin memulihkan item terpilih ke publik?')) return;
+                    }
+
+                    // Fallback using manual form logic if modal UI fails
+                    const form = document.getElementById('bulkForm');
+                    form.innerHTML = '@csrf'; 
+                    // To keep things simple, reload if UI is broken
+                    window.location.reload();
                 }
-
-                Promise.all(promises).then(() => {
-                    selectMode = false;
-                    toggleBtn.innerText = '[ SELECT_MULTI ]';
-                    toggleBtn.classList.remove('border-red-500', 'text-red-500');
-                    bulkBar.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
-                    fetchTrash();
-
-                    const msg = action === 'restore' ? 'System: Items restored successfully.' :
-                        'System: Items permanently purged.';
-                    alert(msg);
-                }).catch(err => alert("System Error: Failed to process bulk execution."));
             };
 
             function attachGridEvents() {
@@ -418,7 +466,7 @@
                             }
                         });
 
-                        button.innerText = allChecked ? '[ SELECT_ALL ]' : '[ UNSELECT_ALL ]';
+                        button.innerText = allChecked ? 'Pilih Semua' : 'Batal Semua';
                         updateBulkBar();
                     });
                 });
@@ -439,16 +487,14 @@
                             }
                         });
 
-                        button.innerText = allChecked ? '[ SELECT_ALL ]' :
-                            '[ UNSELECT_ALL ]';
+                        button.innerText = allChecked ? 'Pilih Semua' : 'Batal Semua';
                         updateBulkBar();
                     });
                 });
 
                 const handleCardClick = function(e) {
                     if (!selectMode) return;
-                    if (e.target.closest('form') || e.target.tagName === 'BUTTON' || e.target.closest(
-                            '.delete-trash-btn') || e.target.closest('a')) return;
+                    if (e.target.closest('form') || e.target.tagName === 'BUTTON' || e.target.closest('.delete-trash-btn') || e.target.closest('a')) return;
 
                     const checkbox = this.querySelector('.bulk-checkbox, .bulk-skill-checkbox');
                     if (checkbox) {
@@ -462,46 +508,55 @@
                 projectCards.forEach(card => card.addEventListener('click', handleCardClick));
                 skillCards.forEach(card => card.addEventListener('click', handleCardClick));
 
-                const deleteButtons = document.querySelectorAll('.delete-trash-btn');
-                deleteButtons.forEach(btn => {
+                const actionButtons = document.querySelectorAll('.delete-trash-btn, .restore-trash-btn');
+                actionButtons.forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
 
-                        const url = this.dataset.deleteUrl;
+                        const isRestore = this.classList.contains('restore-trash-btn');
+                        const url = isRestore ? this.dataset.restoreUrl : this.dataset.deleteUrl;
+
                         const confirmModal = document.getElementById('confirm-modal');
                         const confirmYes = document.getElementById('confirm-yes');
                         const confirmCancel = document.getElementById('confirm-cancel');
                         const confirmMessage = document.getElementById('confirm-message');
 
                         if (confirmModal && confirmYes && confirmCancel) {
-                            confirmMessage.textContent =
-                                'CRITICAL: Are you sure you want to permanently purge this node? Data cannot be recovered.';
+                            if (confirmMessage) {
+                                confirmMessage.textContent = isRestore 
+                                    ? 'Apakah Anda yakin ingin memulihkan item ini ke publik?' 
+                                    : 'PENTING: Apakah Anda yakin ingin menghapus item ini secara permanen? Data tidak dapat dipulihkan.';
+                            }
 
-                            // Trigger modal tampil (tergantung implementasi modalmu)
                             confirmModal.classList.remove('opacity-0', 'pointer-events-none');
                             confirmModal.style.opacity = '1';
 
-                            const handleYes = () => {
-                                const form = document.getElementById('singleDeleteForm');
+                            const executeAction = () => {
+                                const form = document.getElementById('singleActionForm');
                                 form.action = url;
+                                document.getElementById('singleActionMethod').value = isRestore ? 'POST' : 'DELETE';
                                 form.submit();
-                                cleanup();
-                            };
-
-                            const handleCancel = () => {
                                 cleanup();
                             };
 
                             const cleanup = () => {
                                 confirmModal.classList.add('opacity-0', 'pointer-events-none');
                                 confirmModal.style.opacity = '0';
-                                confirmYes.removeEventListener('click', handleYes);
-                                confirmCancel.removeEventListener('click', handleCancel);
+                                confirmYes.removeEventListener('click', executeAction);
+                                confirmCancel.removeEventListener('click', cleanup);
                             };
 
-                            confirmYes.addEventListener('click', handleYes);
-                            confirmCancel.addEventListener('click', handleCancel);
+                            confirmYes.addEventListener('click', executeAction);
+                            confirmCancel.addEventListener('click', cleanup);
+                        } else {
+                            const msg = isRestore ? 'Apakah Anda yakin ingin memulihkan item ini ke publik?' : 'PENTING: Apakah Anda yakin ingin menghapus item ini secara permanen? Data tidak dapat dipulihkan.';
+                            if (confirm(msg)) {
+                                const form = document.getElementById('singleActionForm');
+                                form.action = url;
+                                document.getElementById('singleActionMethod').value = isRestore ? 'POST' : 'DELETE';
+                                form.submit();
+                            }
                         }
                     });
                 });
@@ -524,7 +579,7 @@
                     monthButtons.forEach(btn => btn.classList.remove('hidden'));
                     skillsMonthButtons.forEach(btn => btn.classList.remove('hidden'));
                     checkboxes.forEach(cb => cb.classList.remove('opacity-0', 'pointer-events-none'));
-                    normalActions.forEach(el => el.classList.add('opacity-0', 'pointer-events-none'));
+                    normalActions.forEach(el => el.classList.add('opacity-0', 'pointer-events-none', 'hidden'));
                 } else {
                     monthButtons.forEach(btn => btn.classList.add('hidden'));
                     skillsMonthButtons.forEach(btn => btn.classList.add('hidden'));
@@ -534,17 +589,11 @@
                     });
                     projectCards.forEach(card => card.classList.remove('border-primary', 'bg-primary/5'));
                     skillCards.forEach(card => card.classList.remove('border-primary', 'bg-primary/5'));
-                    normalActions.forEach(el => el.classList.remove('opacity-0', 'pointer-events-none'));
+                    normalActions.forEach(el => el.classList.remove('opacity-0', 'pointer-events-none', 'hidden'));
                 }
             }
 
             attachGridEvents();
         });
     </script>
-    <style>
-        /* CSS Utility untuk Putaran Lambat pada Target HUD */
-        .animate-spin-slow {
-            animation: spin 4s linear infinite;
-        }
-    </style>
 @endpush
