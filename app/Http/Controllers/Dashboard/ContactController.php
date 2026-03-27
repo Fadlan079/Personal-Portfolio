@@ -65,12 +65,12 @@ class ContactController extends Controller
         // ==========================================
         // 4. DATA VISUALIZATION MATRIX (CHART.JS)
         // ==========================================
-        
+
         // 4.1 Contacts per Month (Last 6 Months)
         $timelineChart = [];
         for ($i = 5; $i >= 0; $i--) {
             $monthName = now()->subMonths($i)->format('M');
-            $timelineChart[$monthName] = 0; 
+            $timelineChart[$monthName] = 0;
         }
         $recentContacts = Contact::where('created_at', '>=', now()->subMonths(5)->startOfMonth())->get(['created_at']);
         $timelineData = $recentContacts->groupBy(function($item) {
@@ -78,27 +78,22 @@ class ContactController extends Controller
         })->map->count()->toArray();
         $timelineChart = array_merge($timelineChart, $timelineData);
 
-        // 4.2 Contact Method (Email vs WA)
-        $methodChart = Contact::selectRaw('method, count(*) as count')
-            ->groupBy('method')
-            ->pluck('count', 'method')
-            ->toArray();
-        // Normalisasi nama agar bagus di chart
-        $methodChartFormatted = [
-            'Email (SMTP)' => $methodChart['email'] ?? 0,
-            'WhatsApp'     => $methodChart['wa'] ?? 0,
-        ];
-
         // 4.3 Contact Type
         $typeChart = Contact::selectRaw('type, count(*) as count')
             ->groupBy('type')
             ->pluck('count', 'type')
             ->toArray();
 
+        $inboxChart = [
+            'read' => $totalMessages - $unreadCount,
+            'unread' => $unreadCount,
+            'total' => $totalMessages,
+        ];
+
         $chartData = [
             'timeline' => $timelineChart,
-            'method'   => $methodChartFormatted,
             'type'     => $typeChart,
+            'inbox'    => $inboxChart,
         ];
 
         return view('dashboard.contact.contact', compact(

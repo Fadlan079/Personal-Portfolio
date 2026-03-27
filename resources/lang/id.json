@@ -4,13 +4,12 @@
         "about": "Tentang Saya",
         "projects": "Proyek",
         "contact": "Kontak",
-        "main_menu":"Menu Utama",
-        "navigasi":"Navigasi",
-        "authenticated":"Autentikasi",
+        "main_menu": "Menu Utama",
+        "navigasi": "Navigasi",
+        "authenticated": "Autentikasi",
         "login": "Masuk",
         "dashboard": "Dasbor"
     },
-
     "home": {
         "hero": {
             "status": "Tersedia Untuk Kolaborasi",
@@ -53,7 +52,6 @@
             "button_email": "Kirim via Email"
         }
     },
-
     "about": {
         "teaser": {
             "label": "Profil Saya"
@@ -94,7 +92,6 @@
             }
         }
     },
-
     "project": {
         "header": {
             "label": "Arsip Proyek",
@@ -135,7 +132,6 @@
             "description": "Detail proyek dan pembaruan akan terus dikembangkan."
         }
     },
-
     "contact": {
         "header": {
             "label": "Saluran Komunikasi Terbuka",
@@ -182,12 +178,10 @@
             "text": "Menunggu pesan Anda..."
         }
     },
-
     "footer": {
         "brand_description": "Siswa SMK TI Airlangga generasi ke-24 yang tertarik pada pengembangan web full-stack.",
         "quick_links_label": "Tautan Cepat",
         "connect_label": "Hubungi",
         "copyright": "Hak Cipta Dilindungi"
     }
-
 }

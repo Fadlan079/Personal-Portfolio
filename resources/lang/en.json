@@ -10,7 +10,6 @@
         "login": "Login",
         "dashboard": "Dashboard"
     },
-
     "home": {
         "hero": {
             "status": "Available for Collaboration",
@@ -37,8 +36,8 @@
             "button_detail": "View Detail",
             "button_more": "View All Projects",
             "empty_archive": {
-            "title": "Empty Archive",
-            "description": "No projects have been highlighted at this time."
+                "title": "Empty Archive",
+                "description": "No projects have been highlighted at this time."
             }
         },
         "skills": {
@@ -93,7 +92,6 @@
             }
         }
     },
-
     "project": {
         "header": {
             "label": "Project Archive",
@@ -134,7 +132,6 @@
             "description": "Project details and updates will continue to be developed."
         }
     },
-
     "contact": {
         "header": {
             "label": "Open Communication Channel",
@@ -181,7 +178,6 @@
             "text": "Waiting for your message..."
         }
     },
-
     "footer": {
         "brand_description": "SMK TI Airlangga 24th generation student interested in full-stack web development.",
         "quick_links_label": "Quick Links",

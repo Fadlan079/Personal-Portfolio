@@ -146,10 +146,14 @@
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-                        <div class="space-y-4">
-                            <p class="text-[10px] font-bold uppercase tracking-widest text-muted italic font-serif border-l-2 border-emerald-500 pl-3">Metode Kontak</p>
-                            <div class="relative h-32 w-full flex justify-center bg-container/30 rounded-lg p-2 border border-border/50">
-                                <canvas id="methodChart"></canvas>
+                        <div class="relative h-40 w-full flex justify-center items-center">
+                            <canvas id="inboxChart"></canvas>
+
+                            <div class="absolute text-center top-8">
+                                <p class="text-xs text-muted">Total</p>
+                                <p class="text-lg font-bold">
+                                    {{ $chartData['inbox']['total'] }}
+                                </p>
                             </div>
                         </div>
 
@@ -459,24 +463,23 @@
                 }
             });
 
-            new Chart(document.getElementById('methodChart'), {
+            const chartData = @json($chartData);
+            const inboxData = chartData.inbox;
+            new Chart(document.getElementById('inboxChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(methodData),
+                    labels: ['Unread', 'Read'],
                     datasets: [{
-                        data: Object.values(methodData),
-                        backgroundColor: [colors.amber, colors.emerald],
-                        borderColor: '#FEFCE8',
-                        borderWidth: 2
+                        data: [inboxData.unread, inboxData.read],
+                        backgroundColor: ['#f97316', '#22c55e'],
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '65%',
+                    cutout: '70%',
                     plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 10, borderRadius: 2 } },
-                        tooltip: tooltipConfig
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
             });

@@ -198,7 +198,7 @@ export function projectModalAnimation() {
             // Find all images currently in the detail modal to create the gallery
             const imgs = Array.from(document.querySelectorAll('#detailScreenshots img'));
             currentImages = imgs.map(img => img.src);
-            
+
             // Find index of clicked image
             currentIndex = currentImages.indexOf(src);
             if (currentIndex === -1) {
@@ -265,15 +265,15 @@ export function projectModalAnimation() {
 
         const navigateLightbox = (direction) => {
             if (currentImages.length <= 1) return;
-            
+
             if (direction === 'next') {
                 currentIndex = (currentIndex + 1) % currentImages.length;
             } else {
                 currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
             }
-            
+
             const nextSrc = currentImages[currentIndex];
-            
+
             gsap.to(lightboxImg, {
                 opacity: 0,
                 scale: 0.98,
@@ -321,7 +321,7 @@ if (editModal) {
     const editCloseBtn = document.getElementById('editModalClose');
     const cancelEditBtn = document.getElementById('cancelEdit');
 
-        window.openEditModal = function (project) {
+    window.openEditModal = function (project) {
 
         window.currentEditTech = project.tech;
 
@@ -334,7 +334,7 @@ if (editModal) {
                     techEl._x_dataStack[0].tags = [];
                 }
             }
-            
+
             const imgEl = document.getElementById('imageUploadEditRegion');
             if (imgEl && imgEl._x_dataStack && project.screenshot) {
                 try {
@@ -357,11 +357,11 @@ if (editModal) {
         document.getElementById('editId').value = project.id;
         document.getElementById('editType').value = project.type || 'Website';
         document.getElementById('editStatus').value = project.status || 'Shipped';
-        
+
         const visibilityEl = document.getElementById('editVisibility');
         visibilityEl.value = project.visibility || 'draft';
         visibilityEl.dispatchEvent(new Event('change')); // Trigger alpine change
-        
+
         const publishedEl = document.getElementById('editPublishedAt');
         if (publishedEl) {
             publishedEl.value = project.published || '';
@@ -375,7 +375,7 @@ if (editModal) {
         document.getElementById('editRole').value = project.role || '';
         document.getElementById('editTeamSize').value = project.team_size || '';
         document.getElementById('editResponsibilities').value = project.responsibilities || '';
-        
+
         // DEVICES PREVIEW
         const deskWrapper = document.getElementById('previewDesktopWrapper');
         const deskImg = document.getElementById('previewDesktop');
