@@ -1,113 +1,113 @@
-<section
-    class="relative border border-border/50 bg-surface/10 p-6 md:p-8 space-y-8 group hover:border-primary/50 transition-colors duration-500">
+<section class="relative bg-surface border-2 border-dashed border-border rounded-2xl p-6 md:p-8 space-y-8 group transition-all duration-500 shadow-sm overflow-hidden font-sans text-text">
 
-    {{-- HUD Corners --}}
-    <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/50"></div>
-    <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/50"></div>
+    {{-- Diary Paper Lines Background --}}
+    <div class="absolute inset-0 pointer-events-none opacity-[0.05]"
+         style="background-image: repeating-linear-gradient(transparent, transparent 27px, var(--color-text) 27px, var(--color-text) 28px); line-height: 28px;">
+    </div>
 
     {{-- Header Module --}}
-    <header class="border-b border-border/50 pb-4">
-        <h2 class="text-lg md:text-xl font-mono font-bold uppercase tracking-widest text-text flex items-center gap-3">
-            <i class="fa-solid fa-satellite-dish text-primary animate-pulse"></i>
-            Communication_Nodes
-        </h2>
-        <p class="text-[10px] md:text-xs font-mono text-muted mt-2 tracking-widest uppercase">
-            <span class="text-primary">></span> Configure external transmission endpoints and social arrays.
-        </p>
+    <header class="relative z-10 border-b-2 border-dashed border-border/50 pb-6">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border-2 border-primary/20 rotate-[-5deg]">
+                <i class="fa-solid fa-address-book text-primary text-lg"></i>
+            </div>
+            <div>
+                <h2 class="text-xl md:text-2xl font-serif font-bold tracking-tight text-text">
+                    Daftar Korespondensi
+                </h2>
+                <p class="text-[10px] md:text-xs font-medium text-muted mt-1 tracking-wide italic uppercase">
+                    Hubungkan jejaring sosial dan media komunikasi eksternal Anda.
+                </p>
+            </div>
+        </div>
     </header>
 
-    {{-- Form with backend logic --}}
-    <form method="post" action="{{ route('dashboard.account.socials.update') }}" class="space-y-6">
+    {{-- Form --}}
+    <form method="post" action="{{ route('dashboard.account.socials.update') }}" class="relative z-10 space-y-8">
         @csrf
         @method('patch')
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
 
             {{-- WhatsApp Node --}}
             <div class="space-y-2 relative group/input">
-                <label for="whatsapp"
-                    class="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2 group-focus-within/input:text-green-400 transition-colors">
-                    > ENDPOINT_01: WHATSAPP_NO
+                <label for="whatsapp" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-green-600 transition-colors flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> WhatsApp
                 </label>
                 <div class="relative">
-                    <div
-                        class="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-surface/50 border-y border-l border-border/70 text-muted group-focus-within/input:text-green-400 group-focus-within/input:border-green-400 transition-colors">
-                        <i class="fa-brands fa-whatsapp"></i>
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within/input:text-green-500 transition-colors">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
                     </div>
                     <input type="text" id="whatsapp" name="whatsapp"
-                        class="w-full bg-surface/30 border border-border/70 pl-12 pr-4 py-2.5 font-mono text-xs text-text focus:outline-none focus:border-green-400 focus:bg-green-400/5 transition-colors placeholder:text-muted/30"
-                        placeholder="+6281234567890" value="{{ old('whatsapp', $user->whatsapp) }}" />
+                        class="w-full bg-transparent border-0 border-b-2 border-border pl-8 pr-4 py-2 font-serif text-base text-text focus:outline-none focus:border-green-500 focus:ring-0 transition-all placeholder:text-muted/30 placeholder:italic"
+                        placeholder="+628..." value="{{ old('whatsapp', $user->whatsapp) }}" />
                 </div>
             </div>
 
             {{-- Instagram Node --}}
             <div class="space-y-2 relative group/input">
-                <label for="instagram"
-                    class="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2 group-focus-within/input:text-pink-500 transition-colors">
-                    > ENDPOINT_02: INSTAGRAM_ID
+                <label for="instagram" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-pink-600 transition-colors flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span> Instagram
                 </label>
                 <div class="relative">
-                    <div
-                        class="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-surface/50 border-y border-l border-border/70 text-muted group-focus-within/input:text-pink-500 group-focus-within/input:border-pink-500 transition-colors">
-                        <i class="fa-brands fa-instagram"></i>
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within/input:text-pink-500 transition-colors">
+                        <i class="fa-brands fa-instagram text-lg"></i>
                     </div>
                     <input type="text" id="instagram" name="instagram"
-                        class="w-full bg-surface/30 border border-border/70 pl-12 pr-4 py-2.5 font-mono text-xs text-text focus:outline-none focus:border-pink-500 focus:bg-pink-500/5 transition-colors placeholder:text-muted/30"
+                        class="w-full bg-transparent border-0 border-b-2 border-border pl-8 pr-4 py-2 font-serif text-base text-text focus:outline-none focus:border-pink-500 focus:ring-0 transition-all placeholder:text-muted/30 placeholder:italic"
                         placeholder="@username" value="{{ old('instagram', $user->instagram) }}" />
                 </div>
             </div>
 
             {{-- GitHub Node --}}
             <div class="space-y-2 relative group/input">
-                <label for="github"
-                    class="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2 group-focus-within/input:text-text transition-colors">
-                    > ENDPOINT_03: GITHUB_REPO
+                <label for="github" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-text transition-colors flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-800"></span> GitHub
                 </label>
                 <div class="relative">
-                    <div
-                        class="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-surface/50 border-y border-l border-border/70 text-muted group-focus-within/input:text-text group-focus-within/input:border-text transition-colors">
-                        <i class="fa-brands fa-github"></i>
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within/input:text-text transition-colors">
+                        <i class="fa-brands fa-github text-lg"></i>
                     </div>
                     <input type="text" id="github" name="github"
-                        class="w-full bg-surface/30 border border-border/70 pl-12 pr-4 py-2.5 font-mono text-xs text-text focus:outline-none focus:border-text focus:bg-text/5 transition-colors placeholder:text-muted/30"
-                        placeholder="https://github.com/username" value="{{ old('github', $user->github) }}" />
+                        class="w-full bg-transparent border-0 border-b-2 border-border pl-8 pr-4 py-2 font-serif text-base text-text focus:outline-none focus:border-text focus:ring-0 transition-all placeholder:text-muted/30 placeholder:italic"
+                        placeholder="github.com/..." value="{{ old('github', $user->github) }}" />
                 </div>
             </div>
 
             {{-- LinkedIn Node --}}
             <div class="space-y-2 relative group/input">
-                <label for="linkedin"
-                    class="text-[10px] font-mono uppercase tracking-widest text-primary flex items-center gap-2 group-focus-within/input:text-sky-500 transition-colors">
-                    > ENDPOINT_04: LINKEDIN_URL
+                <label for="linkedin" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-sky-600 transition-colors flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> LinkedIn
                 </label>
                 <div class="relative">
-                    <div
-                        class="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center bg-surface/50 border-y border-l border-border/70 text-muted group-focus-within/input:text-sky-500 group-focus-within/input:border-sky-500 transition-colors">
-                        <i class="fa-brands fa-linkedin-in"></i>
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within/input:text-sky-500 transition-colors">
+                        <i class="fa-brands fa-linkedin-in text-lg"></i>
                     </div>
                     <input type="text" id="linkedin" name="linkedin"
-                        class="w-full bg-surface/30 border border-border/70 pl-12 pr-4 py-2.5 font-mono text-xs text-text focus:outline-none focus:border-sky-500 focus:bg-sky-500/5 transition-colors placeholder:text-muted/30"
-                        placeholder="https://linkedin.com/in/username" value="{{ old('linkedin', $user->linkedin) }}" />
+                        class="w-full bg-transparent border-0 border-b-2 border-border pl-8 pr-4 py-2 font-serif text-base text-text focus:outline-none focus:border-sky-500 focus:ring-0 transition-all placeholder:text-muted/30 placeholder:italic"
+                        placeholder="linkedin.com/in/..." value="{{ old('linkedin', $user->linkedin) }}" />
                 </div>
             </div>
 
         </div>
 
         {{-- Submit Action --}}
-        <div class="pt-4 flex items-center gap-4 border-t border-border/30">
+        <div class="pt-8 flex items-center gap-6 border-t-2 border-dashed border-border/50">
             <button type="submit"
-                class="relative group px-6 py-2.5 bg-primary/10 border border-primary text-primary font-mono text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-background transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)]">
-                <span>[ SYNC_ENDPOINTS ]</span>
-                <i class="fa-solid fa-satellite-dish opacity-50 group-hover:opacity-100 group-hover:animate-ping"></i>
+                class="group relative px-8 py-3 bg-container border-2 border-border text-text font-bold text-xs uppercase tracking-[0.2em] hover:border-primary hover:text-primary hover:-translate-y-1 transition-all shadow-[4px_4px_0px_var(--color-border)] active:shadow-none active:translate-y-0.5 rounded-lg flex items-center gap-3">
+                <span>Perbarui Jejaring</span>
+                <i class="fa-solid fa-stamp group-hover:rotate-12 transition-transform"></i>
             </button>
 
-            {{-- Success indicator --}}
             @if (session('status') === 'socials-updated')
-                <p x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
-                    class="text-[10px] font-mono text-green-400 uppercase tracking-widest">
-                    > SYNC_SUCCESSFUL
-                </p>
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
+                    class="text-[10px] font-bold text-green-700 uppercase tracking-widest flex items-center gap-2 bg-green-50 px-4 py-2 border-2 border-green-200 rounded-full rotate-1 shadow-sm">
+                    <i class="fa-solid fa-check-circle animate-pulse"></i> Data Tersinkron
+                </div>
             @endif
         </div>
     </form>
+
+    {{-- Decorative Background Icon --}}
+    <i class="fa-solid fa-paper-plane absolute -bottom-4 -right-4 text-8xl text-muted/5 -rotate-12 pointer-events-none"></i>
 </section>

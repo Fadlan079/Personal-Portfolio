@@ -37,8 +37,6 @@
             if (!cookieLayout || !valid.includes(cookieLayout)) {
                 document.cookie = 'ui_layout=' + savedLayout + ';path=/;max-age=31536000;SameSite=Lax';
             }
-
-            document.documentElement.classList.add('is-transitioning');
         })();
     </script>
 
@@ -72,60 +70,6 @@
             background: color-mix(in srgb, var(--color-primary) 25%, transparent); color: var(--color-primary);
         }
 
-        /* Transition Styles */
-        html.is-transitioning #page-content-wrapper {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        body.trans-diary #page-content-wrapper {
-            transform: translateY(15px);
-            transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-        body.trans-diary.page-exiting #page-content-wrapper {
-            transform: rotateY(-90deg);
-            transform-origin: left center;
-            transition: transform 0.6s ease-in-out, opacity 0.5s ease-in;
-            opacity: 0;
-        }
-        body.trans-diary.page-loaded #page-content-wrapper {
-            transform: none;
-            opacity: 1;
-            transition: transform 0.6s ease-out, opacity 0.6s ease-out;
-        }
-
-        .trans-diary.page-loaded #page-content-wrapper {
-            clip-path: inset(0 100% 0 0);
-            animation: writeIn 0.8s forwards ease-out;
-        }
-
-        @keyframes writeIn {
-            to { clip-path: inset(0 0 0 0); }
-        }
-
-        body.trans-clean #page-content-wrapper {
-            transform: scale(0.98); filter: blur(4px);
-            transition: opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease-out;
-        }
-        body.trans-clean.page-loaded #page-content-wrapper {
-            opacity: 1; transform: none; filter: none; pointer-events: auto;
-        }
-        body.trans-clean.page-exiting #page-content-wrapper {
-            opacity: 0; transform: scale(0.98); filter: blur(4px);
-            transition: opacity 0.3s ease-in, transform 0.3s ease-in, filter 0.3s ease-in;
-        }
-        body.trans-system #page-content-wrapper {
-            transform: skewX(-5deg); filter: contrast(1.5) brightness(1.2);
-            transition: opacity 0.2s steps(3, end), transform 0.2s steps(2, end), filter 0.2s;
-        }
-        body.trans-system.page-loaded #page-content-wrapper {
-            opacity: 1; transform: none; filter: none; pointer-events: auto;
-        }
-        body.trans-system.page-exiting #page-content-wrapper {
-            opacity: 0; transform: skewX(5deg); filter: contrast(1.5) brightness(0.8);
-            transition: opacity 0.15s steps(2, end), transform 0.15s, filter 0.15s;
-        }
-
         .cta-bubble {
             position: absolute;
             top: 60%;
@@ -157,42 +101,6 @@
 </head>
 
 <body class="bg-bg text-text">
-
-    <div id="transition-indicator" class="fixed inset-0 z-8000 bg-bg pointer-events-none flex items-center justify-center opacity-0 transition-opacity duration-300">
-
-        <div id="loader-diary" class="loader-variant hidden flex-col items-center justify-center transform translate-y-6 transition-transform duration-700 z-9999">
-            <div class="relative bg-warning p-8 pt-10 border border-yellow-500 shadow-[8px_8px_20px_rgba(0,0,0,0.1)] transform rotate-2 w-64 max-w-[85vw] flex flex-col items-center justify-center font-serif">
-                <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-8 bg-black/10 backdrop-blur-[2px] border border-black/5 shadow-sm z-20 rotate-1"
-                    style="clip-path: polygon(2% 10%, 98% 0%, 100% 95%, 0% 100%);">
-                </div>
-                <div class="relative w-16 h-16 flex items-center justify-center mb-6">
-                    <i class="fa-solid fa-book-open text-yellow-900 text-4xl animate-pulse drop-shadow-[0_2px_4px_rgba(0,0,0,0.2)]"></i>
-                    <div class="absolute inset-0 rounded-full border-2 border-yellow-800 border-t-transparent animate-spin opacity-40"></div>
-                    <div class="absolute inset-[-8px] rounded-full border border-yellow-800 border-b-transparent animate-[spin_2s_reverse_infinite] opacity-20"></div>
-                </div>
-                <span class="indicator-text font-bold text-sm uppercase tracking-widest text-yellow-900 text-center border-b border-dashed border-yellow-600/50 pb-2">
-                    Membuka Halaman...
-                </span>
-                <div class="absolute bottom-0 right-0 w-6 h-6 bg-yellow-600 border-t border-l border-yellow-700 shadow-[-2px_-2px_4px_rgba(0,0,0,0.05)] z-10"
-                    style="clip-path: polygon(100% 0, 0 100%, 100% 100%);">
-                </div>
-            </div>
-        </div>
-
-        <div id="loader-clean" class="loader-variant hidden flex-col items-center gap-3 z-[9999]">
-            <span class="indicator-text bg-surface/90 backdrop-blur-xl text-primary px-8 py-4 rounded-full shadow-[0_10px_40px_-10px_var(--color-primary)] border border-primary/30 font-medium text-sm flex items-center gap-4 tracking-wide">
-                <i class="fa-solid fa-circle-notch fa-spin text-primary text-xl"></i>
-                Memuat...
-            </span>
-        </div>
-
-        <div id="loader-system" class="loader-variant hidden flex-col items-center gap-2 z-[9999]">
-            <span class="indicator-text bg-black/90 text-primary px-5 py-3 border border-primary/50 font-mono text-[11px] uppercase tracking-widest shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.4)]">
-                > FETCH_NODE: /...
-            </span>
-        </div>
-
-    </div>
 
     <x-sidebar brand="Fadlan" :menuGroups="[
         'Monitoring' => [
@@ -279,137 +187,23 @@
     @stack('scripts')
 
     <script>
-        window.triggerPageWipe = function(targetUrl, forceMessage = null) {
-            const body = document.body;
-            let activeLayout = localStorage.getItem('ui_layout') || 'diary';
-
-            let pathName = new URL(targetUrl).pathname.replace('/', '');
-            let pageName = pathName === '' ? 'Beranda' : pathName;
-            pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
-
-            let msg = forceMessage;
-
-            if (activeLayout === 'system') {
-                if(window.gsapSystemExit) return window.gsapSystemExit(targetUrl, forceMessage);
-            }
-
-            const indicatorOverlay = document.getElementById('transition-indicator');
-            const variants = document.querySelectorAll('.loader-variant');
-
-            if(!msg) {
-                if(activeLayout === 'diary') msg = `Membuka Lembar: ${pageName}...`;
-                if(activeLayout === 'clean') msg = `<i class="fa-solid fa-circle-notch fa-spin text-primary text-xl"></i> Memuat ${pageName}...`;
-            }
-
-            sessionStorage.setItem('nav_msg', msg);
-            sessionStorage.setItem('nav_layout', activeLayout);
-
-            variants.forEach(v => v.classList.add('hidden'));
-            const activeLoader = document.getElementById('loader-' + activeLayout);
-            if (activeLoader) {
-                activeLoader.classList.remove('hidden');
-                activeLoader.classList.add('flex');
-                const textEl = activeLoader.querySelector('.indicator-text');
-                if(textEl) textEl.innerHTML = msg;
-
-                if(activeLayout === 'diary') {
-                    activeLoader.classList.remove('translate-y-6');
-                    setTimeout(() => activeLoader.classList.add('translate-y-0'), 50);
-                }
-            }
-
-            indicatorOverlay.classList.remove('opacity-0', 'pointer-events-none');
-            indicatorOverlay.classList.add('opacity-100', 'pointer-events-auto');
-
-            body.classList.remove('page-loaded');
-            body.classList.add('page-exiting');
-
-            let exitDelay = 600;
-            if(activeLayout === 'clean') exitDelay = 500;
-            if(activeLayout === 'system') exitDelay = 300;
-
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, exitDelay);
-        };
-
+        // Transisi efek loading dinonaktifkan khusus untuk dashboard agar lebih responsif
         document.addEventListener('DOMContentLoaded', () => {
             const body = document.body;
-            const htmlEl = document.documentElement;
-            const indicatorOverlay = document.getElementById('transition-indicator');
-            const variants = document.querySelectorAll('.loader-variant');
+            body.classList.add('page-loaded');
 
-            const currentLayout = localStorage.getItem('ui_layout') || 'diary';
-            body.classList.add(`trans-${currentLayout}`);
-
-            const navMsg = sessionStorage.getItem('nav_msg');
-            const prevLayout = sessionStorage.getItem('nav_layout') || currentLayout;
-
-            if (navMsg) {
-                if(prevLayout === 'system') {
-                    if(window.gsapSystemEntry) {
-                       window.gsapSystemEntry();
-                       htmlEl.classList.remove('is-transitioning');
-                       body.classList.add('page-loaded');
-                    }
-                    sessionStorage.removeItem('nav_msg');
-                    sessionStorage.removeItem('nav_layout');
-                } else {
-                    indicatorOverlay.classList.remove('opacity-0', 'pointer-events-none');
-                    indicatorOverlay.classList.add('opacity-100', 'pointer-events-auto');
-
-                    variants.forEach(v => v.classList.add('hidden'));
-                    const activeLoader = document.getElementById('loader-' + prevLayout);
-                    if (activeLoader) {
-                        activeLoader.classList.remove('hidden');
-                        activeLoader.classList.add('flex');
-                        const textEl = activeLoader.querySelector('.indicator-text');
-                        if(textEl) textEl.innerHTML = navMsg;
-                    }
-
-                    setTimeout(() => {
-                        indicatorOverlay.classList.remove('opacity-100', 'pointer-events-auto');
-                        indicatorOverlay.classList.add('opacity-0', 'pointer-events-none');
-                        requestAnimationFrame(() => {
-                            htmlEl.classList.remove('is-transitioning');
-                            body.classList.add('page-loaded');
-                            sessionStorage.removeItem('nav_msg');
-                            sessionStorage.removeItem('nav_layout');
-                        });
-                    }, 800);
-                }
-            } else {
-                if(prevLayout === 'system' && window.gsapSystemEntry) {
-                   window.gsapSystemEntry();
-                }
-                requestAnimationFrame(() => {
-                    htmlEl.classList.remove('is-transitioning');
-                    body.classList.add('page-loaded');
-                });
+            // Tetap jalankan utilitas default jika system membutuhkan inisialisasi awal
+            const prevLayout = localStorage.getItem('ui_layout') || 'diary';
+            if (prevLayout === 'system' && window.gsapSystemEntry) {
+                window.gsapSystemEntry();
             }
-
-            const links = document.querySelectorAll('a[href]:not([target="_blank"]):not([href^="#"]):not([href^="mailto:"]):not([href^="tel:"])');
-
-            links.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-                    if (this.hasAttribute('download') || this.hasAttribute('hx-get') || this.hasAttribute('hx-post') || this.classList.contains('no-transition')) return;
-
-                    if (this.href.startsWith(window.location.origin)) {
-                        e.preventDefault();
-                        window.triggerPageWipe(this.href);
-                    }
-                });
-            });
 
             const layoutBtn = document.getElementById('layoutToggleBtn');
             if(layoutBtn) {
                 layoutBtn.addEventListener('click', () => {
-                    const newLayout = localStorage.getItem('ui_layout');
-                    if(newLayout){
-                        body.classList.remove('trans-diary', 'trans-clean', 'trans-system');
-                        body.classList.add(`trans-${newLayout}`);
-                    }
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 50);
                 });
             }
         });
