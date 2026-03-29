@@ -41,37 +41,28 @@
 - Trash dengan tab Projects & Skills (AJAX), soft delete, bulk restore & force delete
 - Upload screenshot ke `storage/`
 - Manajemen visibility project: `published` / `scheduled` / `draft`
+- **Manajemen Proyek:** Sistem CRUD lengkap dengan pengaturan visibilitas (Draft, Scheduled, Published) dan pengelolaan kategori proyek.
+- **Sistem Status Proyek:** Melacak perkembangan setiap proyek melalui status *Prototype*, *In Progress*, atau *Finished*.
+- **Sistem Trash & Bulk Action:** Fitur hapus sementara (Soft Delete), pemulihan data, serta aksi massal untuk efisiensi manajemen konten.
+- **Manajemen Skill:** Pengaturan keahlian yang terhubung langsung dengan proyek-proyek terkait sehingga data tersinkronisasi secara otomatis.
 
-### 🎨 UI / UX
-- Dark/Light mode dengan auto-detect sistem
-- Multi-bahasa: Bahasa Indonesia & English (toggle runtime, tanpa reload)
-- Custom invertible cursor (mix-blend-mode: difference)
-- GSAP ScrollTrigger animations: pin, scrub, parallax di semua halaman
-- 3D keyboard / Three.js viewer untuk featured projects
-- Responsive & mobile-friendly
+### 🎨 UI & UX Tingkat Lanjut
+- **Sistem Tema Dinamis:** Tersedia tiga pilihan tema visual unik (*Diary*, *Clean*, dan *System Architecture*) yang merubah total tampilan antarmuka secara instan.
+- **Mode Gelap/Terang:** Perpindahan mode tampilan yang otomatis mengikuti preferensi sistem atau diatur secara manual melalui pengaturan.
+- **Animasi Transisi Halaman:** Transisi antar halaman yang mulus menggunakan efek *glitch-wipe* berbasis GSAP untuk memberikan kesan modern dan futuristik.
+- **Multi-Bahasa:** Dukungan penuh Bahasa Indonesia dan Bahasa Inggris (i18n) yang dapat diganti secara instan di seluruh bagian situs.
+- **Responsive Design:** Pengalaman pengguna yang dioptimalkan untuk berbagai perangkat mulai dari ponsel hingga desktop resolusi tinggi.
 
 ---
 
 ## 🛠️ Teknologi yang Digunakan
 
 ### Backend
-- **Laravel 12** — routing, Eloquent ORM, mail, auth, soft deletes
-- **SQLite** (dev) / MySQL-compatible — migrations & seeders
-- **Laravel Breeze** — autentikasi (login, register, email verification)
+- **Laravel 12** — Framework PHP utama untuk logika server, routing, dan keamanan data tingkat lanjut.
+- **Eloquent ORM** — Manajemen database berbasis objek untuk relasi data yang kompleks dengan cara yang elegan.
+- **Laravel Breeze** — Sistem autentikasi yang ringan dan aman untuk melindungi area dashboard admin.
 
 ### Frontend
-- **Tailwind CSS v4** — utility-first styling
-- **Alpine.js** — reactive UI tanpa full framework
-- **GSAP 3 + ScrollTrigger** — animasi scroll, pin, parallax
-- **Three.js** — 3D viewer interaktif
-- **HTMX** — progressive AJAX requests
-- **Vite 7** — bundler & HMR
-
----
-
-## 📁 Struktur Project
-
-```
 Portfolio/
 ├── app/
 │   ├── Http/Controllers/
