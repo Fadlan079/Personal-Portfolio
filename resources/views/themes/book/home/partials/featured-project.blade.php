@@ -23,9 +23,9 @@
         }
         }">
 
-        <div class="grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+        <div class="grid lg:grid-cols-12 gap-6 lg:gap-20 items-center px-4 md:px-8 lg:px-0">
 
-            <div class="order-1 lg:order-2 lg:col-span-5 flex flex-col justify-center" @mouseenter="stopAuto()" @mouseleave="startAuto()">
+            <div class="order-1 lg:order-2 lg:col-span-5 flex flex-col justify-start lg:min-h-0" @mouseenter="stopAuto()" @mouseleave="startAuto()">
                 <div class="flex justify-between items-end mb-8 border-b border-[var(--color-border)]/50 pb-4">
                     <div>
                         <h3 class="text-xs font-black uppercase tracking-[0.3em] text-[var(--color-muted)] mb-4" data-i18n="home.featured_project.label">
@@ -38,20 +38,37 @@
                             Beberapa proyek pilihan yang menampilkan karya dan pengalaman pengembangan yang pernah saya buat.
                         </p>
                     </div>
-                    <div class="flex gap-4 items-center mt-4">
-                        <button @click="currentProject = currentProject > 0 ? currentProject - 1 : totalProjects - 1"
-                            class="group flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-surface)] border-2 border-[var(--color-text)] text-[var(--color-text)] font-mono text-sm font-bold tracking-widest uppercase transition-all duration-300 transform -rotate-2 hover:rotate-0 shadow-[3px_3px_0px_var(--color-text)] active:shadow-[0px_0px_0px_var(--color-text)] active:translate-y-[3px] active:translate-x-[3px]">
-                            <i class="fa-solid fa-arrow-left-long transition-transform group-hover:-translate-x-1"></i>
-                        </button>
-
-                        <button @click="currentProject = currentProject < totalProjects - 1 ? currentProject + 1 : 0"
-                            class="group flex items-center justify-center gap-2 px-4 py-2 bg-[var(--color-surface)] border-2 border-[var(--color-text)] text-[var(--color-text)] font-mono text-sm font-bold tracking-widest uppercase transition-all duration-300 transform rotate-2 hover:rotate-0 shadow-[3px_3px_0px_var(--color-text)] active:shadow-[0px_0px_0px_var(--color-text)] active:translate-y-[3px] active:translate-x-[3px]">
-                            <i class="fa-solid fa-arrow-right-long transition-transform group-hover:translate-x-1"></i>
-                        </button>
-                    </div>
                 </div>
 
-                <div class="relative w-full aspect-square md:aspect-square lg:aspect-auto lg:h-[350px]">
+                <div class="relative w-full aspect-square md:aspect-square lg:aspect-auto lg:h-[350px] group/nav">
+                    <button @click="currentProject = currentProject > 0 ? currentProject - 1 : totalProjects - 1"
+                        class="absolute -left-4 lg:-left-10 top-1/2 -translate-y-1/2 z-50
+                        flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12
+                        bg-[var(--color-surface)] border border-[var(--color-border)]
+                        text-[var(--color-text)]
+                        rounded-md
+                        shadow-md hover:shadow-lg
+                        transition-all duration-300
+                        hover:scale-110 active:scale-95
+                        backdrop-blur-sm">
+
+                        <i class="fa-solid fa-arrow-left-long text-sm"></i>
+                    </button>
+
+                    <button @click="currentProject = currentProject < totalProjects - 1 ? currentProject + 1 : 0"
+                        class="absolute -right-4 lg:-right-10 top-1/2 -translate-y-1/2 z-50
+                        flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12
+                        bg-[var(--color-surface)] border border-[var(--color-border)]
+                        text-[var(--color-text)]
+                        rounded-md
+                        shadow-md hover:shadow-lg
+                        transition-all duration-300
+                        hover:scale-110 active:scale-95
+                        backdrop-blur-sm">
+
+                        <i class="fa-solid fa-arrow-right-long text-sm"></i>
+                    </button>
+
                     @forelse($recentProjects as $index => $project)
                         <div x-show="currentProject === {{ $index }}"
                             x-transition:enter="transition ease-out duration-500 transform"
@@ -68,7 +85,7 @@
 
                                 <div class="relative z-10">
                                     <div class="flex justify-between items-start mb-3 md:mb-4">
-                                        <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-[var(--color-warning)] text-text border border-[var(--color-text)] shadow-sm -rotate-1">
+                                        <span class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-[var(--color-warning)] text-text border border-[var(--color-text)] shadow-sm md:-rotate-1">
                                             {{ $project->type }}
                                         </span>
                                         <span class="text-[9px] font-mono text-[var(--color-muted)] uppercase italic">{{ $project->status }}</span>
@@ -119,8 +136,8 @@
                             'w-full max-w-[280px] aspect-[9/16] scale-100': deviceView === 'mobile'
                         }">
 
-                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-32 h-8 bg-[var(--color-warning)]/40 border border-[var(--color-border)]/50 shadow-sm backdrop-blur-[1px] -rotate-3 z-40 flex items-center justify-center">
-                             <div class="w-full h-px bg-[var(--color-text)]/10 rotate-12"></div>
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-32 h-8 bg-[var(--color-warning)]/40 border border-[var(--color-border)]/50 shadow-sm backdrop-blur-[1px] md:-rotate-3 z-40 flex items-center justify-center">
+                             <div class="w-full h-px bg-[var(--color-text)]/10 md:rotate-12"></div>
                         </div>
 
                         <div class="w-full h-full bg-[var(--color-surface)] p-2 md:p-3 shadow-[10px_10px_30px_rgba(0,0,0,0.1)] border border-[var(--color-border)] relative group">
@@ -160,13 +177,12 @@
                     @foreach(['desktop' => 'fa-display', 'tablet' => 'fa-tablet-screen-button', 'mobile' => 'fa-mobile-screen'] as $view => $icon)
                         <button @click="setDevice('{{ $view }}')"
                             class="px-3 py-1.5 transition-all duration-300 transform hover:-translate-y-1 font-mono text-[10px] md:text-xs uppercase tracking-[0.2em] font-black border-2"
-                            :class="deviceView === '{{ $view }}' ? 'bg-[var(--color-warning)] text-text border-[var(--color-text)] shadow-[4px_4px_0px_var(--color-text)] -rotate-1' : 'bg-[var(--color-surface)] text-[var(--color-muted)] border-[var(--color-border)] hover:border-[var(--color-text)] hover:text-[var(--color-text)]'">
+                            :class="deviceView === '{{ $view }}' ? 'bg-[var(--color-warning)] text-text border-[var(--color-text)] shadow-[4px_4px_0px_var(--color-text)] md:-rotate-1' : 'bg-[var(--color-surface)] text-[var(--color-muted)] border-[var(--color-border)] hover:border-[var(--color-text)] hover:text-[var(--color-text)]'">
                             <i class="fa-solid {{ $icon }} mr-2"></i> {{ $view }}
                         </button>
                     @endforeach
                 </div>
             </div>
-
         </div>
     </div>
 </section>
