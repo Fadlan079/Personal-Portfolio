@@ -25,6 +25,20 @@
             <header class="relative space-y-6">
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div class="space-y-6">
+                        <div class="relative inline-flex items-center gap-2 py-1.5 pl-8 pr-6 transition-all duration-300 w-max group hover:-translate-y-0.5 hover:rotate-1"
+                            style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.06));">
+                            <div class="absolute inset-0 bg-warning border border-yellow-500 rounded-l-md z-0 transition-colors"
+                                style="clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);">
+                            </div>
+                            <div class="absolute top-1/2 -left-4 w-6 h-[1.5px] bg-[#8B0000]/80 -translate-y-[calc(50%+1px)] origin-right -rotate-12 group-hover:-rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+                            <div class="absolute top-1/2 -left-3 w-5 h-[1.5px] bg-[#B22222]/80 -translate-y-[calc(50%-1px)] origin-right rotate-12 group-hover:rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+                            <div class="absolute left-2.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-surface shadow-[inset_1px_1px_3px_rgba(0,0,0,0.3)] border border-yellow-700/30 z-10"></div>
+
+                            <i class="fa-solid fa-layer-group relative z-10 text-yellow-800 text-[11px] mt-px"></i>
+                            <span class="relative z-10 text-[10px] sm:text-xs font-black tracking-[0.15em] uppercase text-yellow-900 mt-px">
+                                Pendukung Pengembangan
+                            </span>
+                        </div>
 
                         <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter leading-[1.05] text-text">
                             <span class="block font-diary-body">Tech Stack</span>
