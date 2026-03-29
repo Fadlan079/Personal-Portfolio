@@ -1,186 +1,40 @@
-<div align="center">
+# Fadlan — Portofolio Pribadi
 
-<h1>🗂️ Fadlan — Personal Portfolio</h1>
-
-<p>Full-stack portfolio website built with Laravel, GSAP, and Three.js.<br>Menampilkan proyek, skill tree interaktif, halaman kontak, dan dashboard admin lengkap.</p>
-
-<p>
-  <img src="https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white"/>
-  <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white"/>
-  <img src="https://img.shields.io/badge/GSAP-3-88CE02?style=flat-square&logo=greensock&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Three.js-0.182-black?style=flat-square&logo=three.js&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Alpine.js-3-77C1D2?style=flat-square&logo=alpine.js&logoColor=white"/>
-</p>
-
-<p>
-  <a href="https://github.com/Fadlan079/Personal-Portfolio">
-    <img src="https://img.shields.io/github/last-commit/Fadlan079/Personal-Portfolio?style=flat-square"/>
-  </a>
-  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square"/>
-</p>
-
-</div>
+Web portofolio modern yang dibangun dengan Laravel, GSAP, dan Three.js. Proyek ini dirancang untuk menampilkan karya, keahlian, dan perjalanan profesional saya dengan antarmuka yang interaktif dan visual yang menarik.
 
 ---
 
 ## ✨ Fitur Utama
 
-### 🌐 Public Portfolio
-| Halaman | Deskripsi |
-|---|---|
-| **Home** | Hero section dengan animasi GSAP ribbon & parallax, featured projects carousel 3D (Three.js viewer), skill tree interaktif berbasis SVG |
-| **About** | Halaman narasi dengan pin scroll GSAP, nilai & prinsip, constraints text animation |
-| **Projects** | Daftar proyek dengan AJAX search, filter tipe, dan paginate tanpa reload; detail modal dengan screenshot lightbox |
-| **Contact** | Form kontak dengan pengiriman email via Laravel Mail, social links |
+### 🌐 Halaman Publik
+- **Beranda (Home):** Hero section dengan animasi GSAP yang halus, carousel proyek unggulan dalam format 3D, dan *skill tree* interaktif berbasis SVG.
+- **Tentang (About):** Halaman narasi perjalanan saya menggunakan animasi *scroll-pin* GSAP untuk pengalaman membaca yang imersif.
+- **Proyek (Projects):** Daftar proyek lengkap dengan fitur pencarian AJAX, filter berdasarkan kategori (Website, Application, Design), dan pengurutan tanpa muat ulang halaman. Tersedia juga detail proyek dalam modal dengan galeri foto.
+- **Kontak (Contact):** Formulir kontak terintegrasi dengan pengiriman email dan tautan media sosial.
 
 ### 🔒 Dashboard Admin
-- CRUD project lengkap (judul, deskripsi, tech stack, screenshot, repo, live URL)
-- CRUD skill dengan relasi many-to-many ke projects
-- Bulk action: publish, delete, restore
-- Trash dengan tab Projects & Skills (AJAX), soft delete, bulk restore & force delete
-- Upload screenshot ke `storage/`
-- Manajemen visibility project: `published` / `scheduled` / `draft`
+- **Manajemen Proyek:** CRUD (Create, Read, Update, Delete) lengkap untuk proyek, termasuk pengaturan *visibility* (Published, Scheduled, Draft).
+- **Sistem Status Proyek:** Melacak perkembangan setiap karya dengan label status: *Prototype*, *In Progress*, atau *Finished*.
+- **Manajemen Skill:** Pengaturan keahlian dengan relasi *many-to-many* ke proyek terkait.
+- **Fitur Lanjutan:** Aksi massal (bulk action) untuk hapus/publish, sistem tempat sampah (Trash) dengan fitur pemulihan, dan optimasi unggah gambar ke penyimpanan lokal.
 
-### 🎨 UI / UX
-- Dark/Light mode dengan auto-detect sistem
-- Multi-bahasa: Bahasa Indonesia & English (toggle runtime, tanpa reload)
-- Custom invertible cursor (mix-blend-mode: difference)
-- GSAP ScrollTrigger animations: pin, scrub, parallax di semua halaman
-- 3D keyboard / Three.js viewer untuk featured projects
-- Responsive & mobile-friendly
+### 🎨 UI & UX Tingkat Lanjut
+- **Mode Gelap/Terang:** Perpindahan tema yang otomatis mengikuti preferensi sistem atau manual.
+- **Tema Beragam:** Tersedia pilihan tema visual yang unik seperti *Diary* (estetika buku tua), *Clean*, dan *System Architecture*.
+- **Animasi Imersif:** Penggunaan GSAP ScrollTrigger untuk efek *parallax*, *pinning*, dan transisi antar halaman yang mulus.
+- **Elemen Interaktif:** Cursor kustom yang interaktif, interaksi keyboard 3D menggunakan Three.js, dan desain yang sepenuhnya responsif di semua perangkat.
+- **Multi-Bahasa:** Dukungan penuh Bahasa Indonesia dan Bahasa Inggris yang bisa diganti secara instan tanpa muat ulang.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Teknologi yang Digunakan
 
 ### Backend
-- **Laravel 12** — routing, Eloquent ORM, mail, auth, soft deletes
-- **SQLite** (dev) / MySQL-compatible — migrations & seeders
-- **Laravel Breeze** — autentikasi (login, register, email verification)
+- **Laravel 12** — Framework utama untuk logika server, routing, dan manajemen database.
+- **Eloquent ORM** — Manajemen database yang efisien dengan relasi kompleks.
+- **Laravel Breeze** — Sistem autentikasi untuk keamanan dashboard admin.
 
 ### Frontend
-- **Tailwind CSS v4** — utility-first styling
-- **Alpine.js** — reactive UI tanpa full framework
-- **GSAP 3 + ScrollTrigger** — animasi scroll, pin, parallax
-- **Three.js** — 3D viewer interaktif
-- **HTMX** — progressive AJAX requests
-- **Vite 7** — bundler & HMR
-
----
-
-## 📁 Struktur Project
-
-```
-Portfolio/
-├── app/
-│   ├── Http/Controllers/
-│   │   ├── HomeController.php         # public pages (home, about, project, contact)
-│   │   ├── ProjectController.php      # dashboard CRUD project
-│   │   ├── ContactController.php      # kirim email
-│   │   └── Dashboard/
-│   │       ├── SkillController.php    # CRUD skill
-│   │       └── TrashController.php   # trash (project + skill)
-│   ├── Models/
-│   │   ├── Project.php  (soft delete, scopes: search, filterType, public, recent)
-│   │   └── Skill.php    (soft delete, belongsToMany Project)
-│   └── Mail/ContactMail.php
-├── resources/
-│   ├── js/
-│   │   ├── app.js                    # entry point, i18n, GSAP init, skeleton removal
-│   │   ├── animations/               # hero, about, project, navbar, modal animations
-│   │   ├── project/                  # filters.js (AJAX), detail-modal.js, edit-modal.js
-│   │   ├── skill-tree.js             # SVG skill tree interaktif
-│   │   └── three-viewer.js           # Three.js 3D project viewer
-│   ├── css/
-│   │   ├── app.css                   # base + custom tokens
-│   │   ├── hero.css, project.css     # page-specific styles
-│   │   └── contact.css, keyboard.css
-│   └── views/
-│       ├── layouts/main.blade.php    # layout utama
-│       ├── pages/                    # home, about, project, contact
-│       ├── components/               # navbar, footer, modals
-│       └── dashboard/                # admin views
-├── routes/web.php
-└── database/migrations/
-```
-
----
-
-## 🚀 Cara Menjalankan
-
-### Requirement
-- PHP >= 8.2
-- Composer
-- Node.js >= 18
-- SQLite atau MySQL
-
-### Install
-
-```bash
-# Clone repo
-git clone https://github.com/Fadlan079/Personal-Portfolio.git
-cd Personal-Portfolio
-
-# Install dependencies
-composer install
-npm install
-
-# Setup environment
-cp .env.example .env
-php artisan key:generate
-
-# Database
-php artisan migrate --seed
-
-# Storage link (untuk screenshot upload)
-php artisan storage:link
-```
-
-### Jalankan Development Server
-
-```bash
-# Terminal 1 — Laravel
-php artisan serve
-
-# Terminal 2 — Vite (HMR)
-npm run dev
-```
-
-Buka `http://localhost:8000`
-
-### Build Production
-
-```bash
-npm run build
-```
-
----
-
-## 🔑 Konfigurasi `.env`
-
-```env
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=sqlite
-# atau MySQL:
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_DATABASE=portfolio
-# DB_USERNAME=root
-# DB_PASSWORD=
-
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=your_username
-MAIL_PASSWORD=your_password
-MAIL_FROM_ADDRESS=fadlanfirdaus220@gmail.com
-MAIL_FROM_NAME="Fadlan Firdaus"
-```
-
----
-
 ## 📸 Halaman Utama
 
 | | |
