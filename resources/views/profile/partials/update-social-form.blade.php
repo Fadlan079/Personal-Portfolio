@@ -1,50 +1,58 @@
 <section class="relative bg-surface border-2 border-dashed border-border rounded-2xl p-6 md:p-8 space-y-8 group transition-all duration-500 shadow-sm overflow-hidden font-sans text-text">
 
-    {{-- Diary Paper Lines Background --}}
     <div class="absolute inset-0 pointer-events-none opacity-[0.05]"
          style="background-image: repeating-linear-gradient(transparent, transparent 27px, var(--color-text) 27px, var(--color-text) 28px); line-height: 28px;">
     </div>
+    <header class="relative z-10 border-b-2 border-dashed border-border/50 pb-6 mb-2">
+        <div class="relative inline-flex items-center gap-2 py-1.5 pl-8 pr-6 transition-all duration-300 w-max group hover:-translate-y-0.5 hover:rotate-1"
+            style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.06));">
 
-    {{-- Header Module --}}
-    <header class="relative z-10 border-b-2 border-dashed border-border/50 pb-6">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border-2 border-primary/20 rotate-[-5deg]">
-                <i class="fa-solid fa-address-book text-primary text-lg"></i>
+            <div class="absolute inset-0 bg-emerald-400/90 border border-emerald-500 rounded-l-md z-0 transition-colors"
+                style="clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);">
             </div>
-            <div>
-                <h2 class="text-xl md:text-2xl font-serif font-bold tracking-tight text-text">
-                    Daftar Korespondensi
-                </h2>
-                <p class="text-[10px] md:text-xs font-medium text-muted mt-1 tracking-wide italic uppercase">
-                    Hubungkan jejaring sosial dan media komunikasi eksternal Anda.
-                </p>
-            </div>
+
+            <div class="absolute top-1/2 -left-4 w-6 h-[1.5px] bg-emerald-900/80 -translate-y-[calc(50%+1px)] origin-right -rotate-12 group-hover:-rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+            <div class="absolute top-1/2 -left-3 w-5 h-[1.5px] bg-emerald-800/80 -translate-y-[calc(50%-1px)] origin-right rotate-12 group-hover:rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
+
+            <div class="absolute left-2.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white shadow-[inset_1px_1px_3px_rgba(0,0,0,0.3)] border border-emerald-700/30 z-10"></div>
+
+            <i class="fa-solid fa-share-nodes relative z-10 text-emerald-900 text-[11px] mt-px"></i>
+
+            <span class="relative z-10 text-[10px] sm:text-xs font-black tracking-[0.15em] uppercase text-emerald-950 mt-px">
+                Media Sosial
+            </span>
+        </div>
+
+        <div class="mt-4">
+            <h2 class="text-xl md:text-2xl font-serif font-bold tracking-tight text-text">
+                Tautan Komunikasi
+            </h2>
+            <p class="text-[10px] md:text-xs font-medium text-muted mt-1 tracking-wide italic uppercase">
+                Hubungkan akun media sosial dan platform profesional Anda.
+            </p>
         </div>
     </header>
 
-    {{-- Form --}}
     <form method="post" action="{{ route('dashboard.account.socials.update') }}" class="relative z-10 space-y-8">
         @csrf
         @method('patch')
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
 
-            {{-- WhatsApp Node --}}
             <div class="space-y-2 relative group/input">
-                <label for="whatsapp" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-green-600 transition-colors flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> WhatsApp
+                <label for="whatsapp" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-emerald-600 transition-colors flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> WhatsApp
                 </label>
                 <div class="relative">
-                    <div class="absolute left-0 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within/input:text-green-500 transition-colors">
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 text-muted/40 group-focus-within/input:text-emerald-500 transition-colors">
                         <i class="fa-brands fa-whatsapp text-lg"></i>
                     </div>
                     <input type="text" id="whatsapp" name="whatsapp"
-                        class="w-full bg-transparent border-0 border-b-2 border-border pl-8 pr-4 py-2 font-serif text-base text-text focus:outline-none focus:border-green-500 focus:ring-0 transition-all placeholder:text-muted/30 placeholder:italic"
+                        class="w-full bg-transparent border-0 border-b-2 border-border pl-8 pr-4 py-2 font-serif text-base text-text focus:outline-none focus:border-emerald-500 focus:ring-0 transition-all placeholder:text-muted/30 placeholder:italic"
                         placeholder="+628..." value="{{ old('whatsapp', $user->whatsapp) }}" />
                 </div>
             </div>
 
-            {{-- Instagram Node --}}
             <div class="space-y-2 relative group/input">
                 <label for="instagram" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-pink-600 transition-colors flex items-center gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span> Instagram
@@ -59,7 +67,6 @@
                 </div>
             </div>
 
-            {{-- GitHub Node --}}
             <div class="space-y-2 relative group/input">
                 <label for="github" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-text transition-colors flex items-center gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-gray-800"></span> GitHub
@@ -74,7 +81,6 @@
                 </div>
             </div>
 
-            {{-- LinkedIn Node --}}
             <div class="space-y-2 relative group/input">
                 <label for="linkedin" class="text-[10px] font-bold uppercase tracking-[0.2em] text-muted group-focus-within/input:text-sky-600 transition-colors flex items-center gap-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> LinkedIn
@@ -91,23 +97,15 @@
 
         </div>
 
-        {{-- Submit Action --}}
         <div class="pt-8 flex items-center gap-6 border-t-2 border-dashed border-border/50">
             <button type="submit"
-                class="group relative px-8 py-3 bg-container border-2 border-border text-text font-bold text-xs uppercase tracking-[0.2em] hover:border-primary hover:text-primary hover:-translate-y-1 transition-all shadow-[4px_4px_0px_var(--color-border)] active:shadow-none active:translate-y-0.5 rounded-lg flex items-center gap-3">
-                <span>Perbarui Jejaring</span>
-                <i class="fa-solid fa-stamp group-hover:rotate-12 transition-transform"></i>
+                class="group relative px-8 py-3 bg-warning border-2 border-yellow-600 text-yellow-900 font-bold text-xs uppercase tracking-[0.2em] hover:-translate-y-1 transition-all shadow-[4px_4px_0px_var(--color-border)] active:shadow-none active:translate-y-0.5 rounded-lg flex items-center gap-3">
+                <span>Simpan</span>
+                <i class="fa-solid fa-stamp group-hover:rotate-12 transition-transform text-yellow-700"></i>
             </button>
 
-            @if (session('status') === 'socials-updated')
-                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
-                    class="text-[10px] font-bold text-green-700 uppercase tracking-widest flex items-center gap-2 bg-green-50 px-4 py-2 border-2 border-green-200 rounded-full rotate-1 shadow-sm">
-                    <i class="fa-solid fa-check-circle animate-pulse"></i> Data Tersinkron
-                </div>
-            @endif
         </div>
     </form>
 
-    {{-- Decorative Background Icon --}}
     <i class="fa-solid fa-paper-plane absolute -bottom-4 -right-4 text-8xl text-muted/5 -rotate-12 pointer-events-none"></i>
 </section>

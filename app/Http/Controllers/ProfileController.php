@@ -46,7 +46,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('dashboard.account.edit')->with('status', 'profile-updated');
+        return Redirect::route('dashboard.account.edit')->with('success', 'Profil Anda telah berhasil diperbarui.');
     }
 
     /**
@@ -66,7 +66,7 @@ class ProfileController extends Controller
         $user->fill($validated);
         $user->save();
 
-        return Redirect::route('dashboard.account.edit')->with('status', 'socials-updated');
+        return Redirect::route('dashboard.account.edit')->with('success', 'Tautan media sosial Anda telah berhasil diperbarui.');
     }
 
     /**

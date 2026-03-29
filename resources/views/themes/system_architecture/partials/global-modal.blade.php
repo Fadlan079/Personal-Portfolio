@@ -8,12 +8,12 @@ $message = session($type);
 @endphp
 
 @if($type)
-<div id="global-modal" class="fixed inset-0 z-99999 flex items-center justify-center px-4 font-mono select-none">
+<div id="global-modal" class="fixed inset-0 z-99999 flex items-center justify-center px-4 font-mono select-none pointer-events-none">
     {{-- Terminal Style Modal --}}
-    <div id="modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+    <div id="modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"></div>
 
     <div id="modal-box"
-         class="relative w-full max-w-lg bg-black border border-primary/50 shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.2)] opacity-0 scale-95 transition-all duration-300">
+         class="relative w-full max-w-lg bg-black border border-primary/50 shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.2)] opacity-0 scale-95 transition-all duration-300 pointer-events-auto">
 
         {{-- Terminal Header --}}
         <div class="flex items-center justify-between px-4 py-2 border-b border-primary/30 bg-primary/5">
@@ -72,20 +72,36 @@ $message = session($type);
         const okBtn = document.getElementById('modal-ok-btn');
 
         function showModal() {
-            backdrop.classList.add('opacity-100');
+            if (backdrop) backdrop.classList.add('opacity-100');
             box.classList.remove('opacity-0', 'scale-95');
             box.classList.add('opacity-100', 'scale-100');
+            
+            // Dismiss when clicking outside, but allow clicks to pass through
+            document.addEventListener('mousedown', handleOutsideClick);
+        }
+
+        function handleOutsideClick(event) {
+            if (!box.contains(event.target)) {
+                hideModal();
+            }
         }
 
         function hideModal() {
-            backdrop.classList.remove('opacity-100');
+            if (backdrop) backdrop.classList.remove('opacity-100');
             box.classList.add('opacity-0', 'scale-95');
+            document.removeEventListener('mousedown', handleOutsideClick);
             setTimeout(() => modal.remove(), 300);
         }
 
         setTimeout(showModal, 100);
-        closeBtn.addEventListener('click', hideModal);
-        okBtn.addEventListener('click', hideModal);
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hideModal();
+        });
+        okBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hideModal();
+        });
         setTimeout(hideModal, 8000);
     });
 </script>

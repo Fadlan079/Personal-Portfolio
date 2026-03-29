@@ -60,16 +60,16 @@ $randomRotation = $type ? $rotations[array_rand($rotations)] : '';
 @endphp
 
 @if($type)
-<div id="global-modal" class="fixed inset-0 z-99999 flex items-center justify-center px-4 overflow-hidden select-none" style="font-family: 'Kalam', 'Segoe UI', cursive;">
+<div id="global-modal" class="fixed inset-0 z-99999 flex items-center justify-center px-4 overflow-hidden select-none pointer-events-none" style="font-family: 'Kalam', 'Segoe UI', cursive;">
     {{-- Kalam adalah font Google yang mirip tulisan tangan. Jika tidak ada, fallback ke cursive --}}
     {{-- Muat font Kalam di head link: <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet"> --}}
 
     {{-- Backdrop (lebih terang agar tema diary terasa soft) --}}
-    <div id="modal-backdrop" class="absolute inset-0 bg-[#E5E4DF]/70 backdrop-blur-sm cursor-pointer" style="opacity: 0;"></div>
+    <div id="modal-backdrop" class="absolute inset-0 bg-[#E5E4DF]/50 backdrop-blur-sm pointer-events-none opacity-0 transition-opacity duration-300"></div>
 
     {{-- Sticky Note Container --}}
     <div id="modal-box"
-         class="relative w-full max-w-[360px] p-6 md:p-8 shadow-xl rounded-sm group {{ $randomRotation }}"
+         class="relative w-full max-w-[360px] p-6 md:p-8 shadow-xl rounded-sm group {{ $randomRotation }} pointer-events-auto"
          style="background-color: {{ $colors[$type]['bg'] }};
                 color: {{ $colors[$type]['text'] }};
                 opacity: 0; transform: scale(0.9) translateY(30px);
@@ -139,23 +139,35 @@ $randomRotation = $type ? $rotations[array_rand($rotations)] : '';
         const closeBtn = document.getElementById('modal-close-btn');
 
         function showModal() {
-            backdrop.style.opacity = '1';
+            if (backdrop) backdrop.style.opacity = '1';
             box.style.opacity = '1';
             box.style.transform = 'scale(1) translateY(0) rotate({{ $randomRotation == "rotate-1" ? "1deg" : ($randomRotation == "-rotate-2" ? "-2deg" : ($randomRotation == "-rotate-1" ? "-1deg" : "2deg")) }})';
+            
+            // Listen for clicks outside the box to dismiss, while allowing clicks to pass through
+            document.addEventListener('mousedown', handleOutsideClick);
+        }
+
+        function handleOutsideClick(event) {
+            if (!box.contains(event.target)) {
+                hideModal();
+            }
         }
 
         function hideModal() {
-            backdrop.style.opacity = '0';
+            if (backdrop) backdrop.style.opacity = '0';
             box.style.opacity = '0';
             box.style.transform = 'scale(0.9) translateY(30px)';
+            document.removeEventListener('mousedown', handleOutsideClick);
             setTimeout(() => modal.remove(), 300);
         }
 
         // Trigger animasi masuk
         setTimeout(showModal, 100);
 
-        closeBtn.addEventListener('click', hideModal);
-        backdrop.addEventListener('click', hideModal);
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hideModal();
+        });
 
         // Auto close setelah 5 detik
         setTimeout(hideModal, 5000);
