@@ -7,30 +7,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <style>
-    /* Base paper texture with fine grain noise */
     .bg-diary-texture {
-        background-color: #f5efe6;
+        background-color: var{--color-bg};
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
     }
 
 
-    /* Lined paper card styling */
     .diary-page {
-        background-color: #fdfbf7;
-        /* Creates the horizontal notebook lines */
+        background-color: var{--color-container};
         background-image: repeating-linear-gradient(transparent, transparent 31px, rgba(0, 0, 0, 0.06) 31px, rgba(0, 0, 0, 0.06) 32px);
         background-position: 0 10px;
         border: 1px solid rgba(0, 0, 0, 0.05);
         border-radius: 2px;
-        /* Stacked paper shadow effect */
         box-shadow: 2px 4px 12px rgba(0,0,0,0.06), -1px 2px 4px rgba(0,0,0,0.03);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         padding: 2rem 2rem;
-        /* Ensures line height matches the 32px background grid */
         line-height: 32px;
     }
 
-    /* Hover interactions for physical feel */
     .diary-page:hover {
         box-shadow: 5px 10px 20px rgba(0,0,0,0.08), -2px 5px 10px rgba(0,0,0,0.04);
         z-index: 10;
@@ -40,17 +34,10 @@
     .rotate-hover-right:hover { transform: rotate(1.5deg) scale(1.01); }
     .rotate-hover-left:hover { transform: rotate(-1.5deg) scale(1.01); }
 
-    /* Entry Animation */
     @keyframes journalEntry {
         from { opacity: 0; transform: translateY(30px) rotateX(-5deg); }
         to { opacity: 1; transform: translateY(0) rotateX(0); }
     }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #f5efe6; }
-    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.4); }
 
     .font-cormorant { font-family: 'Cormorant', serif; }
     .font-caveat { font-family: 'Caveat', cursive; }

@@ -7,7 +7,13 @@
         ['id' => 'tools', 'name' => 'Tools', 'icon' => '<i class="fa-solid fa-toolbox"></i>', 'color' => 'text-emerald-700', 'bg' => 'bg-emerald-50', 'border' => 'border-emerald-200'],
     ];
 
-    $cardRotations = ['-rotate-2', 'rotate-3', '-rotate-1', 'rotate-2', '-rotate-3'];
+    $cardRotations = [
+    'md:-rotate-2',
+    'md:rotate-3',
+    'md:-rotate-1',
+    'md:rotate-2',
+    'md:-rotate-3'
+];
     $tapeRotations = ['rotate-3', '-rotate-2', 'rotate-1', '-rotate-4', 'rotate-2'];
 @endphp
 

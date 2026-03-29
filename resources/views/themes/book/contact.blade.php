@@ -290,7 +290,7 @@
                     </div>
                 </a>
 
-                <div class="mt-8 bg-warning text-yellow-900 p-5 shadow-md rotate-[2deg] border-l-4 border-yellow-500 rounded-r-md">
+                <div class="mt-8 bg-warning text-yellow-900 p-5 shadow-md md:rotate-[2deg] border-l-4 border-yellow-500 rounded-r-md">
                     <p class="text-[10px] font-black uppercase tracking-widest mb-2 opacity-80 border-b border-yellow-900/20 pb-2" data-i18n="contact.notes.label">
                         Catatan
                     </p>

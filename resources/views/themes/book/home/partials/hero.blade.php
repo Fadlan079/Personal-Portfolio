@@ -88,7 +88,7 @@
 
         <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,var(--color-border)_10px,var(--color-border)_11px)] opacity-20 -z-10 rounded-[2rem] transform translate-x-4 translate-y-4"></div>
 
-        <div class="relative w-80 h-80 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-surface shadow-2xl border border-border p-3 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+        <div class="relative w-80 h-80 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-surface shadow-2xl border border-border p-3 transform md:rotate-3 hover:rotate-0 transition-transform duration-500">
 
             <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-surface/80 backdrop-blur-sm border border-border/50 shadow-sm rotate-[-4deg] z-20"></div>
 

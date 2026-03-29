@@ -1,7 +1,7 @@
 <div id="project-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     @forelse($projects as $index => $project)
             @php
-                $rotation = $index % 2 === 0 ? 'rotate-1' : '-rotate-1';
+                $rotation = $index % 2 === 0 ? 'md:rotate-1' : 'md:-rotate-1';
             @endphp
 
             <div class="group relative p-4 pt-12 shadow-inner bg-container rounded-xl {{ $rotation }} hover:rotate-0 transition-transform duration-500">

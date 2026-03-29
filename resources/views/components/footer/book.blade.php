@@ -8,7 +8,7 @@
     <div class="max-w-6xl mx-auto px-6 md:px-10 relative z-10 flex flex-col md:flex-row flex-wrap justify-between gap-12 lg:gap-8">
 
         <div class="w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(40%-2rem)] flex-shrink-0">
-            <div class="relative bg-amber-100 p-8 shadow-xl rotate-[-2deg] rounded-lg border border-amber-900/10 group">
+            <div class="relative bg-amber-100 p-8 shadow-xl md:rotate-[-2deg] rounded-lg border border-amber-900/10 group">
                 <div class="absolute top-0 right-0 w-16 h-6 bg-amber-200/80 -rotate-45 shadow-inner pointer-events-none origin-top-right"></div>
 
                 <div>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(30%-2rem)] flex-shrink-0">
-            <div class="relative bg-white/70 p-8 shadow-lg rotate-[1deg] rounded-sm border border-amber-900/10 group">
+            <div class="relative bg-white/70 p-8 shadow-lg md:rotate-[1deg] rounded-sm border border-amber-900/10 group">
                  <div class="absolute -top-4 -left-4 w-14 h-6 bg-amber-100/90 rotate-45 shadow-inner pointer-events-none origin-bottom-left"></div>
 
                 <p class="text-[11px] font-bold uppercase tracking-widest text-amber-950 border-b border-amber-900/20 pb-2 mb-6" data-i18n="footer.quick_links_label">
@@ -65,7 +65,7 @@
         </div>
 
         <div class="w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(30%-2rem)] flex-shrink-0">
-            <div class="relative bg-container p-8 shadow-md rotate-[-1deg] rounded-md border border-border/50 group">
+            <div class="relative bg-container p-8 shadow-md md:rotate-[-1deg] rounded-md border border-border/50 group">
                 <div class="absolute bottom-0 left-0 w-18 h-6 bg-amber-100/80 -rotate-45 shadow-inner pointer-events-none origin-bottom-left"></div>
 
                 <p class="text-[11px] font-bold uppercase tracking-widest text-text border-b border-amber-500/20 pb-2 mb-6" data-i18n="footer.connect_label">
@@ -86,7 +86,7 @@
                     @endforeach
                 </div>
 
-                <div class="pt-4 flex items-center gap-3 bg-amber-50 p-3 rounded-full shadow-inner shadow-amber-900/10 rotate-[-3deg] group-hover:rotate-0 transition-transform">
+                <div class="pt-4 flex items-center gap-3 bg-amber-50 p-3 rounded-full shadow-inner shadow-amber-900/10 md:rotate-[-3deg] group-hover:rotate-0 transition-transform">
                     <i class="fa-solid fa-stamp text-lg text-amber-500 rotate-15 group-hover:rotate-0 transition-transform"></i>
                     <div class="flex flex-col">
                       <span class="text-[10px] font-bold uppercase tracking-widest text-black/70" data-i18n="footer.location_label">Lokasi</span>
