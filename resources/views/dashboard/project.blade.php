@@ -87,8 +87,8 @@
                     </div>
                 </div>
             </header>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-8">
                 <div class="bg-sky-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
                     <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
 
@@ -126,6 +126,16 @@
                         <span data-i18n="project.stats.inProgress">Dalam Proses</span>
                     </p>
                     <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['statusBreakdown']['In Progress'] ?? 0 }}</h3>
+                </div>
+
+                <div class="bg-slate-100 p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all col-span-2 md:col-span-1">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-vial text-slate-600"></i>
+                        <span>Prototype</span>
+                    </p>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $summary['statusBreakdown']['Prototype'] ?? 0 }}</h3>
                 </div>
             </div>
 
@@ -451,7 +461,7 @@
             };
 
             const rawStatusData = {!! json_encode(
-                $summary['statusBreakdown'] ?? ['Shipped' => 5, 'In Progress' => 3, 'Prototype' => 2, 'Archived' => 1],
+                $summary['statusBreakdown'] ?? ['Finished' => 5, 'In Progress' => 3, 'Prototype' => 2],
             ) !!};
             const typeData = {!! json_encode($chartData['types'] ?? ['Website' => 10, 'Web App' => 6, 'Application' => 4, 'Design' => 3]) !!};
             const timelineData = {!! json_encode(

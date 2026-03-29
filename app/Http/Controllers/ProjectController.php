@@ -33,7 +33,7 @@ class ProjectController extends Controller
             $projects = $query->paginate(3)->withQueryString();
         }
 
-        $summary = Project::summary();
+        $summary = Project::summary(false);
         $technologies = \App\Models\Skill::pluck('name');
 
         $typesChart = Project::selectRaw('type, count(*) as count')

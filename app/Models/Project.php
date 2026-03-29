@@ -120,34 +120,35 @@ class Project extends Model
         };
     }
 
-public static function summary(): array
-{
-    $projects = self::public()->get();
+    public static function summary(bool $onlyPublic = true): array
+    {
+        $query = $onlyPublic ? self::public() : self::query();
 
-    $typeMap = [
-        'Website' => 'Web',
-        'Web App' => 'Web',
-        'Application' => 'Application',
-        'Design' => 'Design',
-    ];
+        $typeMap = [
+            'Website'     => 'Web',
+            'Web App'     => 'Web',
+            'Application' => 'Application',
+            'Design'      => 'Design',
+        ];
 
-    $normalizedTypes = $projects
-        ->pluck('type')
-        ->map(fn($type) => $typeMap[$type] ?? $type)
-        ->unique();
+        // Fetch essential data to minimize memory usage for summary calculation
+        $projects = $query->get(['type', 'status']);
 
-    $statusCount = $projects->groupBy('status')->map->count();
+        $normalizedTypes = $projects
+            ->pluck('type')
+            ->map(fn($type) => $typeMap[$type] ?? $type)
+            ->unique();
 
-    return [
-        'totalProjects' => $projects->count(),
+        $statusCount = $projects->groupBy('status')->map->count();
 
-        'totalCategories' => $normalizedTypes->count(),
-
-        'statusBreakdown' => [
-            'Finished'     => $statusCount['Finished'] ?? 0,
-            'In Progress' => $statusCount['In Progress'] ?? 0,
-            'Prototype'   => $statusCount['Prototype'] ?? 0,
-        ],
-    ];
-}
+        return [
+            'totalProjects'   => $projects->count(),
+            'totalCategories' => $normalizedTypes->count(),
+            'statusBreakdown' => [
+                'Finished'    => $statusCount['Finished'] ?? 0,
+                'In Progress' => $statusCount['In Progress'] ?? 0,
+                'Prototype'   => $statusCount['Prototype'] ?? 0,
+            ],
+        ];
+    }
 }

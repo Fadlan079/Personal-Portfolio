@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $projectSummary = Project::summary();
+        $projectSummary = Project::summary(false);
         $unreadMessagesCount = Contact::where('is_read', false)->count();
 
         $skillSummary = Skill::summary();
