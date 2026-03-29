@@ -2,25 +2,6 @@
 @section('title', 'Contact')
 
 @section('content')
-
-    @if (session('success'))
-        <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.500ms x-init="setTimeout(() => show = false, 4000)"
-            class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-lg border-l-2 border-emerald-500 bg-emerald-500/10 p-4 shadow-[0_0_20px_rgba(16,185,129,0.2)] backdrop-blur-md">
-            <div class="flex justify-between items-start">
-                <div class="flex gap-3 text-emerald-600">
-                    <i class="fa-solid fa-check-circle mt-1"></i>
-                    <div>
-                        <h4 class="text-[10px] font-bold uppercase tracking-widest mb-1 font-sans">BERHASIL</h4>
-                        <p class="text-xs font-serif italic opacity-90">{{ session('success') }}</p>
-                    </div>
-                </div>
-                <button @click="show = false" class="text-emerald-600/50 hover:text-emerald-600">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-        </div>
-    @endif
-
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -65,15 +46,6 @@
                             Tinjau dan kelola pesan masuk, permintaan proyek, serta ajakan kolaborasi.
                         </p>
                     </div>
-
-                    <div class="flex items-center gap-4">
-                        <div class="px-4 py-2 bg-container border-2 border-border rounded-lg text-xs font-bold uppercase tracking-widest text-muted shadow-[3px_3px_0px_var(--color-border)] flex items-center gap-3">
-                            STATUS:
-                            <span class="{{ $unreadCount > 0 ? 'text-amber-500 animate-pulse' : 'text-emerald-500' }}">
-                                {{ $unreadCount > 0 ? 'PESAN BARU' : 'SEMUA TERBACA' }}
-                            </span>
-                        </div>
-                    </div>
                 </div>
             </header>
 
@@ -100,7 +72,7 @@
                 <div class="bg-sky-100 p-6 rounded-sm shadow-md border border-gray-200/70 flex flex-col justify-between relative group/tooltip rotate-2 font-serif hover:z-50 hover:scale-[1.02] transition-all">
                     <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
                     <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10 font-sans">
-                        <i class="fa-solid fa-briefcase text-sky-500"></i> Inisiasi Proyek
+                        <i class="fa-solid fa-briefcase text-sky-500"></i> Proyek
                     </p>
                     <h3 class="text-4xl font-bold text-neutral-900 relative z-10">{{ str_pad($projectCount, 2, '0', STR_PAD_LEFT) }}</h3>
                 </div>
@@ -189,8 +161,8 @@
                                 onchange="document.getElementById('filterForm').submit();">
                                 <option value="ALL" {{ $filter == 'ALL' ? 'selected' : '' }}>Semua Pesan</option>
                                 <option value="UNREAD" {{ $filter == 'UNREAD' ? 'selected' : '' }}>Belum Dibaca</option>
-                                <option value="PROJECT" {{ $filter == 'PROJECT' ? 'selected' : '' }}>Tipe: Project</option>
-                                <option value="COLLAB" {{ $filter == 'COLLAB' ? 'selected' : '' }}>Tipe: Collab</option>
+                                <option value="PROJECT" {{ $filter == 'PROJECT' ? 'selected' : '' }}>Tipe: Proyek</option>
+                                <option value="COLLAB" {{ $filter == 'COLLAB' ? 'selected' : '' }}>Tipe: Kolaborasi</option>
                             </select>
                             <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-muted text-[10px] pointer-events-none"></i>
                         </div>
@@ -229,12 +201,19 @@
                                         'project' => 'text-sky-600 border-sky-300 bg-sky-50',
                                         'collab' => 'text-emerald-600 border-emerald-300 bg-emerald-50',
                                         'inquiry' => 'text-amber-600 border-amber-300 bg-amber-50',
+                                        'feedback' => 'text-rose-600 border-rose-300 bg-rose-50',
                                         default => 'text-muted border-border bg-container',
                                     };
 
-                                    $methodIcon = $msg->method === 'wa'
-                                        ? 'fa-brands fa-whatsapp text-emerald-500'
-                                        : 'fa-solid fa-envelope text-amber-500';
+                                    $displayType = match (strtolower($msg->type)) {
+                                        'project' => 'Proyek',
+                                        'collab' => 'Kolaborasi',
+                                        'inquiry' => 'Pertanyaan',
+                                        'feedback' => 'Kritik & Saran',
+                                        default => $msg->type,
+                                    };
+
+                                    $methodIcon = 'fa-solid fa-envelope text-amber-500';
                                 @endphp
 
                                 <div x-data="{ expanded: false }"
@@ -260,7 +239,7 @@
                                                 </p>
                                                 <div class="flex items-center gap-2 mt-1">
                                                     <span class="text-[9px] font-bold uppercase tracking-widest border rounded px-2 py-0.5 {{ $typeStyle }}">
-                                                        {{ $msg->type }}
+                                                        {{ $displayType }}
                                                     </span>
                                                 </div>
                                             </div>
@@ -317,18 +296,10 @@
                                             </div>
 
                                             <div class="flex flex-wrap items-center justify-between gap-3 pt-6">
-                                                @if ($msg->method === 'email')
-                                                    <a href="mailto:{{ $msg->sender }}?subject=RE: {{ rawurlencode($msg->subject) }}"
-                                                        class="px-5 py-2.5 bg-amber-100 border-2 border-amber-400 rounded-lg text-xs font-bold uppercase tracking-widest text-amber-900 hover:-translate-y-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] flex items-center gap-2">
-                                                        <i class="fa-solid fa-reply"></i> Balas Email
-                                                    </a>
-                                                @else
-                                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $msg->sender) }}?text=Halo,%20terima%20kasih%20telah%20menghubungi%20kami.%20Balasan%20untuk:%20{{ rawurlencode($msg->subject) }}"
-                                                        target="_blank"
-                                                        class="px-5 py-2.5 bg-emerald-100 border-2 border-emerald-400 rounded-lg text-xs font-bold uppercase tracking-widest text-emerald-900 hover:-translate-y-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] flex items-center gap-2">
-                                                        <i class="fa-brands fa-whatsapp text-lg"></i> Balas WhatsApp
-                                                    </a>
-                                                @endif
+                                                <a href="mailto:{{ $msg->sender }}?subject=RE: {{ rawurlencode($msg->subject) }}"
+                                                    class="px-5 py-2.5 bg-amber-100 border-2 border-amber-400 rounded-lg text-xs font-bold uppercase tracking-widest text-amber-900 hover:-translate-y-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] flex items-center gap-2">
+                                                    <i class="fa-solid fa-reply"></i> Balas Email
+                                                </a>
 
                                                 @if ($isUnread)
                                                     <form method="POST" action="{{ route('dashboard.contacts.read', $msg->id) }}">
@@ -487,10 +458,18 @@
             new Chart(document.getElementById('typeChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(typeData).map(t => t.charAt(0).toUpperCase() + t.slice(1)),
+                    labels: Object.keys(typeData).map(t => {
+                        const labels = {
+                            'project': 'Proyek',
+                            'collab': 'Kolaborasi',
+                            'inquiry': 'Pertanyaan',
+                            'feedback': 'Kritik & Saran'
+                        };
+                        return labels[t.toLowerCase()] || t;
+                    }),
                     datasets: [{
                         data: Object.values(typeData),
-                        backgroundColor: [colors.sky, colors.emerald, colors.amber, colors.dark],
+                        backgroundColor: [colors.sky, colors.emerald, colors.amber, colors.rose],
                         borderColor: '#FEFCE8',
                         borderWidth: 2
                     }]
