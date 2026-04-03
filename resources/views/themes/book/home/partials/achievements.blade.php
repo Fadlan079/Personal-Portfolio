@@ -1,11 +1,11 @@
  @php
     // Rotasi dinamis untuk memberikan kesan natural pada susunan kartu (seperti section tech stack)
     $cardRotations = [
-        'md:-rotate-2',
-        'md:rotate-3',
         'md:-rotate-1',
         'md:rotate-2',
-        'md:-rotate-3'
+        'md:-rotate-1',
+        'md:rotate-1',
+        'md:-rotate-2'
     ];
 @endphp
 
