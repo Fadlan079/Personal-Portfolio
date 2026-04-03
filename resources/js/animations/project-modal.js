@@ -63,7 +63,8 @@ export function projectModalAnimation() {
                 screenshot: d.screenshot,
                 image_desktop: d.imageDesktop !== 'undefined' ? d.imageDesktop : '',
                 image_tablet: d.imageTablet !== 'undefined' ? d.imageTablet : '',
-                image_mobile: d.imageMobile !== 'undefined' ? d.imageMobile : ''
+                image_mobile: d.imageMobile !== 'undefined' ? d.imageMobile : '',
+                achievements: d.achievements
             };
 
             window.openEditModal(project);
@@ -193,10 +194,10 @@ export function projectModalAnimation() {
         let currentImages = [];
         let currentIndex = 0;
 
-        window.openLightbox = function (src) {
+        window.openLightbox = function (src, selector = '#detailScreenshots img') {
 
-            // Find all images currently in the detail modal to create the gallery
-            const imgs = Array.from(document.querySelectorAll('#detailScreenshots img'));
+            // Find all images based on selector to create the gallery
+            const imgs = Array.from(document.querySelectorAll(selector));
             currentImages = imgs.map(img => img.src);
 
             // Find index of clicked image
@@ -344,6 +345,18 @@ if (editModal) {
                     imgEl._x_dataStack[0].deletedImages = [];
                 } catch (e) {
                     imgEl._x_dataStack[0].existingImages = [];
+                }
+            }
+
+            const achEl = document.getElementById('achievementEditRegion');
+            if (achEl && achEl._x_dataStack && project.achievements) {
+                try {
+                    const achievements = JSON.parse(project.achievements);
+                    achEl._x_dataStack[0].selected = achievements;
+                    achEl._x_dataStack[0].input = '';
+                    achEl._x_dataStack[0].filtered = [];
+                } catch (e) {
+                    achEl._x_dataStack[0].selected = [];
                 }
             }
         }, 50);

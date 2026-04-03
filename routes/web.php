@@ -76,6 +76,7 @@ Route::middleware(['auth', 'verified'])
 
         Route::resource('projects', ProjectController::class)->except(['show']);
         Route::resource('skills', \App\Http\Controllers\Dashboard\SkillController::class)->except(['show']);
+        Route::resource('achievements', \App\Http\Controllers\Dashboard\AchievementController::class)->except(['show']);
 
         Route::get('/contacts', [\App\Http\Controllers\Dashboard\ContactController::class, 'index'])->name('contacts.index');
         Route::patch('/contacts/{contact}/read', [\App\Http\Controllers\Dashboard\ContactController::class, 'markAsRead'])->name('contacts.read');

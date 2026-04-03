@@ -6,7 +6,7 @@
 
     @if ($errors->any())
         <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.500ms
-            class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-lg border-l-2 border-red-500 bg-red-500/10 p-4 shadow-[0_0_20px_rgba(239,68,68,0.2)] backdrop-blur-md">
+            class="fixed top-24 left-1/2 -translate-x-1/2 z-100 w-[90%] max-w-lg border-l-2 border-red-500 bg-red-500/10 p-4 shadow-[0_0_20px_rgba(239,68,68,0.2)] backdrop-blur-md">
             <div class="flex justify-between items-start">
                 <div class="flex gap-3 text-red-500">
                     <i class="fa-solid fa-triangle-exclamation mt-1 animate-pulse"></i>
@@ -222,7 +222,7 @@
                             </button>
 
                             <div id="sort-menu"
-                                class="hidden absolute right-0 top-full mt-3 w-full min-w-[12rem] bg-surface rounded-lg border-2 border-border shadow-[4px_4px_0px_var(--color-border)] overflow-hidden">
+                                class="hidden absolute right-0 top-full mt-3 w-full min-w-48 bg-surface rounded-lg border-2 border-border shadow-[4px_4px_0px_var(--color-border)] overflow-hidden">
                                 <button class="sort-option w-full text-left px-5 py-3 text-xs font-bold uppercase tracking-widest text-muted hover:bg-container hover:text-text transition-colors border-b-2 border-dashed border-border/50" data-sort="latest"
                                 data-i18n="project.sort.menu.latest">
                                     Terbaru
@@ -299,7 +299,8 @@
                                     data-image-desktop="{{ $project->image_desktop ? asset('storage/' . $project->image_desktop) : '' }}"
                                     data-image-tablet="{{ $project->image_tablet ? asset('storage/' . $project->image_tablet) : '' }}"
                                     data-image-mobile="{{ $project->image_mobile ? asset('storage/' . $project->image_mobile) : '' }}"
-                                    data-tech='@json($project->tech)'>
+                                    data-tech='@json($project->tech)'
+                                    data-achievements='@json($project->achievements->map(fn($a) => ["id" => $a->id, "title" => $a->title, "image_url" => $a->image_url]))'>
 
                                     <div class="aspect-video w-full bg-bg overflow-hidden mb-5 border border-border shadow-inner relative">
                                         <div class="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style="background-image: radial-gradient(var(--color-text) 0.5px, transparent 0.5px); background-size: 8px 8px;"></div>
@@ -320,7 +321,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="px-1 pb-1 flex flex-col flex-grow">
+                                    <div class="px-1 pb-1 flex flex-col grow">
                                         <div class="flex justify-between items-start mb-1">
                                             <span class="text-[9px] font-bold text-muted uppercase tracking-widest">{{ $project->type }}</span>
                                         </div>
@@ -333,13 +334,21 @@
                                             {{ $project->desc }}
                                         </p>
 
-                                        <div class="pt-3 border-t border-border/50 flex justify-between items-center mt-auto">
-                                            <span class="text-[10px] font-medium text-muted italic">
-                                                Diarsipkan: {{ $project->created_at->format('d F Y') }}
-                                            </span>
+                                        <div class="pt-3 border-t border-border/50 flex flex-col gap-2 mt-auto">
+                                            @if($project->achievements && $project->achievements->count() > 0)
+                                                <div class="flex items-center gap-1.5 text-[9px] text-yellow-700 bg-warning/20 px-2 py-0.5 rounded-sm border border-warning/50 w-fit shadow-sm uppercase tracking-wider font-bold">
+                                                    <i class="fa-solid fa-trophy text-yellow-600"></i>
+                                                    <span>+{{ $project->achievements->count() }} Pencapaian</span>
+                                                </div>
+                                            @endif
+                                            <div class="flex justify-between items-center w-full">
+                                                <span class="text-[10px] font-medium text-muted italic">
+                                                    Diarsipkan: {{ $project->created_at->format('d F Y') }}
+                                                </span>
 
-                                            <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">
-                                                <i class="fa-solid fa-arrow-right-long text-xs transform group-hover:translate-x-0.5 transition-transform"></i>
+                                                <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">
+                                                    <i class="fa-solid fa-arrow-right-long text-xs transform group-hover:translate-x-0.5 transition-transform"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -388,7 +397,7 @@
             </div>
 
             <div id="bulkBar"
-                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
+                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-90 bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
 
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 backdrop-blur-sm border border-black/5 rotate-1"></div>
 
@@ -428,8 +437,8 @@
 @endsection
 
 <x-project.detail-modal />
-<x-project.edit-modal :technologies="$technologies" />
-<x-project.create-modal :technologies="$technologies" />
+<x-project.edit-modal :technologies="$technologies" :achievements_all="$achievements_all" />
+<x-project.create-modal :technologies="$technologies" :achievements_all="$achievements_all" />
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -733,6 +742,7 @@
                         detailModal.dataset.repo = card.dataset.repo;
                         detailModal.dataset.live = card.dataset.live;
                         detailModal.dataset.screenshot = card.dataset.screenshot;
+                        detailModal.dataset.achievements = card.dataset.achievements;
 
                         document.getElementById('detailType').textContent = card.dataset.type;
                         document.getElementById('detailStatus').textContent = card.dataset.status;
@@ -782,6 +792,35 @@
                             }
                         } else {
                             wrapper.classList.add('hidden');
+                        }
+
+                        const achWrapper = document.getElementById('detailAchievementsWrapper');
+                        const achContainer = document.getElementById('detailAchievements');
+                        achContainer.innerHTML = '';
+                        if (card.dataset.achievements) {
+                            try {
+                                const achievements = JSON.parse(card.dataset.achievements);
+                                if (achievements.length > 0) {
+                                    achievements.forEach(ach => {
+                                        const imgSrc = ach.image_url ? `/storage/${ach.image_url}` : '';
+                                        if (!imgSrc) return;
+                                        
+                                        achContainer.innerHTML += `
+                                            <div class="aspect-video overflow-hidden border border-border/50 bg-surface/40 group relative">
+                                                <img src="${imgSrc}"
+                                                    class="w-full h-full object-cover transition duration-500 group-hover:scale-105 cursor-pointer">
+                                            </div>
+                                        `;
+                                    });
+                                    achWrapper.classList.remove('hidden');
+                                } else {
+                                    achWrapper.classList.add('hidden');
+                                }
+                            } catch {
+                                achWrapper.classList.add('hidden');
+                            }
+                        } else {
+                            achWrapper.classList.add('hidden');
                         }
 
                         const live = document.getElementById('detailLive');

@@ -24,8 +24,8 @@
         </button>
 
         <div class="px-8 pt-12 pb-6 md:px-12 relative z-10">
-            <div class="flex flex-wrap items-center gap-3 mb-4 text-sm font-diary-accent text-stone-500 text-xl">
-                <div class="flex flex-wrap items-center gap-3 mb-4 text-sm font-diary-accent text-xl">
+            <div class="flex flex-wrap items-center gap-3 mb-4 font-diary-accent text-xl text-stone-500">
+                <div class="flex flex-wrap items-center gap-3 mb-4 font-diary-accent text-xl">
 
                     <div class="flex items-center gap-1.5 text-stone-500">
                         <span class="text-stone-400">Dibuat:</span>
@@ -59,7 +59,13 @@
             <div id="detailScreenshotsWrapper" class="hidden space-y-4">
                 <p class="font-diary-accent text-2xl text-stone-500">Galeri Proyek:</p>
                 <div id="detailScreenshots" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    </div>
+                </div>
+            </div>
+
+            <div id="detailAchievementsWrapper" class="hidden space-y-4">
+                <p class="font-diary-accent text-2xl text-stone-500 flex items-center gap-2"><i class="fa-solid fa-medal text-yellow-600/80"></i>Penghargaan:</p>
+                <div id="detailAchievements" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -115,7 +121,7 @@
 </div>
 
 <div id="imageLightbox"
-     class="fixed inset-0 z-[90] hidden items-center justify-center bg-stone-900/80 backdrop-blur-sm p-4 md:p-12 group">
+     class="fixed inset-0 z-90 hidden items-center justify-center bg-stone-900/80 backdrop-blur-sm p-4 md:p-12 group">
 
     <button id="lightboxClose"
             class="absolute top-6 right-6 md:top-8 md:right-8 text-stone-400 hover:text-[#FCFAEF] transition-colors z-50 text-3xl font-light">
@@ -123,18 +129,18 @@
     </button>
 
     <button id="lightboxPrev"
-            class="hidden absolute left-4 md:left-8 z-50 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#FCFAEF] text-stone-800 hover:bg-stone-200 transition-all hover:-translate-x-1 shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-stone-300">
+            class="hidden absolute left-4 md:left-8 z-50 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#FCFAEF] text-stone-800 hover:bg-stone-200 transition-all hover:-translate-x-1 shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-stone-300">
         <i class="fa-solid fa-chevron-left text-lg md:text-xl relative -left-0.5"></i>
     </button>
 
     <button id="lightboxNext"
-            class="hidden absolute right-4 md:right-8 z-50 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#FCFAEF] text-stone-800 hover:bg-stone-200 transition-all hover:translate-x-1 shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-stone-300">
+            class="hidden absolute right-4 md:right-8 z-50 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#FCFAEF] text-stone-800 hover:bg-stone-200 transition-all hover:translate-x-1 shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-stone-300">
         <i class="fa-solid fa-chevron-right text-lg md:text-xl relative -right-0.5"></i>
     </button>
 
     <div class="relative z-40 bg-[#FCFAEF] p-2 md:p-4 shadow-[0_12px_40px_rgba(0,0,0,0.5)] border border-stone-300">
 
-        <div class="absolute -top-3 left-1/2 w-16 h-6 bg-white/30 backdrop-blur-sm -translate-x-1/2 shadow-sm transform rotate-[-2deg] border border-stone-200/50"></div>
+        <div class="absolute -top-3 left-1/2 w-16 h-6 bg-white/30 backdrop-blur-sm -translate-x-1/2 shadow-sm transform -rotate-2 border border-stone-200/50"></div>
 
         <img id="lightboxImage"
              class="max-h-[80vh] max-w-[85vw] object-contain filter contrast-[0.95] sepia-[0.05] border border-stone-200/50">

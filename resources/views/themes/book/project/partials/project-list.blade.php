@@ -29,7 +29,8 @@
                    data-responsibilities="{{ $project->responsibilities ?? '' }}"
                    data-live="{{ $project->live_url ?? '' }}"
                    data-screenshot='@json($project->screenshot ? collect($project->screenshot)->map(fn($img) => asset("storage/" . $img))->values() : [])'
-                   data-tech='@json($project->tech)'>
+                   data-tech='@json($project->tech)'
+                   data-achievements='@json($project->achievements->map(fn($a) => ["id" => $a->id, "title" => $a->title, "image_url" => $a->image_url]))'>
 
                     <div class="aspect-video w-full bg-bg overflow-hidden mb-5 border border-border shadow-inner relative">
                         <div class="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style="background-image: radial-gradient(var(--color-text) 0.5px, transparent 0.5px); background-size: 8px 8px;"></div>
@@ -73,13 +74,21 @@
                             {{ $project->desc }}
                         </p>
 
-                        <div class="pt-3 border-t border-border/50 flex justify-between items-center mt-auto">
-                            <span class="text-[10px] font-medium text-muted italic">
-                                Diarsipkan: {{ $project->created_at->format('d F Y') }}
-                            </span>
+                        <div class="pt-3 border-t border-border/50 flex flex-col gap-2 mt-auto">
+                            @if($project->achievements && $project->achievements->count() > 0)
+                                <div class="flex items-center gap-1.5 text-[9px] text-yellow-700 bg-warning/20 px-2 py-0.5 rounded-sm border border-warning/50 w-fit shadow-sm uppercase tracking-wider font-bold">
+                                    <i class="fa-solid fa-trophy text-yellow-600"></i>
+                                    <span>+{{ $project->achievements->count() }} Pencapaian</span>
+                                </div>
+                            @endif
+                            <div class="flex justify-between items-center w-full">
+                                <span class="text-[10px] font-medium text-muted italic">
+                                    Diarsipkan: {{ $project->created_at->format('d F Y') }}
+                                </span>
 
-                            <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">
-                                <i class="fa-solid fa-arrow-right-long text-xs transform group-hover:translate-x-0.5 transition-transform"></i>
+                                <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">
+                                    <i class="fa-solid fa-arrow-right-long text-xs transform group-hover:translate-x-0.5 transition-transform"></i>
+                                </div>
                             </div>
                         </div>
                     </div>

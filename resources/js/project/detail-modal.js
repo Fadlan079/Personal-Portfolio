@@ -27,6 +27,7 @@ document.querySelectorAll('.project-open').forEach(card => {
         detailModal.dataset.repo = card.dataset.repo;
         detailModal.dataset.live = card.dataset.live;
         detailModal.dataset.screenshot = card.dataset.screenshot;
+        detailModal.dataset.achievements = card.dataset.achievements;
 
         // ===== Basic Info =====
         document.getElementById('detailType').textContent = card.dataset.type;
@@ -92,6 +93,39 @@ document.querySelectorAll('.project-open').forEach(card => {
             wrapper.classList.add('hidden');
         }
 
+        // ===== Achievements =====
+        const achWrapper = document.getElementById('detailAchievementsWrapper');
+        const achContainer = document.getElementById('detailAchievements');
+        
+        if (achWrapper && achContainer) {
+            achContainer.innerHTML = '';
+            if (card.dataset.achievements) {
+                try {
+                    const achievements = JSON.parse(card.dataset.achievements);
+                    if (achievements.length > 0) {
+                        achievements.forEach(ach => {
+                            const imgSrc = ach.image_url ? `/storage/${ach.image_url}` : '';
+                            if (!imgSrc) return;
+                            
+                            achContainer.innerHTML += `
+                                <div class="aspect-video overflow-hidden border border-border/50 bg-surface/40 group relative">
+                                    <img src="${imgSrc}"
+                                        class="w-full h-full object-cover transition duration-500 group-hover:scale-105 cursor-pointer">
+                                </div>
+                            `;
+                        });
+                        achWrapper.classList.remove('hidden');
+                    } else {
+                        achWrapper.classList.add('hidden');
+                    }
+                } catch {
+                    achWrapper.classList.add('hidden');
+                }
+            } else {
+                achWrapper.classList.add('hidden');
+            }
+        }
+
         // ===== Links =====
         const live = document.getElementById('detailLive');
         const repo = document.getElementById('detailRepo');
@@ -118,7 +152,13 @@ document.querySelectorAll('.project-open').forEach(card => {
 
 screenshotContainer?.addEventListener('click', (e) => {
     if (e.target.tagName === "IMG") {
-        window.openLightbox(e.target.src);
+        window.openLightbox(e.target.src, '#detailScreenshots img');
+    }
+});
+
+document.getElementById('detailAchievements')?.addEventListener('click', (e) => {
+    if (e.target.tagName === "IMG") {
+        window.openLightbox(e.target.src, '#detailAchievements img');
     }
 });
 

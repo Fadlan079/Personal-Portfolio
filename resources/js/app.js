@@ -572,6 +572,62 @@ window.tagInputEdit = function (allTech) {
         }
     }
 }
+
+window.achievementInput = function(allAchievements) {
+    return {
+        all: allAchievements,
+        selected: [],
+        input: '',
+        filtered: [],
+        search() {
+            if (this.input.trim() === '') {
+                this.filtered = [];
+                return;
+            }
+            const q = this.input.toLowerCase();
+            this.filtered = this.all.filter(ach => 
+                ach.title.toLowerCase().includes(q) && 
+                !this.selected.find(s => s.id === ach.id)
+            ).slice(0, 5);
+        },
+        addAch(ach) {
+            this.selected.push(ach);
+            this.input = '';
+            this.filtered = [];
+        },
+        removeAch(index) {
+            this.selected.splice(index, 1);
+        }
+    }
+}
+
+window.achievementInputEdit = function(allAchievements) {
+    return {
+        all: allAchievements,
+        selected: [],
+        input: '',
+        filtered: [],
+        search() {
+            if (this.input.trim() === '') {
+                this.filtered = [];
+                return;
+            }
+            const q = this.input.toLowerCase();
+            this.filtered = this.all.filter(ach => 
+                ach.title.toLowerCase().includes(q) && 
+                !this.selected.find(s => s.id === ach.id)
+            ).slice(0, 5);
+        },
+        addAch(ach) {
+            this.selected.push(ach);
+            this.input = '';
+            this.filtered = [];
+        },
+        removeAch(index) {
+            this.selected.splice(index, 1);
+        }
+    }
+}
 window.imageUpload = function (config = {}) {
     return {
 

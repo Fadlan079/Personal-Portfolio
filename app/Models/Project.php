@@ -36,6 +36,11 @@ class Project extends Model
         return $this->belongsToMany(Skill::class);
     }
 
+    public function achievements()
+    {
+        return $this->belongsToMany(Achievement::class);
+    }
+
     protected $casts = [
         'tech' => 'array',
         'screenshot' => 'array',

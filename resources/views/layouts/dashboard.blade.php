@@ -125,6 +125,12 @@
                 'icon' => 'fa-solid fa-code-branch',
             ],
             [
+                'label' => 'Achievements',
+                'href' => route('dashboard.achievements.index'),
+                'route' => 'dashboard.achievements.*',
+                'icon' => 'fa-solid fa-medal',
+            ],
+            [
                 'label' => 'Contacts',
                 'href' => route('dashboard.contacts.index'),
                 'route' => 'dashboard.contacts.*',

@@ -11,7 +11,7 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Project::query();
+        $query = Project::query()->with('achievements');
 
         if ($request->filled('search')) {
             $query->search($request->search);
@@ -35,6 +35,7 @@ class ProjectController extends Controller
 
         $summary = Project::summary(false);
         $technologies = \App\Models\Skill::pluck('name');
+        $achievements_all = \App\Models\Achievement::all();
 
         $typesChart = Project::selectRaw('type, count(*) as count')
             ->groupBy('type')
@@ -83,6 +84,7 @@ class ProjectController extends Controller
             'projects',
             'summary',
             'technologies',
+            'achievements_all',
             'multipleSelect',
             'chartData', // <- Passing datanya ke Blade
             'projectPlaceholders'
@@ -163,6 +165,9 @@ class ProjectController extends Controller
 
         // Sync relations
         $project->skills()->sync($validSkills->pluck('id'));
+        if ($request->has('achievements')) {
+            $project->achievements()->sync($request->achievements);
+        }
 
         return back()->with('success', 'Project created successfully.');
     }
@@ -233,6 +238,11 @@ class ProjectController extends Controller
 
         // Sync relations for Many-to-Many
         $project->skills()->sync($validSkills->pluck('id'));
+        if ($request->has('achievements')) {
+            $project->achievements()->sync($request->achievements);
+        } else {
+            $project->achievements()->detach();
+        }
 
         /*
         |--------------------------------------------------------------------------

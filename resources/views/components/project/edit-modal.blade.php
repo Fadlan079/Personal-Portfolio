@@ -1,3 +1,4 @@
+@props(['technologies', 'achievements_all'])
 <style>
 /* Utilities untuk tema diary minimalis (Bisa dihapus jika sudah didefinisikan secara global) */
 .hide-scrollbar {
@@ -238,6 +239,35 @@
                     </div>
 
                     <input type="hidden" name="tech" :value="JSON.stringify(tags)">
+                </div>
+            </div>
+
+            <div class="w-full h-px bg-stone-300 border-t border-dashed border-stone-400/50"></div>
+
+            <div>
+                <p class="font-diary-accent text-xl text-stone-500 mb-2">Penghargaan / Sertifikat Terkait</p>
+
+                <div id="achievementEditRegion" x-data="achievementInputEdit({{ Js::from($achievements_all) }})" class="w-full relative">
+                    <div class="flex flex-wrap gap-1.5 mb-3">
+                        <template x-for="(ach, index) in selected" :key="index">
+                            <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-2 py-1 flex items-center gap-2 text-[11px] uppercase tracking-wider font-mono rounded-sm shadow-sm">
+                                <span x-text="ach.title"></span>
+                                <button type="button" @click="removeAch(index)" class="text-yellow-400 hover:text-red-500 transition">✕</button>
+                                <input type="hidden" name="achievements[]" :value="ach.id">
+                            </div>
+                        </template>
+                    </div>
+
+                    <input type="text" x-model="input" @input="search" placeholder="Cari sertifikat atau penghargaan..." class="w-full px-4 py-2 diary-input">
+
+                    <div x-show="filtered.length" x-transition class="absolute left-0 right-0 mt-1 bg-[#FCFAEF] border border-stone-300 shadow-lg max-h-48 overflow-y-auto z-50 rounded-sm">
+                        <template x-for="ach in filtered" :key="ach.id">
+                            <div @click="addAch(ach)" class="px-4 py-2 text-sm cursor-pointer font-diary-body text-stone-600 hover:bg-stone-200 hover:text-stone-900 transition border-b border-stone-100 last:border-0 flex items-center gap-3">
+                                <i class="fa-solid fa-medal text-yellow-600/50"></i>
+                                <span x-text="ach.title"></span>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             </div>
 
