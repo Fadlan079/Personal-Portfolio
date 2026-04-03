@@ -47,10 +47,17 @@ class ContactController extends Controller
 
         foreach ($months as $month) {
             $monthQuery = $query->clone();
-            $contacts = $monthQuery
-                ->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$month])
-                ->orderBy('created_at', 'desc')
-                ->paginate(5, ['*'], "page_$month")->withQueryString();
+            if ($request->has('bulk_mode') && $request->bulk_mode == '1') {
+                $contacts = $monthQuery
+                    ->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$month])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            } else {
+                $contacts = $monthQuery
+                    ->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$month])
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(5, ['*'], "page_$month")->withQueryString();
+            }
 
             $formattedMonth = \Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y');
             $groupedContacts->put($formattedMonth, $contacts);
@@ -132,13 +139,33 @@ class ContactController extends Controller
         return back()->with('success', 'All transmission logs marked as read.');
     }
 
-    /**
-     * Permanently delete a message.
-     */
     public function destroy(Contact $contact)
     {
         $contact->delete();
 
-        return back()->with('success', 'Transmission log successfully purged.');
+        return back()->with('success', 'Pesan berhasil dipindahkan ke tempat sampah.');
+    }
+
+    public function bulkRead(Request $request)
+    {
+        $ids = $request->ids ?? [];
+        if (count($ids) > 0) {
+            Contact::whereIn('id', $ids)->update(['is_read' => true]);
+            if ($request->ajax()) {
+                return response()->json(['success' => true, 'message' => count($ids) . ' pesan ditandai telah dibaca.']);
+            }
+            return back()->with('success', count($ids) . ' pesan ditandai telah dibaca.');
+        }
+        return back()->with('error', 'Tidak ada pesan yang dipilih.');
+    }
+
+    public function bulkTrash(Request $request)
+    {
+        $ids = $request->ids ?? [];
+        if (count($ids) > 0) {
+            Contact::whereIn('id', $ids)->delete();
+            return back()->with('success', count($ids) . ' pesan berhasil dipindahkan ke tempat sampah.');
+        }
+        return back()->with('error', 'Tidak ada pesan yang dipilih.');
     }
 }

@@ -1,6 +1,10 @@
 @extends('layouts.dashboard')
 @section('title', 'Contact')
 
+@php
+    $isBulk = request('bulk_mode') == '1';
+@endphp
+
 @section('content')
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -145,6 +149,9 @@
 
                 <form id="filterForm" method="GET" action="{{ route('dashboard.contacts.index') }}"
                     class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 relative z-20">
+                    @if(request('bulk_mode'))
+                        <input type="hidden" name="bulk_mode" value="1">
+                    @endif
 
                     <div class="relative w-full md:w-1/2 group">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-amber-500 transition-colors"></i>
@@ -155,6 +162,11 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-3">
+                        <button id="toggleSelectMode" type="button"
+                            class="px-5 py-3 border-2 {{ $isBulk ? 'border-red-500 text-red-500' : 'border-border text-muted' }} bg-container rounded-lg text-xs font-bold uppercase tracking-widest hover:text-amber-500 hover:border-amber-500 transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none">
+                            {{ $isBulk ? 'BATAL PILIH' : 'Pilih Beberapa' }}
+                        </button>
+
                         <div class="relative">
                             <select name="filter"
                                 class="appearance-none border-2 border-border bg-container rounded-lg px-5 py-3 pr-10 text-xs font-bold uppercase tracking-widest text-muted hover:text-text hover:border-amber-500 focus:outline-none focus:border-amber-500 transition-colors cursor-pointer shadow-[3px_3px_0px_var(--color-border)]"
@@ -181,7 +193,7 @@
                 </form>
             </div>
 
-            <div class="space-y-10 mt-8">
+            <div id="contacts-container" class="space-y-10 mt-8">
 
                 @forelse($groupedContacts as $month => $contacts)
                     <div class="space-y-5">
@@ -216,20 +228,28 @@
                                     $methodIcon = 'fa-solid fa-envelope text-amber-500';
                                 @endphp
 
-                                <div x-data="{ expanded: false }"
-                                    class="relative border-2 border-dashed {{ $isUnread ? 'border-rose-400 bg-rose-50/30' : 'border-border bg-container' }} rounded-xl transition-all duration-300 group shadow-sm hover:shadow-md hover:-translate-y-0.5"
+                                <div x-data="{ expanded: false, selected: false }"
+                                    :class="selected ? 'border-amber-400 bg-amber-50/50 shadow-md ring-2 ring-amber-400/20' : '{{ $isUnread ? 'border-rose-400 bg-rose-50/30' : 'border-border bg-container' }}'"
+                                    class="relative border-2 border-dashed rounded-xl transition-all duration-300 group shadow-sm hover:shadow-md hover:-translate-y-0.5"
                                     id="contact-{{ $msg->id }}">
 
                                     @if ($isUnread)
-                                        <div class="absolute -left-2 -top-2 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center text-[8px] font-bold shadow-md z-20 rotate-12">
+                                        <div :class="selected ? 'opacity-0' : ''"
+                                            class="absolute -left-2 -top-2 w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center text-[8px] font-bold shadow-md z-20 rotate-12 transition-opacity">
                                             NEW
                                         </div>
                                     @endif
 
-                                    <div @click="expanded = !expanded"
-                                        class="p-4 md:p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
+                                    <div @click="{{ $isBulk ? 'selected = !selected; setTimeout(() => window.updateBulkBar(), 0);' : '(expanded = !expanded)' }}"
+                                        class="p-4 md:p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 relative">
 
-                                        <div class="flex items-center gap-4 w-full md:w-1/4 shrink-0">
+                                        <!-- Bulk Checkbox -->
+                                        <div class="absolute left-4 top-1/2 -translate-y-1/2 z-30 {{ $isBulk ? '' : 'opacity-0 pointer-events-none' }} transition-all duration-300 bulk-check-container">
+                                            <input type="checkbox" name="ids[]" value="{{ $msg->id }}" x-model="selected" @click.stop="setTimeout(() => window.updateBulkBar(), 0)"
+                                                class="bulk-checkbox w-5 h-5 border-2 border-amber-400 rounded appearance-none checked:bg-amber-600 checked:border-amber-600 transition-colors cursor-pointer shadow-sm">
+                                        </div>
+
+                                        <div class="flex items-center gap-4 w-full md:w-1/4 shrink-0 contact-info-container transition-all duration-300 {{ $isBulk ? 'translate-x-10' : '' }}">
                                             <div class="w-10 h-10 shrink-0 rounded-full border border-border bg-surface flex items-center justify-center shadow-inner">
                                                 <i class="{{ $methodIcon }} text-lg"></i>
                                             </div>
@@ -264,10 +284,12 @@
                                                 </p>
                                             </div>
 
-                                            <div class="w-8 h-8 rounded-full flex items-center justify-center border border-border text-muted transition-all duration-300 bg-surface shadow-sm"
-                                                :class="expanded ? 'rotate-180 bg-amber-100 border-amber-300 text-amber-600' : 'group-hover:border-amber-300 group-hover:text-amber-500 group-hover:bg-amber-50'">
-                                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
-                                            </div>
+                                            @if(!$isBulk)
+                                                <div class="w-8 h-8 rounded-full flex items-center justify-center border border-border text-muted transition-all duration-300 bg-surface shadow-sm"
+                                                    :class="expanded ? 'rotate-180 bg-amber-100 border-amber-300 text-amber-600' : 'group-hover:border-amber-300 group-hover:text-amber-500 group-hover:bg-amber-50'">
+                                                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
 
@@ -295,33 +317,41 @@
                                                 <p class="whitespace-pre-wrap">{{ $msg->message }}</p>
                                             </div>
 
-                                            <div class="flex flex-wrap items-center justify-between gap-3 pt-6">
-                                                <a href="mailto:{{ $msg->sender }}?subject=RE: {{ rawurlencode($msg->subject) }}"
-                                                    class="px-5 py-2.5 bg-amber-100 border-2 border-amber-400 rounded-lg text-xs font-bold uppercase tracking-widest text-amber-900 hover:-translate-y-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] flex items-center gap-2">
-                                                    <i class="fa-solid fa-reply"></i> Balas Email
-                                                </a>
+                                            @if(!$isBulk)
+                                                <div class="flex flex-wrap items-center justify-between gap-3 pt-6">
+                                                    <a href="mailto:{{ $msg->sender }}?subject=RE: {{ rawurlencode($msg->subject) }}"
+                                                        class="px-5 py-2.5 bg-amber-100 border-2 border-amber-400 rounded-lg text-xs font-bold uppercase tracking-widest text-amber-900 hover:-translate-y-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] flex items-center gap-2">
+                                                        <i class="fa-solid fa-reply"></i> Balas Email
+                                                    </a>
 
-                                                @if ($isUnread)
-                                                    <form method="POST" action="{{ route('dashboard.contacts.read', $msg->id) }}">
-                                                        @csrf @method('PATCH')
-                                                        <button type="submit"
-                                                            class="px-5 py-2.5 bg-surface border-2 border-border rounded-lg text-xs font-bold uppercase tracking-widest text-muted hover:border-text hover:text-text hover:-translate-y-1 transition-all shadow-[3px_3px_0px_var(--color-border)] flex items-center gap-2">
-                                                            <i class="fa-solid fa-check"></i> Tandai Selesai
-                                                        </button>
-                                                    </form>
-                                                @else
-                                                    <div class="px-5 py-2.5 border-2 border-dashed border-border/50 rounded-lg text-[10px] font-bold uppercase tracking-widest text-muted/50 flex items-center gap-2 bg-container/50">
-                                                        <i class="fa-solid fa-check-double"></i> Telah Dibaca
-                                                    </div>
-                                                @endif
-                                            </div>
+                                                    @if ($isUnread)
+                                                        <form method="POST" action="{{ route('dashboard.contacts.read', $msg->id) }}">
+                                                            @csrf @method('PATCH')
+                                                            <button type="submit"
+                                                                class="px-5 py-2.5 bg-surface border-2 border-border rounded-lg text-xs font-bold uppercase tracking-widest text-muted hover:border-text hover:text-text hover:-translate-y-1 transition-all shadow-[3px_3px_0px_var(--color-border)] flex items-center gap-2">
+                                                                <i class="fa-solid fa-check"></i> Tandai Selesai
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <div class="px-5 py-2.5 border-2 border-dashed border-border/50 rounded-lg text-[10px] font-bold uppercase tracking-widest text-muted/50 flex items-center gap-2 bg-container/50">
+                                                            <i class="fa-solid fa-check-double"></i> Telah Dibaca
+                                                        </div>
+                                                    @endif
+
+                                                    <button type="button"
+                                                        class="delete-contact-btn px-5 py-2.5 bg-rose-50 border-2 border-rose-200 rounded-lg text-xs font-bold uppercase tracking-widest text-rose-600 hover:bg-rose-500 hover:text-white hover:border-rose-600 transition-all shadow-[3px_3px_0px_rgba(244,63,94,0.1)] flex items-center gap-2"
+                                                        data-id="{{ $msg->id }}">
+                                                        <i class="fa-solid fa-trash-can"></i> Hapus
+                                                    </button>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
 
-                        @if ($contacts instanceof \Illuminate\Pagination\LengthAwarePaginator && $contacts->hasPages())
+                        @if (!$isBulk && $contacts instanceof \Illuminate\Pagination\LengthAwarePaginator && $contacts->hasPages())
                             <div class="flex justify-center pt-8">
                                 <nav class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-4 font-mono w-full sm:w-auto px-4">
                                     @if ($contacts->onFirstPage())
@@ -358,8 +388,48 @@
 
             </div>
         </section>
-    </div>
 
+        <!-- Bulk Action Bar -->
+        <div id="bulkBar"
+            class="fixed bottom-8 left-1/2 -translate-x-1/2 z-90 bg-[#FEFCE8] border-2 border-amber-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[450px]">
+
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 backdrop-blur-sm border border-black/5 rotate-1"></div>
+
+            <div class="flex items-center gap-4 border-r-2 border-dashed border-amber-600/20 pr-6 mr-2 w-full sm:w-auto justify-center sm:justify-start">
+                <div class="w-10 h-10 rounded-full bg-amber-400/20 flex items-center justify-center border border-amber-500 animate-pulse">
+                    <i class="fa-solid fa-check-double text-amber-700"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span id="selectedCount" class="text-xs font-black uppercase tracking-widest text-amber-900">0 TERPILIH</span>
+                    <span class="text-[9px] font-bold text-amber-900/40 uppercase tracking-tighter">Operasi Massal</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 w-full sm:w-auto">
+                <button type="button" onclick="executeBulkAction('read')"
+                    class="flex-1 sm:flex-none px-6 py-2.5 bg-emerald-100 border-2 border-emerald-500 rounded text-[10px] font-black uppercase tracking-widest text-emerald-900 hover:-translate-y-1 hover:-rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)]">
+                    TANDAI TERBACA
+                </button>
+                <button type="button" onclick="executeBulkAction('trash')"
+                    class="flex-1 sm:flex-none px-6 py-2.5 bg-rose-100 border-2 border-rose-500 rounded text-[10px] font-black uppercase tracking-widest text-rose-900 hover:-translate-y-1 hover:rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] group">
+                    <i class="fa-solid fa-trash-can mr-2"></i> PINDAHKAN KE TRASH
+                </button>
+                <button type="button" id="cancelSelect" class="text-[9px] font-bold text-muted hover:text-text uppercase tracking-widest underline underline-offset-4 decoration-dashed ml-2">
+                    Batal
+                </button>
+            </div>
+            <div class="absolute bottom-0 right-0 w-4 h-4 bg-amber-200" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
+        </div>
+
+        <form id="bulkActionForm" method="POST" class="hidden">
+            @csrf
+        </form>
+
+        <form id="deleteContactForm" method="POST" class="hidden">
+            @csrf
+            @method('DELETE')
+        </form>
+    </div>
 @endsection
 
 @push('scripts')
@@ -483,6 +553,197 @@
                         tooltip: tooltipConfig
                     }
                 }
+            });
+
+            // Bulk Action logic
+            const toggleSelectBtn = document.getElementById('toggleSelectMode');
+            const bulkBar = document.getElementById('bulkBar');
+            const cancelSelectBtn = document.getElementById('cancelSelect');
+            const selectedCountText = document.getElementById('selectedCount');
+            const bulkCheckboxes = document.querySelectorAll('.bulk-checkbox');
+            let selectMode = false;
+
+            window.selectMode = selectMode; // for x-data access
+
+            window.updateBulkBar = function() {
+                const checkedCount = document.querySelectorAll('.bulk-checkbox:checked').length;
+                if(checkedCount > 0) {
+                    bulkBar.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-8');
+                    bulkBar.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                    if(selectedCountText) selectedCountText.innerText = checkedCount + ' TERPILIH';
+                } else {
+                    bulkBar.classList.add('opacity-0', 'pointer-events-none', 'translate-y-8');
+                    bulkBar.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                }
+            };
+
+            if(toggleSelectBtn) {
+                toggleSelectBtn.addEventListener('click', () => {
+                    const isBulkNow = !{{ $isBulk ? 'true' : 'false' }};
+                    const url = new URL(window.location.href);
+                    if(isBulkNow) url.searchParams.set('bulk_mode', '1');
+                    else url.searchParams.delete('bulk_mode');
+                    
+                    const container = document.getElementById('contacts-container');
+                    container.style.opacity = '0.5';
+                    container.style.pointerEvents = 'none';
+
+                    // Using simple reload for now to ensure all charts and state are clean, 
+                    // but could be AJAX if desired. Since the user wants no pagination, 
+                    // a full refresh is often safer for complex list state.
+                    window.location.href = url.toString();
+                });
+            }
+
+            if(cancelSelectBtn) {
+                cancelSelectBtn.addEventListener('click', () => toggleSelectBtn.click());
+            }
+
+            document.body.addEventListener('change', (e) => {
+                if(e.target.classList.contains('bulk-checkbox')) {
+                    updateBulkBar();
+                }
+            });
+
+            window.executeBulkAction = function(action) {
+                const selected = document.querySelectorAll('.bulk-checkbox:checked');
+                
+                if (selected.length === 0) {
+                    alert('Pilih setidaknya satu pesan terlebih dahulu.');
+                    return;
+                }
+
+                const confirmModal = document.getElementById('confirm-modal');
+                const confirmYes = document.getElementById('confirm-yes');
+                const confirmCancel = document.getElementById('confirm-cancel');
+                const confirmMessage = document.getElementById('confirm-message');
+                const confirmBox = document.getElementById('confirm-box');
+
+                if (confirmModal && confirmYes && confirmCancel) {
+                    const msg = action === 'read' 
+                        ? `Apakah Anda yakin ingin menandai ${selected.length} pesan sebagai terbaca?`
+                        : `Apakah Anda yakin ingin memindahkan ${selected.length} pesan ke tempat sampah?`;
+                    
+                    if (confirmMessage) confirmMessage.textContent = msg;
+
+                    // Reset any previous listeners by cloning (simple way to avoid accumulation)
+                    const newYes = confirmYes.cloneNode(true);
+                    const newCancel = confirmCancel.cloneNode(true);
+                    confirmYes.parentNode.replaceChild(newYes, confirmYes);
+                    confirmCancel.parentNode.replaceChild(newCancel, confirmCancel);
+
+                    // Show Modal
+                    confirmModal.classList.remove('opacity-0', 'pointer-events-none');
+                    confirmModal.classList.add('opacity-100', 'pointer-events-auto');
+                    confirmModal.style.opacity = '1';
+                    confirmModal.style.pointerEvents = 'auto';
+                    
+                    if(confirmBox) {
+                        confirmBox.style.transform = 'scale(1) rotate(0deg)';
+                        confirmBox.style.opacity = '1';
+                    }
+
+                    const cleanup = () => {
+                        confirmModal.classList.add('opacity-0', 'pointer-events-none');
+                        confirmModal.classList.remove('opacity-100', 'pointer-events-auto');
+                        confirmModal.style.opacity = '0';
+                        confirmModal.style.pointerEvents = 'none';
+                        if(confirmBox) {
+                            confirmBox.style.transform = 'scale(0.95) rotate(1deg)';
+                            confirmBox.style.opacity = '0';
+                        }
+                    };
+
+                    newYes.addEventListener('click', () => {
+                        const form = document.getElementById('bulkActionForm');
+                        form.innerHTML = '';
+                        // Manual CSRF for safety in innerHTML
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = '_token';
+                        csrfInput.value = csrfToken;
+                        form.appendChild(csrfInput);
+
+                        selected.forEach(cb => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'ids[]';
+                            input.value = cb.value;
+                            form.appendChild(input);
+                        });
+                        form.action = action === 'read' ? '{{ route("dashboard.contacts.bulkRead") }}' : '{{ route("dashboard.contacts.bulkTrash") }}';
+                        form.submit();
+                        cleanup();
+                    });
+
+                    newCancel.addEventListener('click', cleanup);
+                    // Also close on backdrop click
+                    const backdrop = document.getElementById('confirm-backdrop');
+                    if(backdrop) backdrop.onclick = cleanup;
+                } else {
+                    // Fallback to native confirm if modal is missing for some reason
+                    const msg = action === 'read' 
+                        ? `Tandai ${selected.length} pesan sebagai terbaca?`
+                        : `Pindahkan ${selected.length} pesan ke tempat sampah?`;
+                    if (confirm(msg)) {
+                        const form = document.getElementById('bulkActionForm');
+                        form.innerHTML = '';
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = '_token';
+                        csrfInput.value = csrfToken;
+                        form.appendChild(csrfInput);
+
+                        selected.forEach(cb => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'ids[]';
+                            input.value = cb.value;
+                            form.appendChild(input);
+                        });
+                        form.action = action === 'read' ? '{{ route("dashboard.contacts.bulkRead") }}' : '{{ route("dashboard.contacts.bulkTrash") }}';
+                        form.submit();
+                    }
+                }
+            };
+
+            // Single Delete logic
+            document.querySelectorAll('.delete-contact-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const confirmModal = document.getElementById('confirm-modal');
+                    const confirmYes = document.getElementById('confirm-yes');
+                    const confirmCancel = document.getElementById('confirm-cancel');
+                    const confirmMessage = document.getElementById('confirm-message');
+
+                    if (confirmModal && confirmYes && confirmCancel) {
+                        if (confirmMessage) confirmMessage.textContent = 'Apakah Anda yakin ingin memindahkan pesan ini ke tempat sampah?';
+
+                        confirmModal.classList.remove('opacity-0', 'pointer-events-none');
+                        confirmModal.style.opacity = '1';
+
+                        const handleYes = () => {
+                            const form = document.getElementById('deleteContactForm');
+                            form.action = `/dashboard/contacts/${id}`;
+                            form.submit();
+                            cleanup();
+                        };
+
+                        const handleCancel = () => cleanup();
+
+                        const cleanup = () => {
+                            confirmModal.classList.add('opacity-0', 'pointer-events-none');
+                            confirmModal.style.opacity = '0';
+                            confirmYes.removeEventListener('click', handleYes);
+                            confirmCancel.removeEventListener('click', handleCancel);
+                        };
+
+                        confirmYes.addEventListener('click', handleYes);
+                        confirmCancel.addEventListener('click', handleCancel);
+                    }
+                });
             });
         });
     </script>

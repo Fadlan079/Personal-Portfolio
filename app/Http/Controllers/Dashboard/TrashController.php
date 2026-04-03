@@ -17,111 +17,133 @@ class TrashController extends Controller
      */
     public function index(Request $request)
     {
-        $tab = $request->get('tab', 'all'); // 'all', 'projects', 'skills'
+        $tab = $request->get('tab', 'all'); // 'all', 'projects', 'skills', 'achievements', 'contacts'
         $sort = $request->get('sort', 'latest');
         $direction = $sort === 'oldest' ? 'asc' : 'desc';
         $search = $request->get('search');
-        $multipleSelect = $request->get('multiple_select', 0);
+        $multipleSelect = $request->get('multiple_select', 0) || $request->get('bulk_mode', 0);
 
-        // -- Projects Fetching Logic (Grouped by Month) --
+        // -- Projects Fetching --
         $groupedProjects = collect();
         if (in_array($tab, ['all', 'projects'])) {
             $projectsQuery = Project::onlyTrashed();
-
-            if ($search) {
-                $projectsQuery->where('title', 'like', "%{$search}%");
-            }
-
-            $months = $projectsQuery->clone()
-                ->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")
-                ->distinct()
-                ->orderBy('month', $direction)
-                ->pluck('month');
-
+            if ($search) $projectsQuery->where('title', 'like', "%{$search}%");
+            
+            $months = $projectsQuery->clone()->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")->distinct()->orderBy('month', $direction)->pluck('month');
             foreach ($months as $month) {
-                $query = Project::onlyTrashed()
-                    ->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])
-                    ->orderBy('deleted_at', $direction);
-
-                if ($search) {
-                    $query->where('title', 'like', "%{$search}%");
-                }
-
-                if ($multipleSelect) {
-                    $projects = $query->get();
-                } else {
-                    $projects = $query->paginate(3, ['*'], "page_projects_$month")->withQueryString();
-                }
-
-                $formattedMonth = \Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y');
-                $groupedProjects->put($formattedMonth, $projects);
+                $query = Project::onlyTrashed()->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])->orderBy('deleted_at', $direction);
+                if ($search) $query->where('title', 'like', "%{$search}%");
+                $groupedProjects->put(\Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y'), $multipleSelect ? $query->get() : $query->paginate(3, ['*'], "page_projects_$month")->withQueryString());
             }
         }
 
-        // -- Skills Fetching Logic (Grouped by Month) --
+        // -- Skills Fetching --
         $groupedSkills = collect();
         if (in_array($tab, ['all', 'skills'])) {
             $skillsQuery = Skill::onlyTrashed();
-
-            if ($search) {
-                $skillsQuery->where('name', 'like', "%{$search}%");
-            }
-
-            $months = $skillsQuery->clone()
-                ->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")
-                ->distinct()
-                ->orderBy('month', $direction)
-                ->pluck('month');
-
+            if ($search) $skillsQuery->where('name', 'like', "%{$search}%");
+            
+            $months = $skillsQuery->clone()->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")->distinct()->orderBy('month', $direction)->pluck('month');
             foreach ($months as $month) {
-                $query = Skill::onlyTrashed()
-                    ->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])
-                    ->orderBy('deleted_at', $direction);
+                $query = Skill::onlyTrashed()->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])->orderBy('deleted_at', $direction);
+                if ($search) $query->where('name', 'like', "%{$search}%");
+                $groupedSkills->put(\Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y'), $multipleSelect ? $query->get() : $query->paginate(6, ['*'], "page_skills_$month")->withQueryString());
+            }
+        }
 
-                if ($search) {
-                    $query->where('name', 'like', "%{$search}%");
-                }
+        // -- Achievements Fetching --
+        $groupedAchievements = collect();
+        if (in_array($tab, ['all', 'achievements'])) {
+            $achievementsQuery = \App\Models\Achievement::onlyTrashed();
+            if ($search) $achievementsQuery->where('title', 'like', "%{$search}%");
+            
+            $months = $achievementsQuery->clone()->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")->distinct()->orderBy('month', $direction)->pluck('month');
+            foreach ($months as $month) {
+                $query = \App\Models\Achievement::onlyTrashed()->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])->orderBy('deleted_at', $direction);
+                if ($search) $query->where('title', 'like', "%{$search}%");
+                $groupedAchievements->put(\Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y'), $multipleSelect ? $query->get() : $query->paginate(6, ['*'], "page_achievements_$month")->withQueryString());
+            }
+        }
 
-                if ($multipleSelect) {
-                    $skills = $query->get();
-                } else {
-                    $skills = $query->paginate(6, ['*'], "page_skills_$month")->withQueryString();
-                }
-
-                $formattedMonth = \Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y');
-                $groupedSkills->put($formattedMonth, $skills);
+        // -- Contacts Fetching --
+        $groupedContacts = collect();
+        if (in_array($tab, ['all', 'contacts'])) {
+            $contactsQuery = \App\Models\Contact::onlyTrashed();
+            if ($search) $contactsQuery->where('sender', 'like', "%{$search}%")->orWhere('subject', 'like', "%{$search}%");
+            
+            $months = $contactsQuery->clone()->selectRaw("DATE_FORMAT(deleted_at, '%Y-%m') as month")->distinct()->orderBy('month', $direction)->pluck('month');
+            foreach ($months as $month) {
+                $query = \App\Models\Contact::onlyTrashed()->whereRaw("DATE_FORMAT(deleted_at, '%Y-%m') = ?", [$month])->orderBy('deleted_at', $direction);
+                if ($search) $query->where(fn($q) => $q->where('sender', 'like', "%{$search}%")->orWhere('subject', 'like', "%{$search}%"));
+                $groupedContacts->put(\Carbon\Carbon::createFromFormat('Y-m', $month)->format('F Y'), $multipleSelect ? $query->get() : $query->paginate(5, ['*'], "page_contacts_$month")->withQueryString());
             }
         }
 
         // -- Summary Stats --
         $totalTrashedProjects = Project::onlyTrashed()->count();
         $totalTrashedSkills = Skill::onlyTrashed()->count();
-        $totalTrashed = $totalTrashedProjects + $totalTrashedSkills;
+        $totalTrashedAchievements = \App\Models\Achievement::onlyTrashed()->count();
+        $totalTrashedContacts = \App\Models\Contact::onlyTrashed()->count();
+        $totalTrashed = $totalTrashedProjects + $totalTrashedSkills + $totalTrashedAchievements + $totalTrashedContacts;
 
-        $expiringSoon = Project::onlyTrashed()->get()->filter(function ($p) {
-            $deleteAt = $p->deleted_at->copy()->addDays(config('app.trash_retention_days'));
-            return now()->diffInDays($deleteAt, false) <= 5
-                && now()->diffInDays($deleteAt, false) > 0;
-        })->count();
+        $expiringSoon = (Project::onlyTrashed()->count() + Skill::onlyTrashed()->count() + \App\Models\Achievement::onlyTrashed()->count() + \App\Models\Contact::onlyTrashed()->count());
 
         $data = compact(
-            'groupedProjects',
-            'groupedSkills',
-            'tab',
-            'sort',
-            'search',
-            'multipleSelect',
-            'totalTrashed',
-            'expiringSoon',
-            'totalTrashedProjects',
-            'totalTrashedSkills'
+            'groupedProjects', 'groupedSkills', 'groupedAchievements', 'groupedContacts',
+            'tab', 'sort', 'search', 'multipleSelect', 'totalTrashed', 'expiringSoon',
+            'totalTrashedProjects', 'totalTrashedSkills', 'totalTrashedAchievements', 'totalTrashedContacts'
         );
 
-        if ($request->ajax()) {
-            return view('dashboard.trash.partials.content', $data);
-        }
-
+        if ($request->ajax()) return view('dashboard.trash.partials.content', $data);
         return view('dashboard.trash', $data);
+    }
+
+    /** ACHIEVEMENT TRASH METHODS **/
+    public function restoreAchievement($id) {
+        \App\Models\Achievement::onlyTrashed()->findOrFail($id)->restore();
+        return back()->with('success', 'Pencapaian berhasil dipulihkan.');
+    }
+
+    public function forceDeleteAchievement($id) {
+        $ach = \App\Models\Achievement::onlyTrashed()->findOrFail($id);
+        if ($ach->image_url) \Illuminate\Support\Facades\Storage::disk('public')->delete($ach->image_url);
+        $ach->forceDelete();
+        return back()->with('success', 'Pencapaian dihapus permanen.');
+    }
+
+    public function bulkRestoreAchievements(Request $request) {
+        \App\Models\Achievement::onlyTrashed()->whereIn('id', $request->achievements ?? [])->restore();
+        return back()->with('success', 'Pencapaian terpilih berhasil dipulihkan.');
+    }
+
+    public function bulkForceDeleteAchievements(Request $request) {
+        $achievements = \App\Models\Achievement::onlyTrashed()->whereIn('id', $request->achievements ?? [])->get();
+        foreach ($achievements as $ach) {
+            if ($ach->image_url) \Illuminate\Support\Facades\Storage::disk('public')->delete($ach->image_url);
+            $ach->forceDelete();
+        }
+        return back()->with('success', 'Pencapaian terpilih dihapus permanen.');
+    }
+
+    /** CONTACT TRASH METHODS **/
+    public function restoreContact($id) {
+        \App\Models\Contact::onlyTrashed()->findOrFail($id)->restore();
+        return back()->with('success', 'Pesan berhasil dipulihkan.');
+    }
+
+    public function forceDeleteContact($id) {
+        \App\Models\Contact::onlyTrashed()->findOrFail($id)->forceDelete();
+        return back()->with('success', 'Pesan dihapus permanen.');
+    }
+
+    public function bulkRestoreContacts(Request $request) {
+        \App\Models\Contact::onlyTrashed()->whereIn('id', $request->contacts ?? [])->restore();
+        return back()->with('success', 'Pesan terpilih berhasil dipulihkan.');
+    }
+
+    public function bulkForceDeleteContacts(Request $request) {
+        \App\Models\Contact::onlyTrashed()->whereIn('id', $request->contacts ?? [])->forceDelete();
+        return back()->with('success', 'Pesan terpilih dihapus permanen.');
     }
 
     /*

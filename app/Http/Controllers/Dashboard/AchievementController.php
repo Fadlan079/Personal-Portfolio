@@ -27,7 +27,11 @@ class AchievementController extends Controller
             $query->orderBy('date', 'desc');
         }
 
-        $achievements = $query->paginate(6);
+        if ($request->has('bulk_mode') && $request->bulk_mode == '1') {
+            $achievements = $query->get();
+        } else {
+            $achievements = $query->paginate(6);
+        }
 
         $summary = [
             'total' => Achievement::count(),
@@ -90,11 +94,19 @@ class AchievementController extends Controller
 
     public function destroy(Achievement $achievement)
     {
-        if ($achievement->image_url) {
-            Storage::disk('public')->delete($achievement->image_url);
-        }
         $achievement->delete();
 
-        return redirect()->route('dashboard.achievements.index')->with('success', 'Pencapaian berhasil dihapus.');
+        return redirect()->route('dashboard.achievements.index')->with('success', 'Pencapaian berhasil dipindahkan ke tempat sampah.');
+    }
+
+    public function bulkTrash(Request $request)
+    {
+        $ids = $request->achievements ?? [];
+        if (count($ids) > 0) {
+            Achievement::whereIn('id', $ids)->delete();
+            return back()->with('success', count($ids) . ' pencapaian berhasil dipindahkan ke tempat sampah.');
+        }
+
+        return back()->with('error', 'Tidak ada pencapaian yang dipilih.');
     }
 }

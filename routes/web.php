@@ -34,18 +34,13 @@ Route::middleware(['auth', 'verified'])
         Route::delete('projects/force-delete/{id}', [ProjectController::class, 'forceDelete'])
             ->name('projects.forceDelete');
 
-        Route::post(
-            'projects/bulk-restore',
-            [ProjectController::class, 'bulkRestore']
-        )
+        Route::post('projects/bulk-restore', [ProjectController::class, 'bulkRestore'])
             ->name('bulkRestore');
 
-        Route::post(
-            'projects/bulk-force-delete',
-            [ProjectController::class, 'bulkForceDelete']
-        )
+        Route::post('projects/bulk-force-delete', [ProjectController::class, 'bulkForceDelete'])
             ->name('bulkForceDelete');
 
+        // -- Skills Trash Routes --
         Route::post('skills/restore/{id}', [\App\Http\Controllers\Dashboard\TrashController::class, 'restoreSkill'])
             ->name('skills.restore');
 
@@ -57,6 +52,41 @@ Route::middleware(['auth', 'verified'])
 
         Route::post('skills/bulk-force-delete', [\App\Http\Controllers\Dashboard\TrashController::class, 'bulkForceDeleteSkills'])
             ->name('skills.bulkForceDelete');
+
+        // -- Achievements Trash Routes --
+        Route::post('achievements/restore/{id}', [\App\Http\Controllers\Dashboard\TrashController::class, 'restoreAchievement'])
+            ->name('achievements.restore');
+
+        Route::delete('achievements/force-delete/{id}', [\App\Http\Controllers\Dashboard\TrashController::class, 'forceDeleteAchievement'])
+            ->name('achievements.forceDelete');
+
+        Route::post('achievements/bulk-restore', [\App\Http\Controllers\Dashboard\TrashController::class, 'bulkRestoreAchievements'])
+            ->name('achievements.bulkRestore');
+
+        Route::post('achievements/bulk-force-delete', [\App\Http\Controllers\Dashboard\TrashController::class, 'bulkForceDeleteAchievements'])
+            ->name('achievements.bulkForceDelete');
+
+        Route::post('achievements/bulk-trash', [\App\Http\Controllers\Dashboard\AchievementController::class, 'bulkTrash'])
+            ->name('achievements.bulkTrash');
+
+        // -- Contacts Trash Routes --
+        Route::post('contacts/restore/{id}', [\App\Http\Controllers\Dashboard\TrashController::class, 'restoreContact'])
+            ->name('contacts.restore');
+
+        Route::delete('contacts/force-delete/{id}', [\App\Http\Controllers\Dashboard\TrashController::class, 'forceDeleteContact'])
+            ->name('contacts.forceDelete');
+
+        Route::post('contacts/bulk-restore', [\App\Http\Controllers\Dashboard\TrashController::class, 'bulkRestoreContacts'])
+            ->name('contacts.bulkRestore');
+
+        Route::post('contacts/bulk-force-delete', [\App\Http\Controllers\Dashboard\TrashController::class, 'bulkForceDeleteContacts'])
+            ->name('contacts.bulkForceDelete');
+
+        Route::post('contacts/bulk-trash', [\App\Http\Controllers\Dashboard\ContactController::class, 'bulkTrash'])
+            ->name('contacts.bulkTrash');
+
+        Route::post('contacts/bulk-read', [\App\Http\Controllers\Dashboard\ContactController::class, 'bulkRead'])
+            ->name('contacts.bulkRead');
 
         Route::get('account', [ProfileController::class, 'edit'])
             ->name('account.edit');

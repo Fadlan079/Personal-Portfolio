@@ -161,7 +161,7 @@
                     class="relative z-20 flex flex-col items-center w-full pt-12 pb-4
                     bg-[#E7F2FF] border border-t-0 border-[#BDE0FE] text-blue-900
                     shadow-[0_4px_8px_rgba(0,0,0,0.08)] rounded-b-md
-                    origin-top rotate-[3deg] group-hover:rotate-0
+                    origin-top rotate-3 group-hover:rotate-0
                     transition-all duration-300 ease-out">
                     @csrf
 
@@ -173,7 +173,7 @@
                     class="absolute top-0 left-0 z-10 flex flex-col items-center w-full pt-12 pb-4
                     bg-[#FFF4E6] border border-t-0 border-[#FFD6A5] text-orange-900
                     shadow-[0_4px_8px_rgba(0,0,0,0.08)] rounded-b-md
-                    origin-top rotate-[6deg] group-hover:rotate-0
+                    origin-top rotate-6 group-hover:rotate-0
                     group-hover:translate-y-[calc(100%-8px)]
                     transition-all duration-300 ease-out">
 

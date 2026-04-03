@@ -74,6 +74,22 @@
                     <h3 class="text-4xl font-bold text-black relative z-10">{{ $totalTrashedSkills }}</h3>
                 </div>
 
+                <div class="bg-yellow-100 p-5 md:p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-medal text-yellow-600"></i> Achievement
+                    </p>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $totalTrashedAchievements }}</h3>
+                </div>
+
+                <div class="bg-rose-100 p-5 md:p-6 rounded-sm shadow-md border border-border flex flex-col justify-between relative group/tooltip -rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
+                    <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-4 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-envelope-open-text text-rose-600"></i> Kontak
+                    </p>
+                    <h3 class="text-4xl font-bold text-black relative z-10">{{ $totalTrashedContacts }}</h3>
+                </div>
+
                 <div class="bg-red-50 p-5 md:p-6 rounded-sm shadow-md border border-red-200 flex flex-col justify-between relative group/tooltip -rotate-1 font-serif hover:z-50 hover:scale-[1.02] transition-all">
                     <div class="before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1/2 before:h-4 before:bg-white/50 before:shadow-inner"></div>
                     <p class="text-[10px] font-bold uppercase tracking-widest text-red-600 mb-4 flex items-center gap-2 relative z-10">
@@ -129,6 +145,16 @@
                         data-tab="skills">
                         Skill
                     </button>
+                    <button type="button"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none border-2 border-border shadow-[1px_2px_0px_var(--color-border)]"
+                        data-tab="achievements">
+                        Achievement
+                    </button>
+                    <button type="button"
+                        class="filter-btn shrink-0 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all focus:outline-none border-2 border-border shadow-[1px_2px_0px_var(--color-border)]"
+                        data-tab="contacts">
+                        Kontak
+                    </button>
                 </div>
 
                 <div id="trash-grid" class="space-y-10 min-h-[400px] transition-opacity duration-300">
@@ -138,7 +164,7 @@
             </div>
 
             <div id="bulkBar"
-                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
+                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-90 bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
 
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 backdrop-blur-sm border border-black/5 rotate-1"></div>
 
@@ -295,7 +321,9 @@
 
                 const selectedProjects = document.querySelectorAll('.bulk-checkbox:checked').length;
                 const selectedSkills = document.querySelectorAll('.bulk-skill-checkbox:checked').length;
-                const totalSelected = selectedProjects + selectedSkills;
+                const selectedAchievements = document.querySelectorAll('.bulk-achievement-checkbox:checked').length;
+                const selectedContacts = document.querySelectorAll('.bulk-contact-checkbox:checked').length;
+                const totalSelected = selectedProjects + selectedSkills + selectedAchievements + selectedContacts;
 
                 if (totalSelected > 0) {
                     bulkBar.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
@@ -308,8 +336,10 @@
             window.bulkAction = function(action) {
                 const selectedProjects = document.querySelectorAll('.bulk-checkbox:checked');
                 const selectedSkills = document.querySelectorAll('.bulk-skill-checkbox:checked');
+                const selectedAchievements = document.querySelectorAll('.bulk-achievement-checkbox:checked');
+                const selectedContacts = document.querySelectorAll('.bulk-contact-checkbox:checked');
 
-                if (selectedProjects.length === 0 && selectedSkills.length === 0) return;
+                if (selectedProjects.length === 0 && selectedSkills.length === 0 && selectedAchievements.length === 0 && selectedContacts.length === 0) return;
 
                 const confirmModal = document.getElementById('confirm-modal');
                 const confirmYes = document.getElementById('confirm-yes');
@@ -356,6 +386,40 @@
 
                             let url = action === 'restore' ? '{{ route('dashboard.skills.bulkRestore') }}' :
                                 '{{ route('dashboard.skills.bulkForceDelete') }}';
+
+                            promises.push(fetch(url, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }));
+                        }
+
+                        if (selectedAchievements.length > 0) {
+                            let formData = new FormData();
+                            formData.append('_token', '{{ csrf_token() }}');
+                            selectedAchievements.forEach(cb => formData.append('achievements[]', cb.value));
+
+                            let url = action === 'restore' ? '{{ route('dashboard.achievements.bulkRestore') }}' :
+                                '{{ route('dashboard.achievements.bulkForceDelete') }}';
+
+                            promises.push(fetch(url, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }));
+                        }
+
+                        if (selectedContacts.length > 0) {
+                            let formData = new FormData();
+                            formData.append('_token', '{{ csrf_token() }}');
+                            selectedContacts.forEach(cb => formData.append('contacts[]', cb.value));
+
+                            let url = action === 'restore' ? '{{ route('dashboard.contacts.bulkRestore') }}' :
+                                '{{ route('dashboard.contacts.bulkForceDelete') }}';
 
                             promises.push(fetch(url, {
                                 method: 'POST',
@@ -438,13 +502,14 @@
             };
 
             function attachGridEvents() {
-                const checkboxes = document.querySelectorAll('.bulk-checkbox, .bulk-skill-checkbox');
+                const checkboxes = document.querySelectorAll('.bulk-checkbox, .bulk-skill-checkbox, .bulk-achievement-checkbox, .bulk-contact-checkbox');
                 const projectCards = document.querySelectorAll('.project-card');
                 const skillCards = document.querySelectorAll('.skill-card');
+                const achievementCards = document.querySelectorAll('.achievement-card');
+                const contactCards = document.querySelectorAll('.contact-trash-card');
 
-                const monthButtons = document.querySelectorAll('.month-select');
-                const skillsMonthButtons = document.querySelectorAll('.skills-month-select');
-                const normalActions = document.querySelectorAll('.normal-actions, .normal-skill-actions');
+                const monthButtons = document.querySelectorAll('.month-select, .skills-month-select');
+                const normalActions = document.querySelectorAll('.normal-actions, .normal-skill-actions, .normal-achievement-actions, .normal-contact-actions');
 
                 checkboxes.forEach(cb => {
                     cb.addEventListener('change', updateBulkBar);
@@ -453,34 +518,18 @@
                 monthButtons.forEach(button => {
                     button.addEventListener('click', () => {
                         const month = button.dataset.month;
+                        const selector = month.startsWith('ach-') ? '.achievement-card .bulk-achievement-checkbox'
+                                       : month.startsWith('con-') ? '.contact-trash-card .bulk-contact-checkbox'
+                                       : month.startsWith('skill-') ? '.skill-card .bulk-skill-checkbox'
+                                       : '.project-card .bulk-checkbox';
+                        
                         const monthCheckboxes = document.querySelectorAll(
-                            `.project-card[data-month="${month}"] .bulk-checkbox`);
+                            `${selector.split(' ')[0]}[data-month="${month}"] ${selector.split(' ')[1]}`);
                         const allChecked = [...monthCheckboxes].every(cb => cb.checked);
 
                         monthCheckboxes.forEach(cb => {
                             cb.checked = !allChecked;
-                            const card = cb.closest('.project-card');
-                            if (card) {
-                                card.classList.toggle('border-primary', !allChecked);
-                                card.classList.toggle('bg-primary/5', !allChecked);
-                            }
-                        });
-
-                        button.innerText = allChecked ? 'Pilih Semua' : 'Batal Semua';
-                        updateBulkBar();
-                    });
-                });
-
-                skillsMonthButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const month = button.dataset.month;
-                        const skillCheckboxes = document.querySelectorAll(
-                            `.skill-card[data-month="${month}"] .bulk-skill-checkbox`);
-                        const allChecked = [...skillCheckboxes].every(cb => cb.checked);
-
-                        skillCheckboxes.forEach(cb => {
-                            cb.checked = !allChecked;
-                            const card = cb.closest('.skill-card');
+                            const card = cb.closest('.card, .project-card, .skill-card, .achievement-card, .contact-trash-card');
                             if (card) {
                                 card.classList.toggle('border-primary', !allChecked);
                                 card.classList.toggle('bg-primary/5', !allChecked);
@@ -496,7 +545,7 @@
                     if (!selectMode) return;
                     if (e.target.closest('form') || e.target.tagName === 'BUTTON' || e.target.closest('.delete-trash-btn') || e.target.closest('a')) return;
 
-                    const checkbox = this.querySelector('.bulk-checkbox, .bulk-skill-checkbox');
+                    const checkbox = this.querySelector('.bulk-checkbox, .bulk-skill-checkbox, .bulk-achievement-checkbox, .bulk-contact-checkbox');
                     if (checkbox) {
                         checkbox.checked = !checkbox.checked;
                         this.classList.toggle('border-primary', checkbox.checked);
@@ -507,6 +556,8 @@
 
                 projectCards.forEach(card => card.addEventListener('click', handleCardClick));
                 skillCards.forEach(card => card.addEventListener('click', handleCardClick));
+                achievementCards.forEach(card => card.addEventListener('click', handleCardClick));
+                contactCards.forEach(card => card.addEventListener('click', handleCardClick));
 
                 const actionButtons = document.querySelectorAll('.delete-trash-btn, .restore-trash-btn');
                 actionButtons.forEach(btn => {
@@ -577,18 +628,18 @@
 
                 if (selectMode) {
                     monthButtons.forEach(btn => btn.classList.remove('hidden'));
-                    skillsMonthButtons.forEach(btn => btn.classList.remove('hidden'));
                     checkboxes.forEach(cb => cb.classList.remove('opacity-0', 'pointer-events-none'));
                     normalActions.forEach(el => el.classList.add('opacity-0', 'pointer-events-none', 'hidden'));
                 } else {
                     monthButtons.forEach(btn => btn.classList.add('hidden'));
-                    skillsMonthButtons.forEach(btn => btn.classList.add('hidden'));
                     checkboxes.forEach(cb => {
                         cb.checked = false;
                         cb.classList.add('opacity-0', 'pointer-events-none');
                     });
                     projectCards.forEach(card => card.classList.remove('border-primary', 'bg-primary/5'));
                     skillCards.forEach(card => card.classList.remove('border-primary', 'bg-primary/5'));
+                    achievementCards.forEach(card => card.classList.remove('border-primary', 'bg-primary/5'));
+                    contactCards.forEach(card => card.classList.remove('border-primary', 'bg-primary/5'));
                     normalActions.forEach(el => el.classList.remove('opacity-0', 'pointer-events-none', 'hidden'));
                 }
             }

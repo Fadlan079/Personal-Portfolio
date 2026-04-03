@@ -3,6 +3,10 @@
 
 @vite(['resources/css/dashboard_project.css', 'resources/js/app.js'])
 
+@php
+    $isBulk = request('bulk_mode') == '1';
+@endphp
+
 @section('content')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap');
@@ -67,6 +71,11 @@
                     </div>
 
                     <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
+                        <button id="toggleSelectMode" type="button"
+                            class="px-6 py-3 border-2 {{ $isBulk ? 'border-red-500 text-red-500' : 'border-border text-muted' }} bg-container rounded-lg text-xs font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none">
+                            {{ $isBulk ? 'BATAL PILIH' : 'Pilih Beberapa' }}
+                        </button>
+
                         <div class="relative z-40">
                             <button id="sort-toggle"
                                 class="w-full md:w-auto flex justify-between items-center gap-6 px-5 py-3 border-2 border-border bg-container rounded-lg text-xs font-bold uppercase tracking-widest text-text hover:border-primary hover:text-primary hover:-translate-y-0.5 transition-all shadow-[3px_3px_0px_var(--color-border)] focus:outline-none">
@@ -97,10 +106,20 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
                     @forelse($achievements as $index => $ach)
                         @php $rotation = $index % 2 == 0 ? 'rotate-1' : '-rotate-1'; @endphp
-                        <div class="bg-[#FCFAEF] border border-stone-300 rounded-sm shadow-sm p-4 relative group hover:-translate-y-1 hover:z-20 transition-all {{ $rotation }} hover:rotate-0">
+                        <div x-data="{ selected: false }"
+                             :class="selected ? 'bg-yellow-50 border-yellow-500 shadow-md ring-2 ring-yellow-400/20' : 'bg-[#FCFAEF] border-stone-300'"
+                             class="achievement-card border rounded-sm shadow-sm p-4 relative group hover:-translate-y-1 hover:z-20 transition-all {{ $rotation }} hover:rotate-0"
+                             @click="{{ $isBulk ? 'selected = !selected; setTimeout(() => window.updateBulkBar(), 0);' : '' }}"
+                             data-id="{{ $ach->id }}">
 
-                            <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-10 rotate-12 pointer-events-none" style="clip-path: inset(0 0 50% 0);"></div>
-                            <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-0 rotate-12 pointer-events-none"></div>
+                            <!-- Bulk Checkbox -->
+                            <div class="absolute top-4 left-4 z-30 {{ $isBulk ? '' : 'opacity-0 pointer-events-none' }} transition-opacity duration-300 bulk-check-container">
+                                <input type="checkbox" name="achievements[]" value="{{ $ach->id }}" x-model="selected" @click.stop="setTimeout(() => window.updateBulkBar(), 0)"
+                                    class="bulk-checkbox w-5 h-5 border-2 border-stone-400 rounded appearance-none checked:bg-yellow-600 checked:border-yellow-600 transition-colors cursor-pointer shadow-sm">
+                            </div>
+
+                            <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-10 rotate-12 pointer-events-none sticky-note-tape" style="clip-path: inset(0 0 50% 0);"></div>
+                            <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-0 rotate-12 pointer-events-none sticky-note-tape"></div>
 
                             <div class="flex gap-4 h-full flex-col">
                                 @if($ach->image_url)
@@ -127,7 +146,7 @@
                                             <span class="text-[10px] font-bold uppercase tracking-widest text-stone-500 bg-stone-200/50 px-2 py-1 rounded">
                                                 {{ $ach->projects_count }} Proyek
                                             </span>
-                                            <div class="flex gap-2">
+                                            <div class="flex gap-2 {{ $isBulk ? 'hidden' : '' }} normal-achievement-actions">
                                                 <button type="button" class="text-stone-400 hover:text-primary transition-colors edit-achievement-btn" title="Edit"
                                                     data-id="{{ $ach->id }}"
                                                     data-title="{{ $ach->title }}"
@@ -162,7 +181,7 @@
                     @endforelse
                 </div>
 
-                @if ($achievements instanceof \Illuminate\Pagination\LengthAwarePaginator && $achievements->hasPages())
+                @if (!$isBulk && $achievements instanceof \Illuminate\Pagination\LengthAwarePaginator && $achievements->hasPages())
                     <div class="flex justify-center pt-12 md:pt-16 pb-8">
                         <nav class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-4 font-mono w-full sm:w-auto px-4">
                             @if ($achievements->onFirstPage())
@@ -187,6 +206,39 @@
                 @endif
                 </div>
             </div>
+            </div>
+
+            <!-- Bulk Action Bar -->
+            <div id="bulkBar"
+                class="fixed bottom-8 left-1/2 -translate-x-1/2 z-90 bg-[#FEFCE8] border-2 border-yellow-500/30 p-4 md:px-8 md:py-5 flex flex-col sm:flex-row items-center gap-6 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] opacity-0 pointer-events-none translate-y-8 rotate-1 transition-all duration-300 w-[90%] md:w-auto min-w-[400px]">
+
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 backdrop-blur-sm border border-black/5 rotate-1"></div>
+
+                <div class="flex items-center gap-4 border-r-2 border-dashed border-yellow-600/20 pr-6 mr-2 w-full sm:w-auto justify-center sm:justify-start">
+                    <div class="w-10 h-10 rounded-full bg-yellow-400/20 flex items-center justify-center border border-yellow-500 animate-pulse">
+                        <i class="fa-solid fa-check-double text-yellow-700"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span id="selectedCount" class="text-xs font-black uppercase tracking-widest text-yellow-900">0 TERPILIH</span>
+                        <span class="text-[9px] font-bold text-yellow-900/40 uppercase tracking-tighter">Operasi Massal</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 w-full sm:w-auto">
+                    <button type="button" onclick="executeBulkAction('trash')"
+                        class="flex-1 sm:flex-none px-6 py-2.5 bg-rose-100 border-2 border-rose-500 rounded text-[10px] font-black uppercase tracking-widest text-rose-900 hover:-translate-y-1 hover:rotate-1 transition-all shadow-[3px_3px_0px_rgba(0,0,0,0.05)] group">
+                        <i class="fa-solid fa-trash-can mr-2"></i> PINDAHKAN KE TRASH
+                    </button>
+                    <button type="button" id="cancelSelect" class="text-[9px] font-bold text-muted hover:text-text uppercase tracking-widest underline underline-offset-4 decoration-dashed ml-2">
+                        Batal
+                    </button>
+                </div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-yellow-200" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
+            </div>
+
+            <form id="bulkActionForm" method="POST" class="hidden">
+                @csrf
+            </form>
         </section>
     </div>
 @endsection
@@ -248,33 +300,50 @@
                 const confirmYes = document.getElementById('confirm-yes');
                 const confirmCancel = document.getElementById('confirm-cancel');
                 const confirmMessage = document.getElementById('confirm-message');
+                const confirmBox = document.getElementById('confirm-box');
 
                 if (confirmModal && confirmYes && confirmCancel) {
                     if (confirmMessage) confirmMessage.textContent = 'Apakah Anda yakin ingin menghapus pencapaian ini secara permanen?';
 
-                    confirmModal.classList.remove('opacity-0', 'pointer-events-none');
-                    confirmModal.style.opacity = '1';
+                    // Reset any previous listeners by cloning
+                    const newYes = confirmYes.cloneNode(true);
+                    const newCancel = confirmCancel.cloneNode(true);
+                    confirmYes.parentNode.replaceChild(newYes, confirmYes);
+                    confirmCancel.parentNode.replaceChild(newCancel, confirmCancel);
 
-                    const handleYes = () => {
+                    // Show Modal
+                    confirmModal.classList.remove('opacity-0', 'pointer-events-none');
+                    confirmModal.classList.add('opacity-100', 'pointer-events-auto');
+                    confirmModal.style.opacity = '1';
+                    confirmModal.style.pointerEvents = 'auto';
+                    
+                    if(confirmBox) {
+                        confirmBox.style.transform = 'scale(1) rotate(0deg)';
+                        confirmBox.style.opacity = '1';
+                    }
+
+                    const cleanup = () => {
+                        confirmModal.classList.add('opacity-0', 'pointer-events-none');
+                        confirmModal.classList.remove('opacity-100', 'pointer-events-auto');
+                        confirmModal.style.opacity = '0';
+                        confirmModal.style.pointerEvents = 'none';
+                        if(confirmBox) {
+                            confirmBox.style.transform = 'scale(0.95) rotate(1deg)';
+                            confirmBox.style.opacity = '0';
+                        }
+                    };
+
+                    newYes.addEventListener('click', () => {
                         const form = document.getElementById('deleteAchievementForm');
                         form.action = `/dashboard/achievements/${id}`;
                         form.submit();
                         cleanup();
-                    };
+                    });
 
-                    const handleCancel = () => {
-                        cleanup();
-                    };
-
-                    const cleanup = () => {
-                        confirmModal.classList.add('opacity-0', 'pointer-events-none');
-                        confirmModal.style.opacity = '0';
-                        confirmYes.removeEventListener('click', handleYes);
-                        confirmCancel.removeEventListener('click', handleCancel);
-                    };
-
-                    confirmYes.addEventListener('click', handleYes);
-                    confirmCancel.addEventListener('click', handleCancel);
+                    newCancel.addEventListener('click', cleanup);
+                    // Also close on backdrop click
+                    const backdrop = document.getElementById('confirm-backdrop');
+                    if(backdrop) backdrop.onclick = cleanup;
                 } else {
                     if (confirm('Apakah Anda yakin ingin menghapus pencapaian ini secara permanen?')) {
                         const form = document.getElementById('deleteAchievementForm');
@@ -490,11 +559,147 @@
                 });
             });
 
-            const currentSort = new URLSearchParams(window.location.search).get('sort') || 'latest';
-            const activeOption = document.querySelector(`.sort-option[data-sort="${currentSort}"]`);
-            if (activeOption && sortLabel) {
-                sortLabel.textContent = activeOption.textContent.trim();
+            // Bulk Action logic
+            const toggleSelectBtn = document.getElementById('toggleSelectMode');
+            const bulkBar = document.getElementById('bulkBar');
+            const cancelSelectBtn = document.getElementById('cancelSelect');
+            const selectedCountText = document.getElementById('selectedCount');
+            
+            window.updateBulkBar = function() {
+                const checkedCount = document.querySelectorAll('.bulk-checkbox:checked').length;
+                if(checkedCount > 0) {
+                    bulkBar.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-8');
+                    bulkBar.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                    if(selectedCountText) selectedCountText.innerText = checkedCount + ' TERPILIH';
+                } else {
+                    bulkBar.classList.add('opacity-0', 'pointer-events-none', 'translate-y-8');
+                    bulkBar.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+                }
+            };
+
+            if(toggleSelectBtn) {
+                toggleSelectBtn.addEventListener('click', () => {
+                    const isBulkNow = !{{ $isBulk ? 'true' : 'false' }};
+                    const url = buildUrl({ bulk_mode: isBulkNow ? '1' : '0' });
+                    // Use window.location.href to refresh correctly with the new server-side state
+                    window.location.href = url.toString();
+                });
             }
+
+            if(cancelSelectBtn) {
+                cancelSelectBtn.addEventListener('click', () => toggleSelectBtn.click());
+            }
+
+            document.body.addEventListener('change', (e) => {
+                if(e.target.classList.contains('bulk-checkbox')) {
+                    window.updateBulkBar();
+                }
+            });
+
+            window.executeBulkAction = function(action) {
+                const selected = document.querySelectorAll('.bulk-checkbox:checked');
+                
+                if (selected.length === 0) {
+                    alert('Pilih setidaknya satu pencapaian terlebih dahulu.');
+                    return;
+                }
+
+                const confirmModal = document.getElementById('confirm-modal');
+                const confirmYes = document.getElementById('confirm-yes');
+                const confirmCancel = document.getElementById('confirm-cancel');
+                const confirmMessage = document.getElementById('confirm-message');
+                const confirmBox = document.getElementById('confirm-box');
+
+                if (confirmModal && confirmYes && confirmCancel) {
+                    const msg = `Apakah Anda yakin ingin memindahkan ${selected.length} pencapaian ke tempat sampah?`;
+                    
+                    if (confirmMessage) confirmMessage.textContent = msg;
+
+                    // Reset any previous listeners by cloning (simple way to avoid accumulation)
+                    const newYes = confirmYes.cloneNode(true);
+                    const newCancel = confirmCancel.cloneNode(true);
+                    confirmYes.parentNode.replaceChild(newYes, confirmYes);
+                    confirmCancel.parentNode.replaceChild(newCancel, confirmCancel);
+
+                    // Show Modal
+                    confirmModal.classList.remove('opacity-0', 'pointer-events-none');
+                    confirmModal.classList.add('opacity-100', 'pointer-events-auto');
+                    confirmModal.style.opacity = '1';
+                    confirmModal.style.pointerEvents = 'auto';
+                    
+                    if(confirmBox) {
+                        confirmBox.style.transform = 'scale(1) rotate(0deg)';
+                        confirmBox.style.opacity = '1';
+                    }
+
+                    const cleanup = () => {
+                        confirmModal.classList.add('opacity-0', 'pointer-events-none');
+                        confirmModal.classList.remove('opacity-100', 'pointer-events-auto');
+                        confirmModal.style.opacity = '0';
+                        confirmModal.style.pointerEvents = 'none';
+                        if(confirmBox) {
+                            confirmBox.style.transform = 'scale(0.95) rotate(1deg)';
+                            confirmBox.style.opacity = '0';
+                        }
+                    };
+
+                    newYes.addEventListener('click', () => {
+                        const form = document.getElementById('bulkActionForm');
+                        form.innerHTML = '';
+                        // Manual CSRF for safety in innerHTML
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = '_token';
+                        csrfInput.value = csrfToken;
+                        form.appendChild(csrfInput);
+
+                        selected.forEach(cb => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'achievements[]';
+                            input.value = cb.value;
+                            form.appendChild(input);
+                        });
+                        form.action = '{{ route("dashboard.achievements.bulkTrash") }}';
+                        form.submit();
+                        cleanup();
+                    });
+
+                    newCancel.addEventListener('click', cleanup);
+                    // Also close on backdrop click
+                    const backdrop = document.getElementById('confirm-backdrop');
+                    if(backdrop) backdrop.onclick = cleanup;
+                } else {
+                    // Fallback to native confirm if modal is missing for some reason
+                    if (confirm(`Pindahkan ${selected.length} pencapaian ke tempat sampah?`)) {
+                        const form = document.getElementById('bulkActionForm');
+                        form.innerHTML = '';
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        const csrfInput = document.createElement('input');
+                        csrfInput.type = 'hidden';
+                        csrfInput.name = '_token';
+                        csrfInput.value = csrfToken;
+                        form.appendChild(csrfInput);
+
+                        selected.forEach(cb => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'achievements[]';
+                            input.value = cb.value;
+                            form.appendChild(input);
+                        });
+                        form.action = '{{ route("dashboard.achievements.bulkTrash") }}';
+                        form.submit();
+                    }
+                }
+            };
+        }
+
+        const currentSort = new URLSearchParams(window.location.search).get('sort') || 'latest';
+        const activeOption = document.querySelector(`.sort-option[data-sort="${currentSort}"]`);
+        if (activeOption && sortLabel) {
+            sortLabel.textContent = activeOption.textContent.trim();
         }
     });
 </script>
