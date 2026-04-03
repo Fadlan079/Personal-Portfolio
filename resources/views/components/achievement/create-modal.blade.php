@@ -72,11 +72,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <p class="font-diary-accent text-xl text-stone-500 mb-1">Deskripsi <span class="text-sm border border-stone-400 text-stone-400 rounded-full w-4 h-4 inline-flex items-center justify-center font-sans">?</span></p>
-                    <textarea name="description" rows="3" placeholder="Deskripsi singkat mengenai pencapaian ini..." class="w-full px-4 py-2 diary-input resize-y"></textarea>
-                    @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                </div>
 
                 <div>
                     <p class="font-diary-accent text-xl text-stone-500 mb-2">Gambar / Sertifikat (Max 10MB)</p>

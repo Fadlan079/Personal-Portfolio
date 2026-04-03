@@ -109,8 +109,14 @@
                         <div x-data="{ selected: false }"
                              :class="selected ? 'bg-yellow-50 border-yellow-500 shadow-md ring-2 ring-yellow-400/20' : 'bg-[#FCFAEF] border-stone-300'"
                              class="achievement-card border rounded-sm shadow-sm p-4 relative group hover:-translate-y-1 hover:z-20 transition-all {{ $rotation }} hover:rotate-0"
-                             @click="{{ $isBulk ? 'selected = !selected; setTimeout(() => window.updateBulkBar(), 0);' : '' }}"
-                             data-id="{{ $ach->id }}">
+                             @click="{{ $isBulk ? 'selected = !selected; setTimeout(() => window.updateBulkBar(), 0);' : 'window.openDetailModal($el)' }}"
+                             data-id="{{ $ach->id }}"
+                             data-title="{{ $ach->title }}"
+                             data-issuer="{{ $ach->issuer }}"
+                             data-date-raw="{{ $ach->date ? \Carbon\Carbon::parse($ach->date)->format('Y-m-d') : '' }}"
+                             data-date-formatted="{{ $ach->date ? \Carbon\Carbon::parse($ach->date)->format('M Y') : 'Unknown' }}"
+                             data-image="{{ $ach->image_url ? asset('storage/'.$ach->image_url) : '' }}"
+                             data-projects-count="{{ $ach->projects_count }}">
 
                             <!-- Bulk Checkbox -->
                             <div class="absolute top-4 left-4 z-30 {{ $isBulk ? '' : 'opacity-0 pointer-events-none' }} transition-opacity duration-300 bulk-check-container">
@@ -134,9 +140,6 @@
                                 @endif
                                 <div class="grow flex flex-col pt-2">
                                     <h3 class="text-lg font-diary-body font-bold text-stone-800 line-clamp-1 mb-1" title="{{ $ach->title }}">{{ $ach->title }}</h3>
-                                    <p class="text-sm font-diary-accent text-stone-500 mb-3 line-clamp-2 leading-tight">
-                                        {{ $ach->description ?: 'Tanpa deskripsi' }}
-                                    </p>
                                     <div class="mt-auto space-y-2">
                                         <div class="flex justify-between items-center text-xs font-diary-body text-stone-600">
                                             <span class="truncate"><i class="fa-solid fa-building mr-1.5 opacity-60"></i>{{ $ach->issuer ?? 'Anonim' }}</span>
@@ -250,6 +253,7 @@
 
 <x-achievement.create-modal />
 <x-achievement.edit-modal />
+<x-achievement.detail-modal />
 
 @push('scripts')
 <script>
@@ -316,7 +320,7 @@
                     confirmModal.classList.add('opacity-100', 'pointer-events-auto');
                     confirmModal.style.opacity = '1';
                     confirmModal.style.pointerEvents = 'auto';
-                    
+
                     if(confirmBox) {
                         confirmBox.style.transform = 'scale(1) rotate(0deg)';
                         confirmBox.style.opacity = '1';
@@ -429,8 +433,7 @@
                     document.getElementById('editAchievementId').value = dataset.id;
                     document.getElementById('editAchievementTitle').value = dataset.title;
                     document.getElementById('editAchievementIssuer').value = dataset.issuer;
-                    document.getElementById('editAchievementDate').value = dataset.date;
-                    document.getElementById('editAchievementDesc').value = dataset.description;
+                    document.getElementById('editAchievementDate').value = dataset.dateRaw;
 
                     const form = document.getElementById('editAchievementForm');
                     form.action = '/dashboard/achievements/' + dataset.id;
@@ -564,7 +567,7 @@
             const bulkBar = document.getElementById('bulkBar');
             const cancelSelectBtn = document.getElementById('cancelSelect');
             const selectedCountText = document.getElementById('selectedCount');
-            
+
             window.updateBulkBar = function() {
                 const checkedCount = document.querySelectorAll('.bulk-checkbox:checked').length;
                 if(checkedCount > 0) {
@@ -598,7 +601,7 @@
 
             window.executeBulkAction = function(action) {
                 const selected = document.querySelectorAll('.bulk-checkbox:checked');
-                
+
                 if (selected.length === 0) {
                     alert('Pilih setidaknya satu pencapaian terlebih dahulu.');
                     return;
@@ -612,7 +615,7 @@
 
                 if (confirmModal && confirmYes && confirmCancel) {
                     const msg = `Apakah Anda yakin ingin memindahkan ${selected.length} pencapaian ke tempat sampah?`;
-                    
+
                     if (confirmMessage) confirmMessage.textContent = msg;
 
                     // Reset any previous listeners by cloning (simple way to avoid accumulation)
@@ -626,7 +629,7 @@
                     confirmModal.classList.add('opacity-100', 'pointer-events-auto');
                     confirmModal.style.opacity = '1';
                     confirmModal.style.pointerEvents = 'auto';
-                    
+
                     if(confirmBox) {
                         confirmBox.style.transform = 'scale(1) rotate(0deg)';
                         confirmBox.style.opacity = '1';
@@ -694,6 +697,81 @@
                     }
                 }
             };
+
+            // Achievement Detail Modal Logic
+            const detailModal = document.getElementById('achievementDetailModal');
+            const detailBox = document.getElementById('detailBox');
+            const detailClose = document.getElementById('detailClose');
+
+            window.openDetailModal = function(el) {
+                if(!detailModal || !detailBox) return;
+
+                const dataset = el.dataset;
+
+                // Bind Data
+                document.getElementById('detailTitle').textContent = dataset.title;
+                document.getElementById('detailIssuer').textContent = dataset.issuer || 'Anonim';
+                document.getElementById('detailDate').textContent = dataset.dateFormatted;
+                document.getElementById('detailProjectsCount').textContent = `${dataset.projectsCount} Proyek`;
+
+                const imgEl = document.getElementById('detailImage');
+                const imgContainer = document.getElementById('detailImageContainer');
+                if(dataset.image) {
+                    imgEl.src = dataset.image;
+                    imgContainer.classList.remove('hidden');
+                } else {
+                    imgContainer.classList.add('hidden');
+                }
+
+                // Bind actions
+                const editBtn = document.getElementById('modalEditBtn');
+                const deleteBtn = document.getElementById('modalDeleteBtn');
+
+                if(editBtn) {
+                    // Find the existing edit button for this achievement to reuse its logic or just trigger it
+                    editBtn.onclick = () => {
+                        window.closeDetailModal();
+                        // Trigger the regular edit logic
+                        const actualEditBtn = el.querySelector('.edit-achievement-btn');
+                        if(actualEditBtn) actualEditBtn.click();
+                    };
+                }
+
+                if(deleteBtn) {
+                    deleteBtn.onclick = () => {
+                        window.closeDetailModal();
+                        const actualDeleteBtn = el.querySelector('.delete-achievement-btn');
+                        if(actualDeleteBtn) actualDeleteBtn.click();
+                    };
+                }
+
+                // Show Modal
+                detailModal.classList.remove('hidden');
+                detailModal.classList.add('flex');
+                setTimeout(() => {
+                    detailModal.style.opacity = '1';
+                    detailBox.style.opacity = '1';
+                    detailBox.style.transform = 'scale(1)';
+                }, 10);
+            };
+
+            window.closeDetailModal = function() {
+                if(!detailModal || !detailBox) return;
+                detailModal.style.opacity = '0';
+                detailBox.style.opacity = '0';
+                detailBox.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    detailModal.classList.add('hidden');
+                    detailModal.classList.remove('flex');
+                }, 300);
+            };
+
+            if(detailClose) detailClose.onclick = window.closeDetailModal;
+            if(detailModal) {
+                detailModal.onclick = (e) => {
+                    if(e.target === detailModal) window.closeDetailModal();
+                };
+            }
         }
 
         const currentSort = new URLSearchParams(window.location.search).get('sort') || 'latest';

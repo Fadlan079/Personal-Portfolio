@@ -71,10 +71,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <label for="editAchievementDesc" class="font-diary-accent text-xl text-stone-500 mb-1 block">Deskripsi</label>
-                    <textarea name="description" id="editAchievementDesc" rows="3" class="w-full px-4 py-2 diary-input resize-y"></textarea>
-                </div>
 
                 <div>
                     <p class="font-diary-accent text-xl text-stone-500 mb-2">Gambar / Sertifikat (Max 10MB)</p>
