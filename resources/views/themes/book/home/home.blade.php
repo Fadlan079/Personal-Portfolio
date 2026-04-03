@@ -28,6 +28,10 @@
     </div>
 
     <div class="md:px-5 md:py-5 bg-surface/40">
+        @include('themes.book.home.partials.achievements')
+    </div>
+
+    <div class="md:px-5 md:py-5">
         @include('themes.book.home.partials.skills')
     </div>
 
@@ -35,11 +39,9 @@
         <div class="w-px h-20 md:h-32"></div>
     </div>
 
-    <div class="md:px-5 md:py-5">
+    <div class="md:px-5 md:py-5 bg-surface/40">
         @include('themes.book.home.partials.cta')
     </div>
-
-
 @endsection
 
 @push('script')

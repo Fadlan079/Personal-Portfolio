@@ -21,6 +21,8 @@ class HomeController extends Controller
     {
         $recentProjects = Project::public()->recent(5)->with('achievements')->get();
 
+        $achievements = \App\Models\Achievement::latest()->get();
+
         $skills = \App\Models\Skill::withCount('projects')
             ->where(function ($q) {
                 $q->where('is_core', true)
@@ -71,6 +73,7 @@ class HomeController extends Controller
 
         return theme_view('home.home', compact(
             'recentProjects',
+            'achievements',
             'skills',
             'profilePhoto',
             'showClock',
