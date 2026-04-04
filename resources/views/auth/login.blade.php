@@ -48,7 +48,14 @@
             </div>
 
             <div>
-                <label class="block text-xs font-bold mb-2 text-muted uppercase tracking-wider">Password</label>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-xs font-bold text-muted uppercase tracking-wider">Password</label>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="text-[11px] font-bold text-muted hover:text-stone-800 transition-colors" data-i18n="login.forgot">
+                            Lupa password?
+                        </a>
+                    @endif
+                </div>
                 <input type="password" name="password"
                        class="w-full px-3 py-2 bg-container border-b-2 border-border border-dashed
                               text-text placeholder:text-muted/50 text-sm
@@ -89,6 +96,13 @@
                     <span class="relative z-10 uppercase tracking-widest text-sm">Masuk</span>
                     <i class="fa-solid fa-arrow-right-to-bracket text-sm relative z-10 group-hover:translate-x-1.5 transition-transform"></i>
                 </button>
+                <div class="text-center mt-6">
+                    <a href="{{ route('register') }}"
+                    class="text-sm text-muted hover:text-primary transition-colors underline decoration-dashed underline-offset-4"
+                    data-i18n="login.regis.have_account">
+                        Don't have an account? Register
+                    </a>
+                </div>
             </div>
         </form>
     </div>

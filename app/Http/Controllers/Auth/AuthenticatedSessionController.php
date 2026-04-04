@@ -25,10 +25,28 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
+        $user = auth()->user();
+
+        if (! $user->hasVerifiedEmail()) {
+            auth()->guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')->with('error', 'Silakan cek kotak masuk/spam email Anda untuk memverifikasi akun sebelum login.');
+        }
+
         $request->session()->regenerate();
 
+        if ($user->role === 'admin') {
+            return redirect()
+                ->intended(route('dashboard.home'))
+                ->with('success', 'Login sebagai admin');
+        }
+
+        // user biasa
         return redirect()
-            ->intended(route('dashboard.home', absolute: false))
+            ->intended(route('portofolio.home'))
             ->with('success', 'Login berhasil');
     }
     /**

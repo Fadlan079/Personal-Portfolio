@@ -41,6 +41,16 @@ class Project extends Model
         return $this->belongsToMany(Achievement::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(ProjectLike::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ProjectComment::class)->whereNull('parent_id');
+    }
+
     protected $casts = [
         'tech' => 'array',
         'screenshot' => 'array',

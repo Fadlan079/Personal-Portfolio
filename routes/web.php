@@ -8,10 +8,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProjectLikeController;
+use App\Http\Controllers\ProjectCommentController;
 
-
-
-Route::middleware(['auth', 'verified'])
+Route::middleware(['auth', 'verified','admin'])
     ->prefix('dashboard')
     ->as('dashboard.')
     ->group(function () {
@@ -123,6 +123,21 @@ Route::name('portofolio.')->group(function () {
     Route::get('/contact', [HomeController::class, 'Showcontact'])->name('contact');
     Route::get('/settings', [HomeController::class, 'Showsettings'])->name('settings');
     Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+});
+
+Route::get('/projects/{project}/interactions', [\App\Http\Controllers\ProjectInteractionController::class, 'show'])
+    ->name('projects.interactions');
+
+Route::middleware(['auth', 'throttle:10,1'])->prefix('projects')->group(function () {
+
+    Route::post('/{project}/like', [ProjectLikeController::class, 'toggle'])
+        ->name('projects.like');
+
+    Route::post('/{project}/comment', [ProjectCommentController::class, 'store'])
+        ->name('projects.comment');
+
+    Route::post('/{project}/reply', [ProjectCommentController::class, 'reply'])
+        ->name('projects.reply');
 });
 
 Route::get('/api/lang/{locale}', function ($locale) {

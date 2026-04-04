@@ -119,16 +119,16 @@
                 'icon' => 'fa-solid fa-folder',
             ],
             [
-                'label' => 'Skills',
-                'href' => route('dashboard.skills.index'),
-                'route' => 'dashboard.skills.*',
-                'icon' => 'fa-solid fa-code-branch',
-            ],
-            [
                 'label' => 'Achievements',
                 'href' => route('dashboard.achievements.index'),
                 'route' => 'dashboard.achievements.*',
                 'icon' => 'fa-solid fa-medal',
+            ],
+            [
+                'label' => 'Skills',
+                'href' => route('dashboard.skills.index'),
+                'route' => 'dashboard.skills.*',
+                'icon' => 'fa-solid fa-code-branch',
             ],
             [
                 'label' => 'Contacts',

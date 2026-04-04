@@ -15,13 +15,14 @@
 
 <div id="projectDetailModal" class="fixed inset-0 z-70 hidden items-center justify-center bg-stone-900/60 backdrop-blur-sm p-4 md:p-6">
 
-    <div class="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto hide-scrollbar bg-[#FCFAEF] text-stone-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-stone-200/60 rounded-sm">
+    <div class="relative w-full max-w-3xl max-h-[85vh] overflow-hidden flex flex-col bg-[#FCFAEF] text-stone-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-stone-200/60 rounded-sm">
+        <!-- Main Scrollable Content -->
+        <div id="detailModalContent" class="overflow-y-auto hide-scrollbar flex-1 relative">
+            <div class="absolute top-0 left-6 w-8 h-12 bg-red-800/80 rounded-b-sm shadow-sm z-0"></div>
 
-        <div class="absolute top-0 left-6 w-8 h-12 bg-red-800/80 rounded-b-sm shadow-sm z-0"></div>
-
-        <button id="detailModalClose" class="absolute top-6 right-6 text-stone-400 hover:text-stone-800 transition-colors z-10 text-xl font-light">
-            ✕
-        </button>
+            <button id="detailModalClose" class="absolute top-6 right-6 text-stone-400 hover:text-stone-800 transition-colors z-10 text-xl font-light">
+                ✕
+            </button>
 
         <div class="px-8 pt-12 pb-6 md:px-12 relative z-10">
             <div class="flex flex-wrap items-center gap-3 mb-4 font-diary-accent text-xl text-stone-500">
@@ -92,14 +93,29 @@
             </div>
         </div>
 
-        <div class="bg-stone-100/50 px-8 py-6 md:px-12 border-t border-stone-200/60 flex flex-wrap gap-4 items-center justify-between">
-            <div class="flex flex-wrap gap-3">
-                <a id="detailLive" target="_blank" class="px-5 py-2 bg-transparent border border-stone-800 text-stone-800 font-diary-body text-sm font-bold hover:bg-stone-800 hover:text-[#FCFAEF] transition-colors rounded-sm hidden">
-                    View Live
-                </a>
-                <a id="detailRepo" target="_blank" class="px-5 py-2 bg-transparent border border-stone-400 text-stone-600 font-diary-body text-sm hover:border-stone-800 hover:text-stone-800 transition-colors rounded-sm hidden">
-                    Repository
-                </a>
+        </div>
+
+        <div class="bg-stone-100/50 px-8 py-6 md:px-12 border-t border-stone-200/60 flex flex-wrap gap-4 items-center justify-between shrink-0 relative z-20">
+            <div class="flex flex-wrap items-center gap-6">
+                <div class="flex flex-wrap gap-3">
+                    <a id="detailLive" target="_blank" class="px-5 py-2 bg-transparent border border-stone-800 text-stone-800 font-diary-body text-sm font-bold hover:bg-stone-800 hover:text-[#FCFAEF] transition-colors rounded-sm hidden">
+                        View Live
+                    </a>
+                    <a id="detailRepo" target="_blank" class="px-5 py-2 bg-transparent border border-stone-400 text-stone-600 font-diary-body text-sm hover:border-stone-800 hover:text-stone-800 transition-colors rounded-sm hidden">
+                        Repository
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-5 text-stone-500 font-diary-body text-sm">
+                    <button id="btnLikeProject" class="flex items-center gap-1.5 hover:text-red-500 transition-colors opacity-50 cursor-default" disabled title="Tunggu sebentar...">
+                        <i id="likeIcon" class="fa-regular fa-heart text-xl relative top-px"></i>
+                        <span id="likeCount" class="font-bold">0</span>
+                    </button>
+                    <button id="btnCommentProject" class="flex items-center gap-1.5 hover:text-stone-800 transition-colors opacity-50 cursor-default" disabled title="Tunggu sebentar...">
+                        <i class="fa-regular fa-comment text-xl relative top-px"></i>
+                        <span id="commentCount" class="font-bold">0</span>
+                    </button>
+                </div>
             </div>
 
             @if(request()->routeIs('dashboard.*'))
@@ -115,6 +131,48 @@
                     </div>
                 @endauth
             @endif
+        </div>
+
+        <!-- COMMENTS OVERLAY INSIDE MODAL -->
+        <div id="commentsOverlay" class="absolute inset-0 bg-[#FCFAEF] z-40 flex flex-col transform translate-y-full transition-transform duration-300 ease-in-out">
+            <!-- Header -->
+            <div class="px-8 py-5 border-b border-stone-200/60 flex items-center justify-between bg-[#FCFAEF] shrink-0 sticky top-0 shadow-sm z-10">
+                <h3 class="font-diary-accent text-2xl text-stone-700 flex items-center gap-2">
+                    <i class="fa-regular fa-comments text-xl"></i> Komentar
+                </h3>
+                <button id="closeCommentsBtn" class="text-stone-400 hover:text-stone-800 transition-colors text-xl font-light">
+                    ✕
+                </button>
+            </div>
+            
+            <!-- Comments List -->
+            <div id="commentsList" class="flex-1 overflow-y-auto hide-scrollbar p-6 md:p-8 space-y-6">
+                <!-- comments injected via JS -->
+            </div>
+            
+            <!-- Comment Form -->
+            <div class="p-4 md:p-6 border-t border-stone-200/60 bg-stone-50/50 shrink-0 sticky bottom-0 z-10">
+                @auth
+                <form id="commentForm" class="flex flex-col gap-3">
+                    <textarea id="commentInput" rows="2" class="w-full bg-transparent border-b-2 border-stone-300 focus:border-stone-600 outline-none resize-none font-diary-body text-sm text-stone-700 placeholder-stone-400 py-2 transition-colors" placeholder="Tulis komentar..."></textarea>
+                    <div class="flex justify-between items-center">
+                        <span id="replyToText" class="text-xs text-stone-500 font-diary-body hidden">
+                            Membalas <span id="replyToName" class="font-bold"></span> 
+                            <button type="button" id="cancelReplyBtn" class="text-red-400 hover:text-red-600 ml-1">Batal</button>
+                        </span>
+                        <div class="ml-auto">
+                            <button type="submit" class="px-5 py-2.5 bg-stone-800 text-[#FCFAEF] font-diary-body text-sm font-bold rounded-sm hover:bg-stone-700 transition-colors">
+                                Kirim
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                @else
+                <div id="loginPrompt" class="text-center py-2">
+                    <p class="font-diary-body text-sm text-stone-500">Silakan <a href="{{ route('login') }}" class="text-stone-800 font-bold hover:underline">login</a> untuk meninggalkan komentar.</p>
+                </div>
+                @endauth
+            </div>
         </div>
 
     </div>

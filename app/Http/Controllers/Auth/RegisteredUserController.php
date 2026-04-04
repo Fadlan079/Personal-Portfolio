@@ -43,8 +43,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('login')
+            ->with('success', 'Registrasi berhasil. Silakan periksa kotak masuk/spam email Anda untuk memverifikasi akun sebelum login.');
     }
 }

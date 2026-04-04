@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\SetUserLocale::class,
         ]);
+
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminOnly::class,
+        ]);
     })
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('app:auto-force-delete-trashed-projects')
