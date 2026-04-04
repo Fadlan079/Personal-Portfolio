@@ -31,6 +31,17 @@
                     <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-10 rotate-12 pointer-events-none sticky-note-tape" style="clip-path: inset(0 0 50% 0);"></div>
                     <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-0 rotate-12 pointer-events-none sticky-note-tape"></div>
 
+                    @if(isset($ach->projects_count) && $ach->projects_count > 0)
+                        <div class="absolute top-3 right-3 z-20">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-bold uppercase tracking-widest
+                                bg-yellow-200 text-yellow-900 border border-yellow-400 rounded shadow-sm">
+
+                                <i class="fa-solid fa-link text-[9px]"></i>
+                                +{{ $ach->projects_count }}
+                            </span>
+                        </div>
+                    @endif
+
                     <div class="flex gap-4 h-full flex-col mt-2">
                         @if($ach->image_url)
                             <div class="w-full h-48 bg-stone-200 border border-stone-300 rounded overflow-hidden">

@@ -21,7 +21,9 @@ class HomeController extends Controller
     {
         $recentProjects = Project::public()->recent(5)->with('achievements')->get();
 
-        $achievements = \App\Models\Achievement::latest()->paginate(3);
+        $achievements = \App\Models\Achievement::withCount('projects')
+    ->latest()
+    ->paginate(3);
 
         if (request()->ajax()) {
             return view('themes.book.home.partials.achievements', compact('achievements'))->render();
