@@ -1,16 +1,14 @@
  @php
-    // Rotasi dinamis untuk memberikan kesan natural pada susunan kartu (seperti section tech stack)
     $cardRotations = [
         'md:-rotate-1',
         'md:rotate-2',
         'md:-rotate-1',
         'md:rotate-1',
-        'md:-rotate-2'
+        'md:-rotate-2'  
     ];
 @endphp
 
 <style>
-    /* Mengimpor font jika belum ada di layout utama */
     @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap');
 
     .font-diary-body { font-family: 'Merriweather', serif; }

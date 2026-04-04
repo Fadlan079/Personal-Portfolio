@@ -149,21 +149,6 @@
                                             <span class="text-[10px] font-bold uppercase tracking-widest text-stone-500 bg-stone-200/50 px-2 py-1 rounded">
                                                 {{ $ach->projects_count }} Proyek
                                             </span>
-                                            <div class="flex gap-2 {{ $isBulk ? 'hidden' : '' }} normal-achievement-actions">
-                                                <button type="button" class="text-stone-400 hover:text-primary transition-colors edit-achievement-btn" title="Edit"
-                                                    data-id="{{ $ach->id }}"
-                                                    data-title="{{ $ach->title }}"
-                                                    data-issuer="{{ $ach->issuer }}"
-                                                    data-date="{{ $ach->date ? \Carbon\Carbon::parse($ach->date)->format('Y-m-d') : '' }}"
-                                                    data-description="{{ $ach->description }}"
-                                                    data-image="{{ $ach->image_url ? asset('storage/'.$ach->image_url) : '' }}"
-                                                    data-image-name="{{ $ach->image_url ? basename($ach->image_url) : '' }}">
-                                                    <i class="fa-regular fa-pen-to-square pointer-events-none"></i>
-                                                </button>
-                                                <button type="button" class="text-stone-400 hover:text-red-500 transition-colors delete-achievement-btn" title="Hapus" data-id="{{ $ach->id }}">
-                                                    <i class="fa-regular fa-trash-can pointer-events-none"></i>
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

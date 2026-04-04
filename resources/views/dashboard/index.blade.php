@@ -261,8 +261,29 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <div class="flex items-center justify-center w-full h-full border-2 border-dashed border-text bg-container text-muted font-mono text-xs uppercase tracking-widest p-8 text-center italic opacity-60 rounded-sm lg:col-span-3">
-                                        [ No Deployments Logged ]
+                                    <div class="col-span-full py-20 px-6 flex flex-col items-center justify-center text-center bg-[#fdfcf5] border border-[#e5e0d0] rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,0.05)] relative font-sans overflow-hidden">
+
+                                        <div class="absolute inset-0 z-0 opacity-30"
+                                            style="background-image: repeating-linear-gradient(transparent, transparent 24px, #e5e0d0 24px, #e5e0d0 25px);">
+                                        </div>
+
+                                        <div class="absolute top-0 left-10 bottom-0 w-0.5 bg-red-300 z-10 opacity-60"></div>
+
+                                        <div class="absolute bottom-4 right-6 text-3xl text-muted/50 rotate-12 z-10">
+                                            <i class="fa-solid fa-pencil-alt relative -right-2 top-1"></i>
+                                            <i class="fa-solid fa-pen-nib relative -rotate-12"></i>
+                                        </div>
+
+                                        <div class="relative z-20 space-y-3">
+                                            <h3 class="text-3xl font-medium text-black font-handwriting tracking-wide">
+                                                Arsip Kosong
+                                            </h3>
+
+                                            <p class="text-sm text-[var(--color-muted)] max-w-sm mx-auto italic font-serif opacity-90 leading-relaxed">
+                                                Belum ada proyek yang disorot untuk saat ini.
+                                            </p>
+                                        </div>
+
                                     </div>
                                 @endforelse
                             </div>

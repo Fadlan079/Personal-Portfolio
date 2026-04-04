@@ -96,9 +96,40 @@
                     <div class="absolute bottom-0 right-0 w-5 h-5 bg-yellow-600 border-t border-l border-yellow-700 shadow-[-2px_-2px_4px_rgba(0,0,0,0.03)] z-10" style="clip-path: polygon(100% 0, 0 100%, 100% 100%);"></div>
 
                 </div>
-
             @endif
         @endforeach
+        @if($skills->isEmpty())
+            <div class="col-span-full relative mx-auto w-full max-w-3xl">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-40 h-10 bg-black/5 border border-black/5 backdrop-blur-[2px] z-20 rotate-1 shadow-sm"
+                            style="clip-path: polygon(5% 0%, 95% 10%, 100% 90%, 0% 100%);"></div>
+
+                        <div class="bg-[#fdfcf5] border border-[#e5e0d0] p-12 md:p-20 text-center relative overflow-hidden shadow-sm rounded-sm">
+                            <div class="absolute inset-0 z-0 opacity-20"
+                        style="background-image: repeating-linear-gradient(transparent, transparent 31px, #94a3b8 31px, #94a3b8 32px);">
+                    </div>
+
+                    <div class="absolute top-0 left-12 bottom-0 w-px bg-red-200 z-10"></div>
+
+                    <div class="relative z-20">
+                        <div class="mb-6 inline-flex items-center justify-center w-16 h-16 bg-yellow-500/10 border-2 border-dashed border-yellow-600/30 rounded-full text-yellow-700/40">
+                            <i class="fa-solid fa-microchip text-3xl"></i>
+                        </div>
+
+                        <h3 class="text-3xl font-medium text-slate-800 font-handwriting mb-4 tracking-wide">
+                            Daftar Kemampuan Masih Kosong
+                        </h3>
+
+                        <p class="text-slate-500 max-w-md mx-auto italic leading-relaxed">
+                            Sepertinya data teknologi belum diunggah atau sedang dalam proses pembaharuan. <br>
+                        </p>
+                    </div>
+
+                    <div class="absolute bottom-4 right-8 opacity-20 grayscale">
+                        <i class="fa-solid fa-terminal text-4xl -rotate-12"></i>
+                    </div>
+                </div>
+            </div>
+        @endif
 
     </div>
 </section>
