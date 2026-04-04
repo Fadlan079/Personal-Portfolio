@@ -12,11 +12,11 @@
             Milestones
         </h3>
 
-        <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-3 text-stone-900 leading-tight">
+        <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-3 text-text leading-tight">
             Sertifikat & Penghargaan
         </h2>
 
-        <p class="text-stone-600 text-lg font-medium max-w-2xl mx-auto md:mx-0 italic font-diary-body">
+        <p class="text-stone-500 text-lg font-medium max-w-2xl mx-auto md:mx-0 italic font-diary-body">
             Rekam jejak, pencapaian, dan validasi dari perjalanan karir serta pembelajaran saya.
         </p>
     </div>
@@ -25,7 +25,7 @@
 
             @forelse($achievements as $index => $ach)
 
-                <div class="bg-[#FCFAEF] border border-stone-300 rounded-sm shadow-sm p-5 relative group
+                <div class="bg-surface border border-stone-300 rounded-sm shadow-sm p-5 relative group
                     transition-all duration-300 transform flex flex-col h-full
                     hover:-translate-y-2 hover:shadow-[8px_8px_25px_rgba(0,0,0,0.12)] hover:z-20
 
@@ -62,12 +62,12 @@
                         @endif
 
                         <div class="grow flex flex-col pt-3">
-                            <h3 class="text-xl font-diary-body font-bold text-stone-800 line-clamp-2 mb-2" title="{{ $ach->title }}">
+                            <h3 class="text-xl font-diary-body font-bold text-text line-clamp-2 mb-2" title="{{ $ach->title }}">
                                 {{ $ach->title }}
                             </h3>
 
                             <div class="mt-auto space-y-3">
-                                <div class="flex justify-between items-center text-sm font-diary-body text-stone-600">
+                                <div class="flex justify-between items-center text-sm font-diary-body text-stone-500">
                                     <span class="truncate pr-2"><i class="fa-solid fa-building mr-1.5 opacity-60"></i>{{ $ach->issuer ?? 'Anonim' }}</span>
                                     <span class="whitespace-nowrap"><i class="fa-regular fa-calendar mr-1.5 opacity-60"></i>{{ $ach->date ? \Carbon\Carbon::parse($ach->date)->format('M Y') : 'Unknown' }}</span>
                                 </div>

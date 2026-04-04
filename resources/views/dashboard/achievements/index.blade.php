@@ -28,12 +28,12 @@
                     <div class="space-y-6">
                         <div class="relative inline-flex items-center gap-2 py-1.5 pl-8 pr-6 transition-all duration-300 w-max group hover:-translate-y-0.5 hover:rotate-1"
                             style="filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.06));">
-                            <div class="absolute inset-0 bg-yellow-100 border border-yellow-500 rounded-l-md z-0 transition-colors"
+                            <div class="absolute inset-0 bg-warning border border-yellow-500 rounded-l-md z-0 transition-colors"
                                 style="clip-path: polygon(0 0, 100% 0, 92% 50%, 100% 100%, 0 100%);">
                             </div>
                             <div class="absolute top-1/2 -left-4 w-6 h-[1.5px] bg-[#8B0000]/80 -translate-y-[calc(50%+1px)] origin-right -rotate-12 group-hover:-rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
                             <div class="absolute top-1/2 -left-3 w-5 h-[1.5px] bg-[#B22222]/80 -translate-y-[calc(50%-1px)] origin-right rotate-12 group-hover:rotate-6 transition-transform duration-300 rounded-l-full z-0"></div>
-                            <div class="absolute left-2.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white shadow-[inset_1px_1px_3px_rgba(0,0,0,0.3)] border border-yellow-700/30 z-10"></div>
+                            <div class="absolute left-2.5 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-surface shadow-[inset_1px_1px_3px_rgba(0,0,0,0.3)] border border-yellow-700/30 z-10"></div>
 
                             <i class="fa-solid fa-medal relative z-10 text-yellow-800 text-[11px] mt-px"></i>
                             <span class="relative z-10 text-[10px] sm:text-xs font-black tracking-[0.15em] uppercase text-yellow-900 mt-px">
@@ -41,12 +41,12 @@
                             </span>
                         </div>
 
-                        <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter leading-[1.05] text-stone-900">
+                        <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-tighter leading-[1.05] text-text">
                             <span class="block font-diary-body">Pencapaian</span>
                             <span class="block text-stone-500 mt-2 text-[clamp(1.5rem,4vw,2.5rem)] font-diary-accent">Rekam Jejak & Validasi</span>
                         </h1>
 
-                        <p class="text-base text-stone-600 max-w-2xl leading-relaxed font-diary-body">
+                        <p class="text-base text-stone-500 max-w-2xl leading-relaxed font-diary-body">
                             Mengelola <span class="font-bold border-b border-stone-400">{{ $summary['total'] }}</span> Catatan Pencapaian yang tercatat.
                         </p>
                     </div>
@@ -61,7 +61,7 @@
                 </div>
             </header>
 
-            <div class="bg-surface border-2 border-dashed border-border shadow-sm rounded-2xl p-5 md:p-6 space-y-6 font-sans relative mt-8">
+            <div class="p-5 md:p-6 space-y-6 font-sans relative mt-8">
                 <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 border-b-2 border-dashed border-border/50 pb-6 relative z-20">
                     <div class="relative w-full md:w-1/2 group">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-primary transition-colors"></i>
@@ -107,7 +107,7 @@
                     @forelse($achievements as $index => $ach)
                         @php $rotation = $index % 2 == 0 ? 'rotate-1' : '-rotate-1'; @endphp
                         <div x-data="{ selected: false }"
-                             :class="selected ? 'bg-yellow-50 border-yellow-500 shadow-md ring-2 ring-yellow-400/20' : 'bg-[#FCFAEF] border-stone-300'"
+                             :class="selected ? 'bg-yellow-50 border-yellow-500 shadow-md ring-2 ring-yellow-400/20' : 'bg-surface border-stone-300'"
                              class="achievement-card border rounded-sm shadow-sm p-4 relative group hover:-translate-y-1 hover:z-20 transition-all {{ $rotation }} hover:rotate-0"
                              @click="{{ $isBulk ? 'selected = !selected; setTimeout(() => window.updateBulkBar(), 0);' : 'window.openDetailModal($el)' }}"
                              data-id="{{ $ach->id }}"
@@ -139,14 +139,14 @@
                                     </div>
                                 @endif
                                 <div class="grow flex flex-col pt-2">
-                                    <h3 class="text-lg font-diary-body font-bold text-stone-800 line-clamp-1 mb-1" title="{{ $ach->title }}">{{ $ach->title }}</h3>
+                                    <h3 class="text-lg font-diary-body font-bold text-text line-clamp-1 mb-1" title="{{ $ach->title }}">{{ $ach->title }}</h3>
                                     <div class="mt-auto space-y-2">
-                                        <div class="flex justify-between items-center text-xs font-diary-body text-stone-600">
+                                        <div class="flex justify-between items-center text-xs font-diary-body text-stone-500">
                                             <span class="truncate"><i class="fa-solid fa-building mr-1.5 opacity-60"></i>{{ $ach->issuer ?? 'Anonim' }}</span>
                                             <span class="whitespace-nowrap"><i class="fa-regular fa-calendar mr-1.5 opacity-60"></i>{{ $ach->date ? \Carbon\Carbon::parse($ach->date)->format('M Y') : 'Unknown' }}</span>
                                         </div>
                                         <div class="flex justify-between items-center pt-3 border-t border-dashed border-stone-300">
-                                            <span class="text-[10px] font-bold uppercase tracking-widest text-stone-500 bg-stone-200/50 px-2 py-1 rounded">
+                                            <span class="text-[10px] font-bold uppercase tracking-widest text-text bg-stone-200/50 px-2 py-1 rounded">
                                                 {{ $ach->projects_count }} Proyek
                                             </span>
                                         </div>
