@@ -23,10 +23,15 @@
         </button>
 
         <div class="px-8 pt-16 pb-6 md:px-12 relative z-10">
-            <div class="flex items-center gap-3 mb-3 text-stone-500 font-diary-accent text-xl">
-                 <span id="detailIssuer" class="text-stone-800"></span>
-                 <span class="text-stone-300 font-serif">~</span>
-                 <span id="detailDate" class="text-stone-500 italic"></span>
+            <div class="flex items-center gap-3 mb-3 text-stone-500 font-diary-accent text-xl flex-wrap">
+                <span id="detailIssuer" class="text-stone-800"></span>
+                <span class="text-stone-300 font-serif">~</span>
+                <span id="detailDate" class="text-stone-500 italic"></span>
+
+                <!-- Visibility Badge -->
+                <span id="detailVisibility"
+                    class="ml-2 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded border">
+                </span>
             </div>
             <h2 id="detailTitle" class="text-3xl md:text-4xl font-diary-body font-bold text-stone-900 leading-tight"></h2>
         </div>

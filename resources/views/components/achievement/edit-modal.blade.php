@@ -71,6 +71,28 @@
                     </div>
                 </div>
 
+                <div>
+                    <label class="font-diary-accent text-xl text-stone-500 mb-2 block">
+                        Visibility
+                    </label>
+
+                    <div class="flex gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="visibility" value="public"
+                                class="accent-stone-800"
+                                id="editVisibilityPublic">
+                            <span class="font-diary-body text-sm">Public</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="visibility" value="private"
+                                class="accent-stone-800"
+                                id="editVisibilityPrivate">
+                            <span class="font-diary-body text-sm">Private</span>
+                        </label>
+                    </div>
+                </div>
+
 
                 <div>
                     <p class="font-diary-accent text-xl text-stone-500 mb-2">Gambar / Sertifikat (Max 10MB)</p>

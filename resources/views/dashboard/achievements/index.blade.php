@@ -116,7 +116,17 @@
                              data-date-raw="{{ $ach->date ? \Carbon\Carbon::parse($ach->date)->format('Y-m-d') : '' }}"
                              data-date-formatted="{{ $ach->date ? \Carbon\Carbon::parse($ach->date)->format('M Y') : 'Unknown' }}"
                              data-image="{{ $ach->image_url ? asset('storage/'.$ach->image_url) : '' }}"
-                             data-projects-count="{{ $ach->projects_count }}">
+                             data-projects-count="{{ $ach->projects_count }}"
+                             data-visibility="{{ $ach->visibility }}">
+
+                            <div class="absolute top-4 right-4 z-30">
+                                <span class="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded border
+                                    {{ $ach->visibility === 'public'
+                                        ? 'bg-green-100 text-green-700 border-green-400'
+                                        : 'bg-rose-200 text-rose-600 border-rose-400' }}">
+                                    {{ $ach->visibility === 'public' ? 'PUBLIC' : 'PRIVATE' }}
+                                </span>
+                            </div>
 
                             <!-- Bulk Checkbox -->
                             <div class="absolute top-4 left-4 z-30 {{ $isBulk ? '' : 'opacity-0 pointer-events-none' }} transition-opacity duration-300 bulk-check-container">
@@ -699,6 +709,20 @@
                 document.getElementById('detailDate').textContent = dataset.dateFormatted;
                 document.getElementById('detailProjectsCount').textContent = `${dataset.projectsCount} Proyek`;
 
+                const visibilityEl = document.getElementById('detailVisibility');
+
+                if (visibilityEl) {
+                    const visibility = dataset.visibility;
+
+                    visibilityEl.textContent = visibility === 'public' ? 'PUBLIC' : 'PRIVATE';
+
+                    visibilityEl.className =
+                        'ml-2 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded border ' +
+                        (visibility === 'public'
+                            ? 'bg-green-100 text-green-700 border-green-400'
+                            : 'bg-stone-200 text-stone-600 border-stone-400');
+                }
+
                 const imgEl = document.getElementById('detailImage');
                 const imgContainer = document.getElementById('detailImageContainer');
                 if(dataset.image) {
@@ -721,6 +745,13 @@
                         document.getElementById('editAchievementTitle').value = dataset.title;
                         document.getElementById('editAchievementIssuer').value = dataset.issuer;
                         document.getElementById('editAchievementDate').value = dataset.dateRaw;
+                        const visibility = dataset.visibility;
+
+                        if (visibility === 'private') {
+                            document.getElementById('editVisibilityPrivate').checked = true;
+                        } else {
+                            document.getElementById('editVisibilityPublic').checked = true;
+                        }
 
                         const form = document.getElementById('editAchievementForm');
                         form.action = '/dashboard/achievements/' + dataset.id;

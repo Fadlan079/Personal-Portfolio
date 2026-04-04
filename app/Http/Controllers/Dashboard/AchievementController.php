@@ -53,7 +53,8 @@ class AchievementController extends Controller
             'issuer' => 'nullable|string|max:255',
             'date' => 'nullable|date',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:10240', // 10MB max
+            'image' => 'nullable|image|max:10240',
+            'visibility' => 'required|in:public,private',
         ]);
 
         if ($request->hasFile('image')) {
@@ -78,6 +79,7 @@ class AchievementController extends Controller
             'date' => 'nullable|date',
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:10240',
+            'visibility' => 'required|in:public,private',
         ]);
 
         if ($request->hasFile('image')) {

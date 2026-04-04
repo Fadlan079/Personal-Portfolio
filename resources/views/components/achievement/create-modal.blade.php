@@ -71,6 +71,29 @@
                         @error('date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
+                <div>
+                    <p class="text-xl text-stone-500 mb-2">
+                        Visibilitas <span class="text-red-500">*</span>
+                    </p>
+
+                    <div class="flex gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="visibility" value="public" checked
+                                class="accent-stone-800">
+                            <span class="font-diary-body text-sm text-stone-700">Public</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="visibility" value="private"
+                                class="accent-stone-800">
+                            <span class="font-diary-body text-sm text-stone-700">Private</span>
+                        </label>
+                    </div>
+
+                    @error('visibility')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
 
                 <div>

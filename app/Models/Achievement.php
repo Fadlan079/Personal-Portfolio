@@ -14,12 +14,17 @@ class Achievement extends Model
         'issuer',
         'date',
         'image_url',
+        'visibility',
     ];
 
     protected $casts = [
         'date' => 'date',
     ];
 
+    public function scopePublic($query)
+    {
+        return $query->where('visibility', 'public');
+    }
     public function projects()
     {
         return $this->belongsToMany(Project::class);
