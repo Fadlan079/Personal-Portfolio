@@ -75,7 +75,7 @@
 
     <div id="page-content-wrapper" class="w-full min-h-screen flex flex-col">
 
-        <main id="content" class="relative z-10 flex-1">
+        <main id="content" class="relative flex-1">
             @if (!auth()->check())
                 <a href="/login"
                 class="hidden md:flex absolute -top-6 right-1 lg:right-8 z-50 flex-col items-center px-4 pt-12 pb-4 bg-[#E7F2FF] border-x border-b border-[#BDE0FE] text-blue-900 shadow-[2px_4px_8px_rgba(0,0,0,0.06)] rotate-[3deg] origin-top hover:rotate-0 hover:translate-y-4 transition-all duration-300 group rounded-b-md cursor-pointer">

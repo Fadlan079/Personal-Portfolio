@@ -25,7 +25,8 @@
 
             @forelse($achievements as $index => $ach)
 
-                <div class="bg-[#FCFAEF] border border-stone-300 rounded-sm shadow-sm p-5 relative group hover:-translate-y-2 hover:shadow-[8px_8px_25px_rgba(0,0,0,0.12)] hover:z-20 transition-all duration-300 transform hover:rotate-0 flex flex-col h-full">
+                <div class="bg-[#FCFAEF] border border-stone-300 rounded-sm shadow-sm p-5 relative group hover:-translate-y-2 hover:shadow-[8px_8px_25px_rgba(0,0,0,0.12)] hover:z-20 transition-all duration-300 transform hover:rotate-0 flex flex-col h-full"
+                data-image="{{ $ach->image_url ? asset('storage/'.$ach->image_url) : '' }}">
 
                     <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-10 rotate-12 pointer-events-none sticky-note-tape" style="clip-path: inset(0 0 50% 0);"></div>
                     <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-0 rotate-12 pointer-events-none sticky-note-tape"></div>
@@ -123,49 +124,168 @@
     </div>
 </section>
 
+<div id="imageLightbox"
+     class="fixed inset-0 z-70 hidden items-center justify-center bg-black/80 backdrop-blur-sm">
+
+    <button id="lightboxClose"
+            class="absolute top-6 right-6 md:top-8 md:right-8 text-stone-400 hover:text-[#FCFAEF] transition-colors z-50 text-3xl font-light">
+        ✕
+    </button>
+
+    <button id="lightboxPrev"
+            class="hidden absolute left-4 md:left-8 z-50 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#FCFAEF] text-stone-800 hover:bg-stone-200 transition-all hover:-translate-x-1 shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-stone-300">
+        <i class="fa-solid fa-chevron-left text-lg md:text-xl relative -left-0.5"></i>
+    </button>
+
+    <button id="lightboxNext"
+            class="hidden absolute right-4 md:right-8 z-50 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#FCFAEF] text-stone-800 hover:bg-stone-200 transition-all hover:translate-x-1 shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-stone-300">
+        <i class="fa-solid fa-chevron-right text-lg md:text-xl relative -right-0.5"></i>
+    </button>
+
+    <img id="lightboxImage"
+         class="max-w-[90vw] max-h-[85vh] object-contain rounded shadow-lg">
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
     const container = document.getElementById('achievements-container');
+    const lightbox = document.getElementById('imageLightbox');
+    const img = document.getElementById('lightboxImage');
+    const btnPrev = document.getElementById('lightboxPrev');
+    const btnNext = document.getElementById('lightboxNext');
+    const btnClose = document.getElementById('lightboxClose');
+
     if (!container) return;
 
+    let images = [];
+    let currentIndex = 0;
+
+    // =========================
+    // COLLECT IMAGES
+    // =========================
+    function refreshImages() {
+        images = [...container.querySelectorAll('[data-image]')]
+            .map(el => el.dataset.image)
+            .filter(src => src && src.trim() !== '');
+    }
+
+    function showImage(index) {
+        if (!images.length) return;
+
+        currentIndex = index;
+        img.src = images[currentIndex];
+
+        btnPrev.style.display = currentIndex > 0 ? 'flex' : 'none';
+        btnNext.style.display = currentIndex < images.length - 1 ? 'flex' : 'none';
+    }
+
+    // =========================
+    // MAIN CLICK HANDLER
+    // =========================
     container.addEventListener('click', async function(e) {
-        const link = e.target.closest('a[href]');
-        if (!link) return;
 
-        const url = new URL(link.href);
+        // =====================
+        // 1. PAGINATION AJAX
+        // =====================
+        const paginationLink = e.target.closest('nav a[href]');
+        if (paginationLink) {
+            const url = new URL(paginationLink.href);
 
-        // hanya intercept pagination
-        if (!url.searchParams.has('page')) return;
+            if (!url.searchParams.has('page')) return;
 
-        e.preventDefault();
+            e.preventDefault();
 
+            try {
+                container.style.opacity = '0.5';
+                container.style.pointerEvents = 'none';
+
+                const response = await fetch(url.toString(), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed request');
+
+                const html = await response.text();
+
+                container.innerHTML = html;
+
+                window.history.pushState({}, '', url);
+
+            } catch (err) {
+                console.error('Pagination AJAX error:', err);
+            } finally {
+                container.style.opacity = '';
+                container.style.pointerEvents = '';
+            }
+
+            return; // ⛔ stop supaya ga lanjut ke lightbox
+        }
+
+        // =====================
+        // 2. LIGHTBOX OPEN
+        // =====================
+        const card = e.target.closest('[data-image]');
+        if (!card) return;
+
+        const image = card.dataset.image;
+        if (!image) return;
+
+        refreshImages();
+
+        const index = images.indexOf(image);
+        if (index === -1) return;
+
+        showImage(index);
+
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+    });
+
+    // =========================
+    // LIGHTBOX NAVIGATION
+    // =========================
+    btnPrev?.addEventListener('click', () => {
+        if (currentIndex > 0) showImage(currentIndex - 1);
+    });
+
+    btnNext?.addEventListener('click', () => {
+        if (currentIndex < images.length - 1) showImage(currentIndex + 1);
+    });
+
+    // =========================
+    // CLOSE LIGHTBOX
+    // =========================
+    btnClose?.addEventListener('click', () => {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+    });
+
+    lightbox?.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+        }
+    });
+
+    // =========================
+    // BACK BUTTON SUPPORT
+    // =========================
+    window.addEventListener('popstate', async () => {
         try {
-            // loading state
-            container.style.opacity = '0.5';
-            container.style.pointerEvents = 'none';
-
-            const response = await fetch(url.toString(), {
+            const response = await fetch(window.location.href, {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             });
 
-            if (!response.ok) throw new Error('Failed request');
-
             const html = await response.text();
-
-            // replace isi container
             container.innerHTML = html;
 
-            // update URL (biar back button jalan)
-            window.history.pushState({}, '', url);
-
         } catch (err) {
-            console.error('Pagination AJAX error:', err);
-        } finally {
-            container.style.opacity = '';
-            container.style.pointerEvents = '';
+            console.error('Popstate load error:', err);
         }
     });
 
