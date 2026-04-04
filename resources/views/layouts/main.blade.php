@@ -50,7 +50,7 @@
     <title>Fadlan | @yield('title')</title>
     <meta property="og:title" content="Fadlan | Portofolio">
     <meta property="og:description" content="Hai, saya siswa SMK TI Airlangga fokus full-stack web, mempelajari Laravel & Vue, serta eksplorasi teknologi baru.">
-    <meta property="og:image" content="{{ asset('thumbnail.png') }}">
+    <meta property="og:image" content="{{ asset('thumbnail.jpg') }}">
     <meta property="og:url" content="https://fadlan.f3bytes.my.id/">
     <meta property="og:type" content="website">
 
