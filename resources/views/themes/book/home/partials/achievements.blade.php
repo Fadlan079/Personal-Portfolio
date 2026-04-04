@@ -25,7 +25,7 @@
 
         @forelse($achievements as $index => $ach)
 
-            <div class="bg-[#FCFAEF] border border-stone-300 rounded-sm shadow-sm p-5 relative group hover:-translate-y-2 hover:shadow-[8px_8px_25px_rgba(0,0,0,0.12)] hover:z-20 transition-all duration-300 transform {{ $rotation }} hover:rotate-0 flex flex-col h-full">
+            <div class="bg-[#FCFAEF] border border-stone-300 rounded-sm shadow-sm p-5 relative group hover:-translate-y-2 hover:shadow-[8px_8px_25px_rgba(0,0,0,0.12)] hover:z-20 transition-all duration-300 transform hover:rotate-0 flex flex-col h-full">
 
                 <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-10 rotate-12 pointer-events-none sticky-note-tape" style="clip-path: inset(0 0 50% 0);"></div>
                 <div class="absolute -top-3 left-6 w-8 h-10 border-2 border-stone-400/60 rounded-full z-0 rotate-12 pointer-events-none sticky-note-tape"></div>
