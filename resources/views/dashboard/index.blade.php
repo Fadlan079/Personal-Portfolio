@@ -142,6 +142,81 @@
             </div>
         </div>
 
+        {{-- ─── Engagement Analytics Charts ─── --}}
+        <div class="bg-surface border-2 border-dashed border-border shadow-sm rounded-2xl p-5 md:p-8 space-y-6 font-sans relative">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-muted opacity-20 backdrop-blur-sm rotate-1" style="clip-path: polygon(5% 0, 100% 5%, 95% 100%, 0 95%); z-index: 10;"></div>
+
+            <div class="flex items-center justify-between border-b-2 border-dashed border-border/50 pb-4">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-text flex items-center gap-2">
+                    <i class="fa-solid fa-chart-bar text-rose-400"></i>
+                    Analitik Keterlibatan
+                </h3>
+                <span class="text-[9px] font-mono text-muted italic">Data real-time dari interaksi pengunjung</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+
+                {{-- 1. Top Projects by Likes --}}
+                <div class="bg-container/60 rounded-lg border border-border/70 p-4 space-y-3 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-red-500/5 pointer-events-none"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-1.5 border-l-2 border-red-400 pl-2.5">
+                        <i class="fa-solid fa-heart text-red-400"></i> Top by Likes
+                    </p>
+                    <p class="text-[8px] text-muted/60 font-mono -mt-2">Popularitas proyek</p>
+                    <div class="h-44 relative">
+                        <canvas id="chartTopLikes"></canvas>
+                    </div>
+                </div>
+
+                {{-- 2. Top Projects by Comments --}}
+                <div class="bg-container/60 rounded-lg border border-border/70 p-4 space-y-3 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-indigo-500/5 pointer-events-none"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-1.5 border-l-2 border-indigo-400 pl-2.5">
+                        <i class="fa-solid fa-comments text-indigo-400"></i> Top by Komentar
+                    </p>
+                    <p class="text-[8px] text-muted/60 font-mono -mt-2">Kedalaman engagement</p>
+                    <div class="h-44 relative">
+                        <canvas id="chartTopComments"></canvas>
+                    </div>
+                </div>
+
+                {{-- 3. Comments Over Time (30 days) --}}
+                <div class="bg-container/60 rounded-lg border border-border/70 p-4 space-y-3 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-sky-500/5 pointer-events-none"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-1.5 border-l-2 border-sky-400 pl-2.5">
+                        <i class="fa-solid fa-chart-line text-sky-400"></i> Aktivitas Komentar
+                    </p>
+                    <p class="text-[8px] text-muted/60 font-mono -mt-2">Tren 30 hari terakhir</p>
+                    <div class="h-44 relative">
+                        <canvas id="chartCommentsTime"></canvas>
+                    </div>
+                </div>
+
+                {{-- 4. Pinned vs Normal Comments --}}
+                <div class="bg-container/60 rounded-lg border border-border/70 p-4 space-y-3 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-amber-500/5 pointer-events-none"></div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-muted flex items-center gap-1.5 border-l-2 border-amber-400 pl-2.5">
+                        <i class="fa-solid fa-thumbtack text-amber-400"></i> Pin vs Normal
+                    </p>
+                    <p class="text-[8px] text-muted/60 font-mono -mt-2">Moderasi komentar</p>
+                    <div class="h-32 flex items-center justify-center">
+                        <canvas id="chartPinnedVsNormal"></canvas>
+                    </div>
+                    <div class="flex justify-center gap-4 text-[9px] font-bold uppercase tracking-wider pt-1">
+                        <span class="flex items-center gap-1.5 text-amber-600">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span>
+                            Disematkan ({{ $pinnedVsNormalChart['pinned'] }})
+                        </span>
+                        <span class="flex items-center gap-1.5 text-muted">
+                            <span class="w-2 h-2 rounded-full bg-slate-400 inline-block"></span>
+                            Normal ({{ $pinnedVsNormalChart['normal'] }})
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <div class="space-y-16 pt-4">
             <div class="w-full max-w-5xl mx-auto" x-data="{
                     currentProject: 0,
@@ -442,4 +517,139 @@
     .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-muted); border-radius: 0px; opacity: 0.5; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--color-text); }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    Chart.defaults.color = '#71717a';
+    Chart.defaults.font.family = 'monospace';
+    Chart.defaults.font.size = 10;
+
+    const tooltipCfg = {
+        backgroundColor: 'rgba(10,10,10,0.88)',
+        titleFont: { family: 'monospace', size: 11 },
+        bodyFont:  { family: 'monospace', size: 10 },
+        borderColor: 'rgba(245,158,11,0.4)',
+        borderWidth: 1,
+        cornerRadius: 2,
+        padding: 8
+    };
+    const gridCfg = { color: 'rgba(120,120,120,0.08)', tickColor: 'transparent' };
+
+    // ── 1. Top Projects by Likes ──────────────────────────────
+    const likesData = @json($topLikesChart);
+    new Chart(document.getElementById('chartTopLikes'), {
+        type: 'bar',
+        data: {
+            labels: likesData.labels,
+            datasets: [{
+                label: 'Likes',
+                data: likesData.data,
+                backgroundColor: 'rgba(239,68,68,0.25)',
+                borderColor: 'rgba(239,68,68,0.8)',
+                borderWidth: 1.5,
+                borderRadius: 3,
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: tooltipCfg },
+            scales: {
+                x: { grid: gridCfg, beginAtZero: true, ticks: { precision: 0 } },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+
+    // ── 2. Top Projects by Comments ───────────────────────────
+    const commentsData = @json($topCommentsChart);
+    new Chart(document.getElementById('chartTopComments'), {
+        type: 'bar',
+        data: {
+            labels: commentsData.labels,
+            datasets: [{
+                label: 'Komentar',
+                data: commentsData.data,
+                backgroundColor: 'rgba(99,102,241,0.25)',
+                borderColor: 'rgba(99,102,241,0.8)',
+                borderWidth: 1.5,
+                borderRadius: 3,
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: tooltipCfg },
+            scales: {
+                x: { grid: gridCfg, beginAtZero: true, ticks: { precision: 0 } },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+
+    // ── 3. Comments Over Time ─────────────────────────────────
+    const timeData = @json($commentsOverTimeChart);
+    // Show every 5th label to avoid clutter on 30-day view
+    const sparseLabels = timeData.labels.map((l, i) => i % 5 === 0 ? l : '');
+    new Chart(document.getElementById('chartCommentsTime'), {
+        type: 'line',
+        data: {
+            labels: timeData.labels,
+            datasets: [{
+                label: 'Komentar',
+                data: timeData.data,
+                borderColor: 'rgba(14,165,233,0.9)',
+                backgroundColor: 'rgba(14,165,233,0.08)',
+                borderWidth: 1.5,
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: tooltipCfg },
+            scales: {
+                x: {
+                    grid: gridCfg,
+                    ticks: {
+                        callback: (_, i) => sparseLabels[i],
+                        maxRotation: 0
+                    }
+                },
+                y: { grid: gridCfg, beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+
+    // ── 4. Pinned vs Normal Comments ──────────────────────────
+    const pinnedData = @json($pinnedVsNormalChart);
+    new Chart(document.getElementById('chartPinnedVsNormal'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Disematkan', 'Normal'],
+            datasets: [{
+                data: [pinnedData.pinned, pinnedData.normal],
+                backgroundColor: ['rgba(245,158,11,0.7)', 'rgba(148,163,184,0.4)'],
+                borderColor:     ['rgba(245,158,11,1)',   'rgba(148,163,184,0.6)'],
+                borderWidth: 1.5,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+                legend: { display: false },
+                tooltip: tooltipCfg
+            }
+        }
+    });
+});
+</script>
 @endpush

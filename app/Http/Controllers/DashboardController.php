@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Contact;
 use App\Models\Skill;
+use App\Models\ProjectComment;
 
 class DashboardController extends Controller
 {
@@ -59,6 +60,55 @@ class DashboardController extends Controller
         arsort($monthTechCounts);
         $topTechStackMonth = array_key_first($monthTechCounts) ?? '-';
 
+        // --- Engagement Charts Data ---
+
+        // 1. Top 5 Projects by Likes
+        $topByLikes = Project::withCount('likes')
+            ->orderByDesc('likes_count')
+            ->limit(5)
+            ->get(['id', 'title']);
+        $topLikesChart = [
+            'labels' => $topByLikes->pluck('title')->map(fn($t) => strlen($t) > 18 ? substr($t, 0, 18).'…' : $t)->toArray(),
+            'data'   => $topByLikes->pluck('likes_count')->toArray(),
+        ];
+
+        // 2. Top 5 Projects by Comments
+        $topByComments = Project::withCount('comments')
+            ->orderByDesc('comments_count')
+            ->limit(5)
+            ->get(['id', 'title']);
+        $topCommentsChart = [
+            'labels' => $topByComments->pluck('title')->map(fn($t) => strlen($t) > 18 ? substr($t, 0, 18).'…' : $t)->toArray(),
+            'data'   => $topByComments->pluck('comments_count')->toArray(),
+        ];
+
+        // 3. Comments Over Time (last 30 days)
+        $commentsOverTime = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $day = now()->subDays($i);
+            $commentsOverTime[$day->format('M d')] = 0;
+        }
+        ProjectComment::where('created_at', '>=', now()->subDays(30))
+            ->get(['created_at'])
+            ->each(function ($c) use (&$commentsOverTime) {
+                $key = $c->created_at->format('M d');
+                if (isset($commentsOverTime[$key])) {
+                    $commentsOverTime[$key]++;
+                }
+            });
+        $commentsOverTimeChart = [
+            'labels' => array_keys($commentsOverTime),
+            'data'   => array_values($commentsOverTime),
+        ];
+
+        // 4. Pinned vs Normal Comments
+        $pinnedCount  = ProjectComment::where('is_pinned', true)->count();
+        $normalCount  = ProjectComment::where('is_pinned', false)->orWhereNull('is_pinned')->count();
+        $pinnedVsNormalChart = [
+            'pinned' => $pinnedCount,
+            'normal' => $normalCount,
+        ];
+
         return view('dashboard.index', [
             'recentProjects' => $recentProjects,
             'latestProject' => $latestProject,
@@ -74,6 +124,11 @@ class DashboardController extends Controller
             'topSkillIcon' => $topSkillIcon,
             'topSkillColor' => $topSkillColor,
             'topSkillCount' => $topSkillCount,
+            // Engagement Charts
+            'topLikesChart' => $topLikesChart,
+            'topCommentsChart' => $topCommentsChart,
+            'commentsOverTimeChart' => $commentsOverTimeChart,
+            'pinnedVsNormalChart' => $pinnedVsNormalChart,
         ]);
     }
 }
