@@ -41,9 +41,15 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        try {
+            event(new Registered($user));
 
-        return redirect()->route('login')
-            ->with('success', 'Registrasi berhasil. Silakan periksa kotak masuk/spam email Anda untuk memverifikasi akun sebelum login.');
+            return redirect()->route('login')
+                ->with('success', 'Registrasi berhasil. Silakan periksa kotak masuk/spam email Anda untuk memverifikasi akun sebelum login.');
+        } catch (\Exception $e) {
+            return redirect()->route('login')
+                ->with('error', 'Registrasi berhasil, namun sistem GAGAL mengirim email karena masalah server (SMTP Error): ' . $e->getMessage())
+                ->with('unverified_email', $user->email);
+        }
     }
 }

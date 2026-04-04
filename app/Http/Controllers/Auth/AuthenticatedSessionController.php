@@ -33,7 +33,9 @@ class AuthenticatedSessionController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('login')->with('error', 'Silakan cek kotak masuk/spam email Anda untuk memverifikasi akun sebelum login.');
+            return redirect()->route('login')
+                ->with('error', 'Akun Anda belum diverifikasi. Silakan periksa email, atau tekan tombol kirim ulang.')
+                ->with('unverified_email', $user->email);
         }
 
         $request->session()->regenerate();

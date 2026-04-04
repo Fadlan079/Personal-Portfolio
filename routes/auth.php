@@ -39,6 +39,9 @@ Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, 'verifyCus
     ->middleware(['signed', 'throttle:6,1'])
     ->name('verification.verify');
 
+Route::post('guest/verify-email-resend', [EmailVerificationNotificationController::class, 'resendGuest'])
+    ->name('verification.guest.send');
+
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');

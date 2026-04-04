@@ -26,10 +26,31 @@
 
         <i class="fa-solid fa-paperclip absolute top-6 -left-3 text-muted text-xl -rotate-12 opacity-60 pointer-events-none"></i>
 
-        <div class="mb-8 text-center">
+        <div class="mb-4 text-center">
             <h1 class="text-3xl font-bold mb-2 text-text">Login</h1>
             <p class="text-sm font-sans text-muted" data-i18n="login.subtitle"></p>
         </div>
+
+        {{-- INLINE NOTIFICATION AREA --}}
+        @if (session('success') || session('error'))
+            <div class="mb-6 px-4 py-3 border-2 border-dashed flex flex-col gap-2 {{ session('error') ? 'bg-red-50 border-red-300 text-red-700' : 'bg-stone-50 border-stone-300 text-stone-700' }}">
+                <div class="flex items-start gap-2.5">
+                    <i class="fa-solid {{ session('error') ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-check text-green-600' }} mt-0.5"></i>
+                    <p class="text-[13px] font-bold font-sans leading-relaxed">{{ session('success') ?? session('error') }}</p>
+                </div>
+                
+                @if (session('unverified_email'))
+                    <form method="POST" action="{{ route('verification.guest.send') }}" class="mt-1 ml-6">
+                        @csrf
+                        <input type="hidden" name="email" value="{{ session('unverified_email') }}">
+                        <button type="submit" class="group relative inline-flex items-center gap-2 text-[11px] font-bold font-serif uppercase tracking-wider text-stone-800 hover:text-stone-900 transition-colors">
+                            <span class="underline decoration-dashed underline-offset-4 decoration-stone-400 group-hover:decoration-stone-800">Kirim Ulang Aktivasi</span>
+                            <i class="fa-solid fa-paper-plane text-[9px] group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </form>
+                @endif
+            </div>
+        @endif
 
         <form method="POST" action="{{ route('login') }}" class="space-y-6 font-sans">
             @csrf
