@@ -19,7 +19,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $recentProjects = Project::public()->recent(5)->with('achievements')->get();
+        $recentProjects = Project::withCount('achievements')->latest()->take(5)->get();
 
         $achievements = \App\Models\Achievement::public()->withCount('projects')
         ->latest()

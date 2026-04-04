@@ -97,6 +97,17 @@
                                     </p>
                                 </div>
 
+                                @if(($project->achievements_count ?? $project->achievements?->count()) > 0)
+                                    <div class="mb-3">
+                                        <span class="inline-flex items-center gap-1.5 text-[9px] text-yellow-700 bg-[var(--color-warning)]/20 px-2 py-1 rounded-sm border border-[var(--color-warning)]/50 shadow-sm uppercase tracking-wider font-bold">
+                                            <i class="fa-solid fa-trophy text-yellow-600"></i>
+                                            <span>
+                                                +{{ $project->achievements_count ?? $project->achievements->count() }} Pencapaian
+                                            </span>
+                                        </span>
+                                    </div>
+                                @endif
+
                                 <div class="relative z-10 flex items-center justify-between mt-auto pt-4 md:pt-6 border-t border-[var(--color-border)]">
                                     <a href="{{ route('portofolio.projects', ['search' => $project->title]) }}"
                                         class="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)] hover:opacity-80 flex items-center gap-2 group/btn"
