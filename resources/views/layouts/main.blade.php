@@ -48,6 +48,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <title>Fadlan | @yield('title')</title>
+    <meta property="og:title" content="Fadlan | Portofolio">
+    <meta property="og:description" content="Hai, saya siswa SMK TI Airlangga fokus full-stack web, mempelajari Laravel & Vue, serta eksplorasi teknologi baru.">
+    <meta property="og:image" content="{{ asset('thumbnail.png') }}">
+    <meta property="og:url" content="https://fadlan.f3bytes.my.id/">
+    <meta property="og:type" content="website">
 
     <style>
         html { scroll-behavior: smooth; }
