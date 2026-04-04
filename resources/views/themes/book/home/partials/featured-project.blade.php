@@ -108,6 +108,17 @@
                                     </div>
                                 @endif
 
+                                <div class="flex items-center gap-3 text-[10px] text-[var(--color-muted)] font-bold mb-2">
+                                    <div class="flex items-center gap-1.5" title="Disukai">
+                                        <i class="fa-heart {{ ($project->likes_count ?? 0) > 0 ? 'fa-solid text-red-500/70' : 'fa-regular' }}"></i>
+                                        <span>{{ $project->likes_count ?? 0 }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5" title="Komentar">
+                                        <i class="fa-comment {{ ($project->comments_count ?? 0) > 0 ? 'fa-solid text-[var(--color-text)]/60' : 'fa-regular' }}"></i>
+                                        <span>{{ $project->comments_count ?? 0 }}</span>
+                                    </div>
+                                </div>
+
                                 <div class="relative z-10 flex items-center justify-between mt-auto pt-4 md:pt-6 border-t border-[var(--color-border)]">
                                     <a href="{{ route('portofolio.projects', ['search' => $project->title]) }}"
                                         class="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)] hover:opacity-80 flex items-center gap-2 group/btn"

@@ -11,7 +11,7 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Project::query()->with('achievements');
+        $query = Project::query()->with('achievements')->withCount(['likes', 'comments']);
 
         if ($request->filled('search')) {
             $query->search($request->search);

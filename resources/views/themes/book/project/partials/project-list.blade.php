@@ -76,18 +76,26 @@
 
                         <div class="pt-3 border-t border-border/50 flex flex-col gap-2 mt-auto">
                             @if($project->achievements && $project->achievements->count() > 0)
-                                <div class="flex items-center gap-1.5 text-[9px] text-yellow-700 bg-warning/20 px-2 py-0.5 rounded-sm border border-warning/50 w-fit shadow-sm uppercase tracking-wider font-bold">
+                                <div class="flex items-center gap-1.5 text-[9px] text-yellow-700 bg-warning/20 px-2 py-0.5 rounded-sm border border-warning/50 w-fit shadow-sm uppercase tracking-wider font-bold mb-1">
                                     <i class="fa-solid fa-trophy text-yellow-600"></i>
                                     <span>+{{ $project->achievements->count() }} Pencapaian</span>
                                 </div>
                             @endif
                             <div class="flex justify-between items-center w-full">
-                                <span class="text-[10px] font-medium text-muted italic">
-                                    Diarsipkan: {{ $project->created_at->format('d F Y') }}
-                                </span>
-
-                                <div class="w-8 h-8 rounded-full bg-bg flex items-center justify-center text-muted group-hover:bg-primary group-hover:text-white transition-all border border-border group-hover:border-primary shadow-sm">
-                                    <i class="fa-solid fa-arrow-right-long text-xs transform group-hover:translate-x-0.5 transition-transform"></i>
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                    <span class="text-[10px] font-medium text-muted italic">
+                                        Diarsipkan: {{ $project->created_at->format('d F Y') }}
+                                    </span>
+                                    <div class="flex items-center gap-2 text-[10px] text-muted font-bold border-l border-border/50 pl-3">
+                                        <div class="flex items-center gap-1">
+                                            <i class="fa-heart {{ ($project->likes_count ?? 0) > 0 ? 'fa-solid text-red-500/70' : 'fa-regular' }}"></i>
+                                            <span>{{ $project->likes_count ?? 0 }}</span>
+                                        </div>
+                                        <div class="flex items-center gap-1 ml-1">
+                                            <i class="fa-comment {{ ($project->comments_count ?? 0) > 0 ? 'fa-solid text-stone-500' : 'fa-regular' }}"></i>
+                                            <span>{{ $project->comments_count ?? 0 }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

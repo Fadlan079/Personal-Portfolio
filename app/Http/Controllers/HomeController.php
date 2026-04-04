@@ -19,7 +19,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $recentProjects = Project::public()->recent(5)->withCount('achievements')->get();
+        $recentProjects = Project::public()->recent(5)->withCount(['achievements', 'likes', 'comments'])->get();
 
         $achievements = \App\Models\Achievement::public()->withCount('projects')
         ->latest()
@@ -102,7 +102,7 @@ class HomeController extends Controller
 
     public function Showproject(Request $request)
     {
-        $query = Project::public()->with('achievements');
+        $query = Project::public()->with('achievements')->withCount(['likes', 'comments']);
 
         if ($request->filled('search')) {
             $query->search($request->search);
