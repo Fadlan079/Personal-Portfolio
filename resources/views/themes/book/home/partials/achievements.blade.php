@@ -159,9 +159,12 @@
             class="hidden absolute right-4 md:right-8 z-50 items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#FCFAEF] text-stone-800 hover:bg-stone-200 transition-all hover:translate-x-1 shadow-[0_4px_15px_rgba(0,0,0,0.3)] border border-stone-300">
         <i class="fa-solid fa-chevron-right text-lg md:text-xl relative -right-0.5"></i>
     </button>
-
-    <img id="lightboxImage"
-         class="max-w-[90vw] max-h-[85vh] object-contain rounded shadow-lg">
+    <div class="relative z-40 bg-[#FCFAEF] p-2 md:p-4 shadow-[0_12px_40px_rgba(0,0,0,0.5)] border border-stone-300">
+        <div class="absolute -top-3 left-1/2 w-16 h-6 bg-white/30 backdrop-blur-sm -translate-x-1/2 shadow-sm transform -rotate-2 border border-stone-200/50"></div>
+        
+        <img id="lightboxImage"
+            class="max-w-[90vw] max-h-[85vh] object-contain rounded shadow-lg">
+    </div>
 </div>
 
 <script>
