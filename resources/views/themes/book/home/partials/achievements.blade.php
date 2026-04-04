@@ -1,13 +1,3 @@
- @php
-    $cardRotations = [
-        'md:-rotate-1',
-        'md:rotate-2',
-        'md:-rotate-1',
-        'md:rotate-1',
-        'md:-rotate-2'  
-    ];
-@endphp
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap');
 
@@ -34,9 +24,6 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-14 pt-6 mt-4">
 
         @forelse($achievements as $index => $ach)
-            @php
-                $rotation = $cardRotations[$index % count($cardRotations)];
-            @endphp
 
             <div class="bg-[#FCFAEF] border border-stone-300 rounded-sm shadow-sm p-5 relative group hover:-translate-y-2 hover:shadow-[8px_8px_25px_rgba(0,0,0,0.12)] hover:z-20 transition-all duration-300 transform {{ $rotation }} hover:rotate-0 flex flex-col h-full">
 
