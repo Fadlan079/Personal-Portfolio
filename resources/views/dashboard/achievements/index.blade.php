@@ -716,17 +716,67 @@
                     // Find the existing edit button for this achievement to reuse its logic or just trigger it
                     editBtn.onclick = () => {
                         window.closeDetailModal();
-                        // Trigger the regular edit logic
-                        const actualEditBtn = el.querySelector('.edit-achievement-btn');
-                        if(actualEditBtn) actualEditBtn.click();
+
+                        document.getElementById('editAchievementId').value = dataset.id;
+                        document.getElementById('editAchievementTitle').value = dataset.title;
+                        document.getElementById('editAchievementIssuer').value = dataset.issuer;
+                        document.getElementById('editAchievementDate').value = dataset.dateRaw;
+
+                        const form = document.getElementById('editAchievementForm');
+                        form.action = '/dashboard/achievements/' + dataset.id;
+
+                        openModal(document.getElementById('editAchievementModal'));
                     };
                 }
 
                 if(deleteBtn) {
                     deleteBtn.onclick = () => {
                         window.closeDetailModal();
-                        const actualDeleteBtn = el.querySelector('.delete-achievement-btn');
-                        if(actualDeleteBtn) actualDeleteBtn.click();
+
+                        const id = dataset.id;
+
+                        const confirmModal = document.getElementById('confirm-modal');
+                        const confirmYes = document.getElementById('confirm-yes');
+                        const confirmCancel = document.getElementById('confirm-cancel');
+                        const confirmMessage = document.getElementById('confirm-message');
+                        const confirmBox = document.getElementById('confirm-box');
+
+                        if (confirmModal && confirmYes && confirmCancel) {
+                            if (confirmMessage) {
+                                confirmMessage.textContent = 'Apakah Anda yakin ingin menghapus pencapaian ini secara permanen?';
+                            }
+
+                            // Reset listener
+                            const newYes = confirmYes.cloneNode(true);
+                            const newCancel = confirmCancel.cloneNode(true);
+                            confirmYes.parentNode.replaceChild(newYes, confirmYes);
+                            confirmCancel.parentNode.replaceChild(newCancel, confirmCancel);
+
+                            // Show modal
+                            confirmModal.classList.remove('opacity-0', 'pointer-events-none');
+                            confirmModal.classList.add('opacity-100', 'pointer-events-auto');
+
+                            const cleanup = () => {
+                                confirmModal.classList.add('opacity-0', 'pointer-events-none');
+                                confirmModal.classList.remove('opacity-100', 'pointer-events-auto');
+                            };
+
+                            newYes.addEventListener('click', () => {
+                                const form = document.getElementById('deleteAchievementForm');
+                                form.action = `/dashboard/achievements/${id}`;
+                                form.submit();
+                                cleanup();
+                            });
+
+                            newCancel.addEventListener('click', cleanup);
+                        } else {
+                            // fallback
+                            if (confirm('Yakin ingin menghapus?')) {
+                                const form = document.getElementById('deleteAchievementForm');
+                                form.action = `/dashboard/achievements/${id}`;
+                                form.submit();
+                            }
+                        }
                     };
                 }
 

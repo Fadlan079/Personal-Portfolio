@@ -40,7 +40,7 @@
         </button>
 
         <div class="px-8 pt-12 pb-4 md:px-12 relative z-10">
-            <div class="flex items-center gap-3 mb-2 font-diary-accent text-xl">
+            <div class="flex items-center gap-3 mb-2 text-xl">
                 <span class="text-stone-500 transform rotate-1">Pencapaian Baru</span>
             </div>
         </div>
@@ -53,20 +53,20 @@
             <div class="space-y-6">
 
                 <div>
-                    <p class="font-diary-accent text-xl text-stone-500 mb-1">Judul Pencapaian <span class="text-red-500">*</span></p>
+                    <p class="text-xl text-stone-500 mb-1">Judul Pencapaian <span class="text-red-500">*</span></p>
                     <input type="text" name="title" required placeholder="Sertifikat Web Developer..." class="w-full px-4 py-2 diary-input font-bold">
                     @error('title') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <p class="font-diary-accent text-xl text-stone-500 mb-1">Penerbit</p>
+                        <p class="text-xl text-stone-500 mb-1">Penerbit</p>
                         <input type="text" name="issuer" placeholder="Contoh: Google, Dicoding" class="w-full px-4 py-2 diary-input">
                         @error('issuer') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
-                        <p class="font-diary-accent text-xl text-stone-500 mb-1">Tanggal / Bulan</p>
+                        <p class="text-xl text-stone-500 mb-1">Tanggal / Bulan</p>
                         <input type="date" name="date" class="w-full px-4 py-2 diary-input">
                         @error('date') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
@@ -74,7 +74,7 @@
 
 
                 <div>
-                    <p class="font-diary-accent text-xl text-stone-500 mb-2">Gambar / Sertifikat (Max 10MB)</p>
+                    <p class="text-xl text-stone-500 mb-2">Gambar / Sertifikat (Max 10MB)</p>
 
                     <div class="relative border border-dashed border-stone-400 bg-white/30 rounded-sm p-6 text-center hover:bg-white/60 hover:border-stone-800 transition group cursor-pointer">
                         <input type="file" name="image" id="createAchievementImage" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" onchange="previewAchievementImage(event, 'previewCreateAchievement')">
