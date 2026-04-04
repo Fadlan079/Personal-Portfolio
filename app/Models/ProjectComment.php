@@ -11,6 +11,7 @@ class ProjectComment extends Model
         'project_id',
         'parent_id',
         'content',
+        'is_pinned',
     ];
 
     // RELATIONSHIPS
@@ -23,6 +24,11 @@ class ProjectComment extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(CommentLike::class);
     }
 
     // Reply ke comment ini

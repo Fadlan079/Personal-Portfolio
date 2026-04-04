@@ -86,4 +86,48 @@ class ProjectCommentController extends Controller
             ]
         ]);
     }
+
+    public function like($commentId)
+    {
+        $comment = ProjectComment::findOrFail($commentId);
+        $user = auth()->user();
+
+        $existingLike = \App\Models\CommentLike::where('user_id', $user->id)
+            ->where('project_comment_id', $comment->id)
+            ->first();
+
+        if ($existingLike) {
+            $existingLike->delete();
+            return response()->json(['success' => true, 'liked' => false]);
+        } else {
+            \App\Models\CommentLike::create([
+                'user_id' => $user->id,
+                'project_comment_id' => $comment->id
+            ]);
+            return response()->json(['success' => true, 'liked' => true]);
+        }
+    }
+
+    public function pin($commentId)
+    {
+        $comment = ProjectComment::findOrFail($commentId);
+        
+        // Hanya komentar utama yang bisa dipin
+        if ($comment->parent_id !== null) {
+            return response()->json(['success' => false, 'message' => 'Hanya komentar utama yang dapat disematkan.'], 400);
+        }
+
+        $comment->is_pinned = !$comment->is_pinned;
+        $comment->save();
+
+        return response()->json(['success' => true, 'is_pinned' => $comment->is_pinned]);
+    }
+
+    public function destroy($commentId)
+    {
+        $comment = ProjectComment::findOrFail($commentId);
+        $comment->delete();
+
+        return response()->json(['success' => true]);
+    }
 }

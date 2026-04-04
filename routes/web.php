@@ -138,6 +138,17 @@ Route::middleware(['auth', 'throttle:10,1'])->prefix('projects')->group(function
 
     Route::post('/{project}/reply', [ProjectCommentController::class, 'reply'])
         ->name('projects.reply');
+
+    Route::post('/comments/{comment}/like', [ProjectCommentController::class, 'like'])
+        ->name('comments.like');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::post('/comments/{comment}/pin', [ProjectCommentController::class, 'pin'])
+        ->name('comments.pin');
+
+    Route::delete('/comments/{comment}', [ProjectCommentController::class, 'destroy'])
+        ->name('comments.destroy');
 });
 
 Route::get('/api/lang/{locale}', function ($locale) {

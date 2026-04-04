@@ -211,6 +211,7 @@ const cancelReplyBtn = document.getElementById('cancelReplyBtn');
 
 let currentComments = [];
 let replyToId = null;
+let activeUserRole = 'guest';
 
 window.fetchInteractions = async function(projectId) {
     if(!btnLikeProject || !btnCommentProject) return;
@@ -243,6 +244,7 @@ window.fetchInteractions = async function(projectId) {
         btnLikeProject.classList.remove('opacity-50', 'cursor-default');
         btnCommentProject.classList.remove('opacity-50', 'cursor-default');
 
+        activeUserRole = data.active_user_role || 'guest';
         currentComments = data.comments;
         renderComments();
     } catch (err) {
@@ -262,9 +264,26 @@ function renderComments() {
     }
 
     currentComments.forEach(c => {
+        const adminControls = activeUserRole === 'admin' ? `
+            <button class="text-stone-400 hover:text-amber-600 transition-colors btn-pin ml-2" data-id="${c.id}" title="Pin Komentar">
+                <i class="fa-solid fa-thumbtack ${c.is_pinned ? 'text-amber-500' : ''}"></i>
+            </button>
+            <button class="text-stone-400 hover:text-red-500 transition-colors btn-delete ml-2" data-id="${c.id}" title="Hapus Komentar">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        ` : '';
+
+        const creatorLikedBadge = c.creator_liked ? `
+            <span class="px-1.5 py-px bg-red-50 text-red-500 text-[8px] font-bold rounded-sm uppercase tracking-wide border border-red-200 ml-1">
+                <i class="fa-solid fa-heart mr-0.5"></i> Disukai Creator
+            </span>
+        ` : '';
+
+        const likeBtnColor = c.user_liked ? 'text-red-500 fa-solid' : 'text-stone-400 fa-regular';
+
         const commentHTML = `
-            <div class="flex gap-4">
-                <img src="${c.user.profile_photo_url}" class="w-10 h-10 rounded-full object-cover shrink-0 border border-stone-300">
+            <div class="flex gap-4 ${c.is_pinned ? 'bg-amber-50/50 p-3 rounded-lg border border-amber-200/60' : ''}">
+                <img src="${c.user.profile_photo_url}" class="w-10 h-10 rounded-full object-cover shrink-0 border border-stone-300 shadow-sm">
                 <div class="flex-1 space-y-1">
                     <div class="flex items-center gap-2">
                         <span class="font-bold font-diary-body text-sm text-stone-800">${c.user.name}</span>
@@ -273,14 +292,38 @@ function renderComments() {
                                 Creator
                             </span>
                         ` : ''}
-                        <span class="text-xs text-stone-400 font-diary-body">${c.created_at}</span>
+                        ${creatorLikedBadge}
+                        <span class="text-[10px] text-stone-400 font-diary-body ml-auto">${c.created_at}</span>
+                        ${adminControls}
                     </div>
                     <p class="font-diary-body text-sm text-stone-600 leading-relaxed">${c.content}</p>
-                    <button class="text-xs font-bold text-stone-400 hover:text-stone-800 transition-colors btn-reply" data-id="${c.id}" data-name="${c.user.name}">Balas</button>
+                    
+                    <div class="flex items-center gap-4 mt-2">
+                        <button class="flex items-center gap-1.5 text-xs font-bold transition-colors btn-like-comment ${c.user_liked ? 'text-red-500' : 'text-stone-400 hover:text-red-500'}" data-id="${c.id}">
+                            <i class="fa-heart ${likeBtnColor}"></i>
+                            <span>${c.likes_count > 0 ? c.likes_count : 'Suka'}</span>
+                        </button>
+                        <button class="text-xs font-bold text-stone-400 hover:text-stone-800 transition-colors btn-reply" data-id="${c.id}" data-name="${c.user.name}">Balas</button>
+                    </div>
 
                     ${c.replies.length > 0 ? `
                         <div class="mt-4 space-y-4 border-l-2 border-stone-200 pl-4">
-                            ${c.replies.map(r => `
+                            ${c.replies.map(r => {
+                                const rCreatorBadge = r.creator_liked ? `
+                                    <span class="px-1.5 py-px bg-red-50 text-red-500 text-[8px] font-bold rounded-sm uppercase tracking-wide border border-red-200 ml-1">
+                                        <i class="fa-solid fa-heart mr-0.5"></i> Disukai Creator
+                                    </span>
+                                ` : '';
+                                
+                                const rAdminControls = activeUserRole === 'admin' ? `
+                                    <button class="text-stone-300 hover:text-red-500 transition-colors btn-delete ml-2" data-id="${r.id}" title="Hapus Balasan">
+                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                    </button>
+                                ` : '';
+
+                                const rLikeColor = r.user_liked ? 'text-red-500 fa-solid' : 'text-stone-400 fa-regular';
+
+                                return `
                                 <div class="flex gap-3">
                                     <img src="${r.user.profile_photo_url}" class="w-8 h-8 rounded-full object-cover shrink-0 border border-stone-300">
                                     <div class="flex-1 space-y-0.5">
@@ -289,12 +332,23 @@ function renderComments() {
                                             ${r.user.role === 'admin' ? '<span class="px-1.5 py-px bg-stone-800 text-[#FCFAEF] text-[8px] font-bold rounded-sm uppercase tracking-wide">Creator</span>' : ''}
                                             <i class="fa-solid fa-play text-[8px] mx-0.5 text-stone-300"></i>
                                             <span class="font-bold font-diary-body text-[11px] text-stone-500">${c.user.name}</span>
+                                            ${rCreatorBadge}
                                             <span class="text-[10px] text-stone-400 font-diary-body ml-auto">${r.created_at}</span>
+                                            ${rAdminControls}
                                         </div>
                                         <p class="font-diary-body text-sm text-stone-600 leading-relaxed">${r.content}</p>
+                                        
+                                        <div class="flex items-center gap-3 mt-1.5">
+                                            <button class="flex items-center gap-1.5 text-xs font-bold transition-colors btn-like-comment ${r.user_liked ? 'text-red-500' : 'text-stone-400 hover:text-red-500'}" data-id="${r.id}">
+                                                <i class="fa-heart ${rLikeColor}"></i>
+                                                <span class="text-[10px]">${r.likes_count > 0 ? r.likes_count : 'Suka'}</span>
+                                            </button>
+                                            <button class="text-[10px] font-bold text-stone-400 hover:text-stone-800 transition-colors btn-reply" data-id="${c.id}" data-name="${r.user.name}">Balas</button>
+                                        </div>
                                     </div>
                                 </div>
-                            `).join('')}
+                                `
+                            }).join('')}
                         </div>
                     ` : ''}
                 </div>
@@ -312,6 +366,61 @@ function renderComments() {
                 commentInput.focus();
             } else {
                 alert("Silakan login untuk membalas komentar.");
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-like-comment').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const commentId = btn.dataset.id;
+            try {
+                const csrf = document.querySelector('meta[name="csrf-token"]').content;
+                const res = await fetch(`/projects/comments/${commentId}/like`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                });
+                if(!res.ok) throw new Error();
+                window.fetchInteractions(detailModal.dataset.id);
+            } catch {
+                alert("Silakan login untuk menyukai komentar.");
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-pin').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const confirmed = await showConfirm('Ubah status Sematan pada komentar ini?');
+            if(!confirmed) return;
+            const commentId = btn.dataset.id;
+            try {
+                const csrf = document.querySelector('meta[name="csrf-token"]').content;
+                const res = await fetch(`/comments/${commentId}/pin`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                });
+                if(!res.ok) throw new Error();
+                window.fetchInteractions(detailModal.dataset.id);
+            } catch {
+                alert("Gagal menyematkan komentar.");
+            }
+        });
+    });
+
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const confirmed = await showConfirm('Yakin ingin menghapus komentar ini secara permanen?');
+            if(!confirmed) return;
+            const commentId = btn.dataset.id;
+            try {
+                const csrf = document.querySelector('meta[name="csrf-token"]').content;
+                const res = await fetch(`/comments/${commentId}`, {
+                    method: 'DELETE',
+                    headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' }
+                });
+                if(!res.ok) throw new Error();
+                window.fetchInteractions(detailModal.dataset.id);
+            } catch {
+                alert("Gagal menghapus komentar.");
             }
         });
     });
