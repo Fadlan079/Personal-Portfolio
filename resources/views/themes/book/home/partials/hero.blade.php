@@ -33,7 +33,7 @@
 
         <p class="gsap-hero-item text-base md:text-lg text-muted max-w-xl leading-relaxed font-medium opacity-0 translate-y-4"
         data-i18n="home.hero.description">
-           Siswa SMK TI Airlangga generasi ke-24 yang berfokus pada pengembangan web full-stack dan tertarik mempelajari teknologi baru.
+           Siswa SMK TI Airlangga generasi ke-24 dengan fokus pada pengembangan web full-stack, mengintegrasikan AI sebagai asisten dalam proses pengembangan, serta memiliki minat pada teknologi dan inovasi baru.
         </p>
 
         <div class="gsap-hero-item flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-4 opacity-0 translate-y-4">

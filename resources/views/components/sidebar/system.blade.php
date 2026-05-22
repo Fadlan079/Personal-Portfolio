@@ -53,6 +53,13 @@
 
         {{-- Control Modules --}}
         <div class="flex items-center gap-4">
+            {{-- Landing Page Shortcut --}}
+            <a href="{{ route('portofolio.home') }}"
+                class="text-muted hover:text-primary transition-colors flex items-center justify-center"
+                title="Landing Page">
+                <i class="fa-solid fa-globe text-sm"></i>
+            </a>
+
             {{-- Theme Toggle --}}
             <button onclick="toggleTheme()"
                 class="text-muted hover:text-primary transition-colors flex items-center justify-center"

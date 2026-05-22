@@ -13,9 +13,14 @@
             {{ $brand ?? 'MY_DIARY' }}
         </h1>
     </div>
-    <button onclick="openSidebar()" class="w-10 h-10 rounded-xl flex items-center bg-white border border-gray-300/70 shadow-sm justify-center text-neutral-900 transition-colors shrink-0 ml-2">
-        <i class="fa-solid fa-bars-staggered text-sm"></i>
-    </button>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('portofolio.home') }}" class="w-10 h-10 rounded-xl flex items-center bg-white border border-gray-300/70 shadow-sm justify-center text-neutral-600 hover:text-primary transition-colors shrink-0" title="Landing Page">
+            <i class="fa-solid fa-globe text-sm"></i>
+        </a>
+        <button onclick="openSidebar()" class="w-10 h-10 rounded-xl flex items-center bg-white border border-gray-300/70 shadow-sm justify-center text-neutral-900 transition-colors shrink-0">
+            <i class="fa-solid fa-bars-staggered text-sm"></i>
+        </button>
+    </div>
 </nav>
 
 <div class="md:hidden h-20 w-full"></div>
@@ -79,6 +84,28 @@
                 <button id="langToggleMobile" class="flex-1 h-10 rounded-xl flex items-center justify-center border border-gray-300/70 bg-white text-muted transition-colors grayscale hover:grayscale-0 shadow-sm" title="Switch Language">
                     <span id="langFlagMobile" class="fi fi-id text-sm rounded-sm"></span>
                 </button>
+            </div>
+        </div>
+        <div class="mt-6 pt-3 border-t border-gray-300/70 space-y-3">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-muted mb-2 px-2">Aksi</p>
+            <div class="flex flex-col gap-2 px-2">
+                <a href="{{ route('portofolio.home') }}"
+                    class="group relative flex items-center justify-between px-3 py-2 rounded-xl font-bold text-sm bg-surface/70 text-muted hover:bg-white hover:text-primary border border-primary/70 -rotate-1 transition-all duration-300 shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <i class="fa-solid fa-globe w-5 text-center opacity-70 group-hover:opacity-100"></i>
+                        <span>Landing Page</span>
+                    </div>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-50 group-hover:opacity-100"></i>
+                </a>
+
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <button type="submit"
+                        class="w-full group relative flex items-center gap-4 px-3 py-2 rounded-xl font-bold text-sm bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-300 transition-all duration-300 shadow-sm">
+                        <i class="fa-solid fa-power-off w-5 text-center"></i>
+                        <span>Keluar</span>
+                    </button>
+                </form>
             </div>
         </div>
     </nav>

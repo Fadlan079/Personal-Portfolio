@@ -100,6 +100,24 @@ Route::middleware(['auth', 'verified','admin'])
         Route::delete('account', [ProfileController::class, 'destroy'])
             ->name('account.destroy');
 
+        Route::get('storage-link', function () {
+            try {
+                $link = public_path('storage');
+                if (file_exists($link)) {
+                    if (is_link($link)) {
+                        unlink($link);
+                    } else {
+                        rename($link, $link . '_backup_' . time());
+                    }
+                }
+                \Illuminate\Support\Facades\Artisan::call('storage:link');
+                return redirect()->route('dashboard.account.edit')->with('success', 'Storage link berhasil diperbarui!');
+            } catch (\Exception $e) {
+                return redirect()->route('dashboard.account.edit')->with('error', 'Gagal memperbarui storage link: ' . $e->getMessage());
+            }
+        })->name('storage.link');
+
+
         Route::get('/settings', [\App\Http\Controllers\Dashboard\SettingsController::class, 'index'])->name('settings');
         Route::put('/settings', [\App\Http\Controllers\Dashboard\SettingsController::class, 'update'])->name('settings.update');
         Route::post('/settings/reset', [\App\Http\Controllers\Dashboard\SettingsController::class, 'reset'])->name('settings.reset');
@@ -206,3 +224,12 @@ Route::post('/api/layout', function (Illuminate\Http\Request $request) {
     }
     return response()->json(['success' => true]);
 });
+
+Route::get('storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*');
+

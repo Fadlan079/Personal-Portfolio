@@ -47,6 +47,15 @@
              </div>
         </div>
 
+        <a href="{{ route('portofolio.home') }}"
+            class="w-full group flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-semibold text-white/60 hover:bg-white/5 hover:text-white transition-all border border-white/5 mb-2">
+            <span class="flex items-center gap-3">
+                <i class="fa-solid fa-globe text-sm opacity-60 group-hover:opacity-100"></i>
+                <span>Landing Page</span>
+            </span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-40 group-hover:opacity-100"></i>
+        </a>
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="w-full py-3 rounded-2xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all font-bold text-xs uppercase tracking-widest">
@@ -59,9 +68,14 @@
 {{-- Mobile Top Bar --}}
 <nav class="md:hidden fixed top-0 left-0 w-full h-16 bg-surface/80 backdrop-blur-xl border-b border-white/5 px-6 flex items-center justify-between z-40">
     <span class="text-white font-bold tracking-tight">{{ $brand }}</span>
-    <button onclick="openSidebar()" class="text-white">
-        <i class="fa-solid fa-bars-staggered"></i>
-    </button>
+    <div class="flex items-center gap-4">
+        <a href="{{ route('portofolio.home') }}" class="text-white/60 hover:text-white transition-colors" title="Landing Page">
+            <i class="fa-solid fa-globe text-base"></i>
+        </a>
+        <button onclick="openSidebar()" class="text-white">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+    </div>
 </nav>
 
 {{-- Overlay --}}

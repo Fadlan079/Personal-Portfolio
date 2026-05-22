@@ -84,19 +84,30 @@
                 </div>
 
                 <div class="flex-1 space-y-4 pt-4">
-                    <div class="bg-sky-50 border-l-2 border-sky-500 p-4 rounded-r-lg">
-                        <h4 class="text-[10px] font-bold uppercase tracking-widest text-sky-800 mb-2">Ketentuan Gambar:</h4>
-                        <ul class="space-y-1.5">
-                            <li class="text-[10px] font-medium text-sky-900/70 flex items-center gap-2">
-                                <i class="fa-solid fa-paperclip text-[8px] text-sky-400"></i> Format: JPG, PNG, WEBP
-                            </li>
-                            <li class="text-[10px] font-medium text-sky-900/70 flex items-center gap-2">
-                                <i class="fa-solid fa-paperclip text-[8px] text-sky-400"></i> Ukuran Maks: 5 MB
-                            </li>
-                            <li class="text-[10px] font-medium text-sky-900/70 flex items-center gap-2">
-                                <i class="fa-solid fa-paperclip text-[8px] text-sky-400"></i> Rasio: 4:5 (Portrait)
-                            </li>
-                        </ul>
+                    <div class="bg-sky-50 border-l-2 border-sky-500 p-4 rounded-r-lg space-y-3">
+                        <div>
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-sky-800 mb-2">Ketentuan Gambar:</h4>
+                            <ul class="space-y-1.5">
+                                <li class="text-[10px] font-medium text-sky-900/70 flex items-center gap-2">
+                                    <i class="fa-solid fa-paperclip text-[8px] text-sky-400"></i> Format: JPG, PNG, WEBP
+                                </li>
+                                <li class="text-[10px] font-medium text-sky-900/70 flex items-center gap-2">
+                                    <i class="fa-solid fa-paperclip text-[8px] text-sky-400"></i> Ukuran Maks: 5 MB
+                                </li>
+                                <li class="text-[10px] font-medium text-sky-900/70 flex items-center gap-2">
+                                    <i class="fa-solid fa-paperclip text-[8px] text-sky-400"></i> Rasio: 4:5 (Portrait)
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="pt-2 border-t border-sky-200">
+                            <p class="text-[9px] font-medium text-sky-900/60 mb-2">
+                                <i class="fa-solid fa-circle-info"></i> Gambar tidak muncul di server?
+                            </p>
+                            <a href="{{ route('dashboard.storage.link') }}" 
+                               class="inline-flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded transition-colors shadow-sm">
+                                <i class="fa-solid fa-link"></i> Perbaiki Tautan
+                            </a>
+                        </div>
                     </div>
 
                     @error('profile_photo')

@@ -30,14 +30,22 @@ class ProfileController extends Controller
         $user = $request->user();
         $user->fill($request->safe()->except('profile_photo'));
 
+        if ($request->file('profile_photo') && !$request->file('profile_photo')->isValid()) {
+            return Redirect::route('dashboard.account.edit')->with('error', 'Foto profil tidak valid atau melebihi batas ukuran unggahan server.');
+        }
+
         if ($request->hasFile('profile_photo')) {
-            // Hapus foto lama jika ada dan bukan foto default
-            if ($user->profile_photo) {
-                Storage::disk('public')->delete($user->profile_photo);
+            try {
+                // Hapus foto lama jika ada dan bukan foto default
+                if ($user->profile_photo) {
+                    Storage::disk('public')->delete($user->profile_photo);
+                }
+                // Simpan foto baru
+                $user->profile_photo = $request->file('profile_photo')
+                    ->store('profile-photos', 'public');
+            } catch (\Exception $e) {
+                return Redirect::route('dashboard.account.edit')->with('error', 'Gagal menyimpan foto profil ke server: ' . $e->getMessage());
             }
-            // Simpan foto baru
-            $user->profile_photo = $request->file('profile_photo')
-                ->store('profile-photos', 'public');
         }
 
         if ($user->isDirty('email')) {
